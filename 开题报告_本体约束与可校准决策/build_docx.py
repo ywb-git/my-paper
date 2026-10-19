@@ -18,10 +18,9 @@ from docx.shared import Pt, Cm, Emu
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml.ns import qn
 
-MD = Path("开题报告_正文.md")
-OUT = Path("开题报告_V1.docx")
-
-TITLE = "正例稀缺条件下材料合成路线可行性的概率校准策略研究"
+BASE = Path(__file__).resolve().parent
+MD = BASE / "开题报告_正文.md"
+OUT = BASE / "开题报告_V1.docx"
 
 
 def set_run(run, cn_font=None, en_font="Times New Roman", size=None, bold=None):
@@ -84,6 +83,15 @@ def add_rich_para(doc, text):
 
 
 def build():
+    import re
+
+    lines = MD.read_text(encoding="utf-8").splitlines()
+    title = next(line[2:].strip() for line in lines if line.startswith("# "))
+    headings = []
+    for line in lines:
+        match = re.match(r"^(#{2,4}) (.+)$", line)
+        if match:
+            headings.append((len(match.group(1)) - 2, match.group(2).strip()))
     doc = Document()
 
     # ---- 页面设置 ----
@@ -126,7 +134,7 @@ def build():
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_after = Pt(6)
-    r = p.add_run("论文题目：" + TITLE)
+    r = p.add_run("论文题目：" + title)
     set_run(r, cn_font="宋体", size=13)
 
     for _ in range(3):
@@ -144,35 +152,15 @@ def build():
         add_para(doc, line, size=15, align=WD_ALIGN_PARAGRAPH.LEFT,
                  indent=1333500, space_after=8)
 
-    for _ in range(3):
-        doc.add_paragraph()
-    add_para(doc, "2025年12月", size=15, align=WD_ALIGN_PARAGRAPH.CENTER, space_before=18)
+    doc.add_paragraph()
+    add_para(doc, "2026年10月（修订）", size=15, align=WD_ALIGN_PARAGRAPH.CENTER, space_before=18)
 
     doc.add_page_break()
 
     # ---- 目录 ----
     add_para(doc, "目    录", cn="黑体", en="黑体", size=15, bold=True,
              align=WD_ALIGN_PARAGRAPH.CENTER, space_after=14)
-    toc = [
-        (0, "1 选题背景及选题意义"),
-        (1, "1.1 选题背景"),
-        (1, "1.2 选题意义"),
-        (0, "2 文献综述"),
-        (1, "2.1 材料合成路线推荐方法综述"),
-        (1, "2.2 大模型不确定性校准方法综述"),
-        (1, "2.3 现有研究的局限性"),
-        (0, "3 研究内容、研究方案、时间安排"),
-        (1, "3.1 研究内容"),
-        (2, "3.1.0 预测目标的界定与标签口径"),
-        (2, "3.1.1 基于本体约束的合成可行性决策空间构造"),
-        (2, "3.1.2 决策模型的领域知识注入与自动训练"),
-        (2, "3.1.3 四类概率校准策略的比较与证据可靠性分层"),
-        (1, "3.2 研究方案"),
-        (1, "3.3 时间安排"),
-        (0, "4 研究的局限性"),
-        (0, "参考文献"),
-    ]
-    for lvl, text in toc:
+    for lvl, text in headings:
         p = doc.add_paragraph()
         pf = p.paragraph_format
         pf.left_indent = Emu(304800 * lvl)
@@ -183,11 +171,32 @@ def build():
     doc.add_page_break()
 
     # ---- 正文：解析 md ----
-    lines = MD.read_text(encoding="utf-8").splitlines()
+    in_table = False
+    table = None
     for raw in lines:
         line = raw.rstrip()
         if not line.strip():
+            in_table = False
             continue
+        if line.startswith("|") and line.endswith("|"):
+            cells = [cell.strip() for cell in line.strip("|").split("|")]
+            if all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
+                continue
+            if not in_table:
+                table = doc.add_table(rows=1, cols=len(cells))
+                table.style = "Table Grid"
+                target_cells = table.rows[0].cells
+            else:
+                target_cells = table.add_row().cells
+            if len(cells) != len(target_cells):
+                raise ValueError("Markdown表格列数不一致")
+            for cell, text in zip(target_cells, cells):
+                cell.text = text
+                for run in cell.paragraphs[0].runs:
+                    set_run(run, cn_font="宋体", size=10.5, bold=not in_table)
+            in_table = True
+            continue
+        in_table = False
         # "# 题目" 已放在封面，正文跳过，避免重复
         if line.startswith("# ") and not line.startswith("## "):
             continue
@@ -203,7 +212,7 @@ def build():
             ip.alignment = WD_ALIGN_PARAGRAPH.CENTER
             ip.paragraph_format.space_before = Pt(6)
             run = ip.add_run()
-            run.add_picture("图3-1_技术路线图.png", width=Cm(15.2))
+            run.add_picture(str(BASE / "图3-1_技术路线图.png"), width=Cm(15.2))
             cap = doc.add_paragraph()
             cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
             cap.paragraph_format.space_after = Pt(8)
