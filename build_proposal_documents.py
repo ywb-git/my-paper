@@ -49,6 +49,20 @@ def add_mixed_runs(paragraph, text, size=10.5, base_bold=False, color=INK):
             set_run_font(run, size=size, bold=base_bold, color=color)
 
 
+def _extract_date(md_path: str) -> str:
+    """从 md 的「报告日期：」行提取日期，取不到则回退。"""
+    import re
+    try:
+        with open(md_path, encoding="utf-8") as f:
+            for line in f:
+                m = re.match(r"\s*报告日期[：:]\s*(.+)", line)
+                if m:
+                    return m.group(1).strip()
+    except OSError:
+        pass
+    return "2026 年 10 月 18 日"
+
+
 def build(md_path: str, docx_path: str, force: bool = False):
     if os.path.exists(docx_path) and not force:
         print(f"[skip] 已存在，不覆盖：{docx_path}")
@@ -83,7 +97,7 @@ def build(md_path: str, docx_path: str, force: bool = False):
 
     footer_p = section.footer.paragraphs[0]
     footer_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    fr = footer_p.add_run("2026 年 10 月 17 日")
+    fr = footer_p.add_run(_extract_date(md_path))
     set_run_font(fr, size=8, color=RGBColor(0x80, 0x80, 0x80), cn=HEAD_CN)
 
     i = 0
@@ -188,19 +202,20 @@ def build(md_path: str, docx_path: str, force: bool = False):
 
 if __name__ == "__main__":
     base_dir = os.path.dirname(os.path.abspath(__file__))
+    # 顺序与优先级一致（01 首选 → 06），便于按序生成与核对
     targets = [
-        ("开题报告01_材料问答中的选择性拒答_2026-10-18.md",
-         "开题报告01_材料问答中的选择性拒答_2026-10-18.docx"),
-        ("开题报告02_材料知识冲突的识别与消解_2026-10-18.md",
-         "开题报告02_材料知识冲突的识别与消解_2026-10-18.docx"),
-        ("开题报告03_材料逆向设计的运行间稳定性_2026-10-18.md",
-         "开题报告03_材料逆向设计的运行间稳定性_2026-10-18.docx"),
-        ("开题报告04_闭环材料发现中的失败样本利用_2026-10-17.md",
-         "开题报告04_闭环材料发现中的失败样本利用_2026-10-17.docx"),
-        ("开题报告05_可合成性引导的材料生成_2026-10-18.md",
-         "开题报告05_可合成性引导的材料生成_2026-10-18.docx"),
-        ("开题报告06_材料设计的交互式多轮修正_2026-10-18.md",
-         "开题报告06_材料设计的交互式多轮修正_2026-10-18.docx"),
+        ("开题报告01_材料知识冲突的识别与消解_2026-10-18.md",
+         "开题报告01_材料知识冲突的识别与消解_2026-10-18.docx"),
+        ("开题报告02_材料问答中的选择性拒答_2026-10-18.md",
+         "开题报告02_材料问答中的选择性拒答_2026-10-18.docx"),
+        ("开题报告03_材料设计的交互式多轮修正_2026-10-18.md",
+         "开题报告03_材料设计的交互式多轮修正_2026-10-18.docx"),
+        ("开题报告04_材料逆向设计的运行间稳定性_2026-10-18.md",
+         "开题报告04_材料逆向设计的运行间稳定性_2026-10-18.docx"),
+        ("开题报告05_闭环材料发现中的失败样本利用_2026-10-17.md",
+         "开题报告05_闭环材料发现中的失败样本利用_2026-10-17.docx"),
+        ("开题报告06_可合成性引导的材料生成_2026-10-18.md",
+         "开题报告06_可合成性引导的材料生成_2026-10-18.docx"),
     ]
     for md, dx in targets:
         md_abs = os.path.join(base_dir, md)
