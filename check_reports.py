@@ -37,8 +37,9 @@ for f in sorted(glob.glob("开题报告0*.md")):
     for s in REQUIRED:
         if s not in t:
             issues.append(f"缺章节:{s}")
-    if "**算法创新" not in t:
-        issues.append("无算法创新段")
+    # 创新段可为算法创新（重算法方向）或方法组件/评测创新（重基准方向）
+    if not any(k in t for k in ("**算法创新", "**方法组件", "**评测创新")):
+        issues.append("无创新段")
 
     refs = set(int(x) for x in re.findall(r"^\[(\d+)\]", t, re.M))
     body = t.split("## 参考文献")[0]
