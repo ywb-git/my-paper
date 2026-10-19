@@ -1,0 +1,21 @@
+digraph G {
+  graph [rankdir=TB, nodesep=0.30, ranksep=0.34, bgcolor="white"];
+  node  [shape=box, style="rounded,filled", fontname="SimSun", fontsize=10.5,
+         fillcolor="#FFFFFF", color="#444444", penwidth=1.0, margin="0.20,0.09", width=4.6];
+  edge  [color="#555555", arrowsize=0.75, penwidth=1.1];
+
+  a [label="阶段一　数据准备\n公开文本挖掘合成配方数据集 → 清洗 / 去重 / 按发表年份时序划分", fillcolor="#EDF3FA"];
+
+  b [label="阶段二　决策空间构造（研究内容 1）\n轻量本体定义（前驱体·温度·时间·气氛·产率）\n↓\n类型化问题集 Choice / Score / Noul　→　本体约束下的概率一致性推理", fillcolor="#EDF3FA"];
+
+  c [label="阶段三　知识注入与自动标注训练（研究内容 2）\n检索通道：两万篇文献库 RAG　｜　微调通道：决策模型 + LoRA\n↓\n热力学判据自动标注：强力否定→负例；支持且文献佐证→正例；灰色地带→不入训练\n↓\n多轮迭代训练，每轮监控指标以防退化", fillcolor="#F2F7EE"];
+
+  d [label="阶段四　校准与可靠性分层（研究内容 3）\n实测确定校准方向 → 温度缩放 → 保形预测（有限样本覆盖保证）\n↓\n分层贝叶斯 / 部分池化：按证据可靠性分层估计校准参数", fillcolor="#FBF3EC"];
+
+  e [label="输出：合成路线排序 ＋ 成功概率 ＋ 置信区间", fillcolor="#EFEFEF", penwidth=1.6];
+
+  f [label="对照基线：未校准排序分数\n（期望校准误差 / 覆盖率 / NDCG）", shape=note, fillcolor="#FFFDF0", fontsize=9.5];
+
+  a -> b -> c -> d -> e;
+  f -> e [style=dashed, label="  对照", fontsize=9];
+}
