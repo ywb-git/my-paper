@@ -174,6 +174,55 @@ def add_field(paragraph, instr: str, *, placeholder: str = ""):
     return paragraph
 
 
+def add_bookmark(paragraph, name: str, bid: int):
+    """在段落开头插入书签（用于参考文献交叉引用）。"""
+    start = OxmlElement("w:bookmarkStart")
+    start.set(qn("w:id"), str(bid))
+    start.set(qn("w:name"), name)
+    end = OxmlElement("w:bookmarkEnd")
+    end.set(qn("w:id"), str(bid))
+    p_el = paragraph._p
+    # bookmarkStart 放在第一个 run 之前；bookmarkEnd 放最后
+    if len(p_el) and p_el[0].tag != qn("w:pPr"):
+        p_el.insert(0, start)
+    else:
+        p_el.append(start)
+    p_el.append(end)
+
+
+def add_ref_field(paragraph, bookmark: str, *, size=None, cn=None, superscript=True,
+                  display: str | None = None):
+    """插入指向某书签的 REF 域（Word 交叉引用）。
+
+    显示为书签段落的完整文本；配合 \\h 可点击跳转。
+    """
+    run = paragraph.add_run()
+    if superscript:
+        run.font.superscript = True
+    if size is not None or cn is not None:
+        set_run_font(run, size=size or SZ_BODY, cn=cn or FONT_CN_BODY)
+
+    b = OxmlElement("w:fldChar"); b.set(qn("w:fldCharType"), "begin")
+    i = OxmlElement("w:instrText"); i.set(qn("xml:space"), "preserve")
+    i.text = f" REF {bookmark} \\h "
+    s = OxmlElement("w:fldChar"); s.set(qn("w:fldCharType"), "separate")
+    e = OxmlElement("w:fldChar"); e.set(qn("w:fldCharType"), "end")
+
+    run._r.append(b)
+    run._r.append(i)
+    run._r.append(s)
+
+    # separate 与 end 之间放缓存显示值：未在 Word 中更新域时也可见
+    if display is not None:
+        cache = OxmlElement("w:t")
+        cache.set(qn("xml:space"), "preserve")
+        cache.text = display
+        run._r.append(cache)
+
+    run._r.append(e)
+    return run
+
+
 def add_toc(paragraph, levels: str = "1-3"):
     """插入目录域。"""
     return add_field(paragraph, f' TOC \\o "{levels}" \\h \\z \\u ',
@@ -467,9 +516,11 @@ def _write_plain_with_refs(paragraph, text, *, size, cn, bold, superscript_refs)
         if not seg:
             continue
         if RE_REF.fullmatch(seg):
-            r = paragraph.add_run(seg)
-            r.font.superscript = True
-            set_run_font(r, size=size, bold=bold, cn=cn)
+            # [3] 或 [3][5] 形式：拆成多个 REF 域，实现 Word 交叉引用
+            for num in re.findall(r"\[(\d+)\]", seg):
+                add_ref_field(paragraph, ref_bookmark_name(int(num)),
+                              size=size, cn=cn, superscript=True,
+                              display=f"[{num}]")
         else:
             r = paragraph.add_run(seg)
             set_run_font(r, size=size, bold=bold, cn=cn)
@@ -554,8 +605,13 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
 # ---------------------------------------------------------------- 参考文献
 
 
+def ref_bookmark_name(idx: int) -> str:
+    """参考文献第 idx 条的书签名。"""
+    return f"_Ref_ref{idx:03d}"
+
+
 def render_references(doc: Document, ref_lines: list[str]):
-    """参考文献：自动编号列表。"""
+    """参考文献：每条加书签，供正文 REF 域交叉引用。"""
     if not ref_lines:
         return
     for idx, line in enumerate(ref_lines, 1):
@@ -565,6 +621,8 @@ def render_references(doc: Document, ref_lines: list[str]):
         p.paragraph_format.left_indent = Cm(0.847)
         p.paragraph_format.hanging_indent = Cm(0.847)
         p.paragraph_format.line_spacing = BODY_LINE_SPACING
+        # 编号与正文合并到同一书签范围，使 REF 引用显示为「[3]」
+        add_bookmark(p, ref_bookmark_name(idx), 1000 + idx)
         set_run_font(p.add_run(f"[{idx}] {text}"), size=Pt(10.5), cn=FONT_CN_BODY)
 
 

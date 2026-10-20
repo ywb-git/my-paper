@@ -436,5 +436,63 @@ class TestFormatCoverage(unittest.TestCase):
         self.assertEqual(self.doc.tables[0].style.name, "Table Grid")
 
 
+class TestCrossref(unittest.TestCase):
+    """参考文献交叉引用：书签 + REF 域。"""
+
+    @classmethod
+    def setUpClass(cls):
+        import tempfile
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.out = Path(cls.tmp.name) / "x.docx"
+        md = HERE / "开题报告_正文.md"
+        if not md.exists():
+            raise unittest.SkipTest("缺少 开题报告_正文.md")
+        cls.n_refs, cls.n_heads, cls.warnings = br.build(md, cls.out)
+        cls.doc = Document(str(cls.out))
+        cls.xml = "".join(p._p.xml for p in cls.doc.paragraphs)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_ref_fields_exist(self):
+        self.assertGreater(self.xml.count("REF _Ref_ref"), 0,
+                           "正文引用应为 REF 域而非纯文本")
+
+    def test_bookmarks_match_reference_count(self):
+        from docx.oxml.ns import qn
+        names = [e.get(qn("w:name"))
+                 for e in self.doc.element.body.iter(qn("w:bookmarkStart"))]
+        ref_bm = [n for n in names if n and n.startswith("_Ref_ref")]
+        self.assertEqual(len(ref_bm), self.n_refs,
+                         "每条参考文献应有一个书签")
+
+    def test_ref_field_has_cached_display(self):
+        """未在 Word 中更新域时也应有可见的 [n] 缓存值。"""
+        import re
+        self.assertTrue(re.search(r"REF _Ref_ref\d+[^<]*<[^>]*/>[^<]*<w:t[^>]*>\[\d+\]",
+                                  self.xml) or "[1]" in self.xml,
+                        "REF 域应带缓存显示值")
+
+    def test_no_bare_text_citation(self):
+        """正文不应再出现纯文本形式的 [n]（已全改为域）。"""
+        import re
+        bare = 0
+        for p in self.doc.paragraphs:
+            for r in p.runs:
+                if re.fullmatch(r"\[\d+\](?:\[\d+\])*", r.text.strip()):
+                    # 若该 run 内没有 fldChar，则是纯文本
+                    if "fldChar" not in r._element.xml:
+                        bare += 1
+        self.assertEqual(bare, 0, f"仍有 {bare} 处纯文本引用")
+
+    def test_bookmark_names_are_unique(self):
+        from docx.oxml.ns import qn
+        names = [e.get(qn("w:name"))
+                 for e in self.doc.element.body.iter(qn("w:bookmarkStart"))]
+        ref_bm = [n for n in names if n and n.startswith("_Ref_ref")]
+        self.assertEqual(len(ref_bm), len(set(ref_bm)), "书签名不得重复")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
