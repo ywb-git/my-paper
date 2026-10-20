@@ -79,12 +79,14 @@ DEFAULT_OUT_STATIC = "开题报告_静态目录.docx"
 DEFAULT_FIG_CAPTION = "图 3-1　技术路线图"
 
 # 命令行用法（--help 直接打印此常量，不再从 __doc__ 切割）
-USAGE = """用法：
+# 命令行用法（--help 打印此函数结果，每次读取当前常量，避免文案与常量漂移）
+def usage_text() -> str:
+    return f"""用法：
   python build_report.py [选项] [输入.md] [输出.docx]
 
 选项：
-  --static-toc          生成静态目录版（默认输出 开题报告_格式版_静态目录.docx）
-  --fig-caption TEXT    图题文字（默认 图 4-1　技术路线图）
+  --static-toc          生成静态目录版（默认输出 {DEFAULT_OUT_STATIC}）
+  --fig-caption TEXT    图题文字（默认 {DEFAULT_FIG_CAPTION}）
   --force               覆盖已存在的输出文件
   -h, --help            显示本帮助
 
@@ -402,6 +404,13 @@ def parse_markdown(md_text: str):
             i += 1
             continue
 
+        # 占位符统一检查：放在所有分支之前，覆盖标题内、行内、表格内。
+        # 已知占位符（{{FIG31}}/{{FIG41}}/{{FIG}}）不告警。
+        known_ph = {"{{FIG31}}", "{{FIG41}}", "{{FIG}}"}
+        for ph in re.findall(r"\{\{[^}]+\}\}", stripped):
+            if ph not in known_ph:
+                warn(f"第 {i + 1} 行有未识别的占位符 {ph}，将按普通文本输出")
+
         # 标题
         m = RE_HEADING.match(stripped)
         if m:
@@ -431,6 +440,10 @@ def parse_markdown(md_text: str):
                     else:
                         cells = cells[: len(header)]
                     rows.append(cells)
+                # 表格数据行内的占位符也要检查（首行已由统一检查覆盖）
+                for ph in re.findall(r"\{\{[^}]+\}\}", lines[j].strip()):
+                    if ph not in known_ph:
+                        warn(f"表格第 {j + 1} 行有未识别的占位符 {ph}，将原样输出")
                 j += 1
             blocks.append(("table", (header, rows)))
             i = j
@@ -442,11 +455,6 @@ def parse_markdown(md_text: str):
             i += 1
             continue
 
-        # 未识别的占位符（整行或行内）
-        unknown_ph = re.findall(r"\{\{[^}]+\}\}", stripped)
-        if unknown_ph:
-            for ph in unknown_ph:
-                warn(f"第 {i + 1} 行有未识别的占位符 {ph}，将按普通文本输出")
 
         # 有序列表
         m = RE_ORDERED.match(stripped)
@@ -671,9 +679,21 @@ def render_references(doc: Document, ref_lines: list[str]):
         p = doc.add_paragraph()
         p.paragraph_format.line_spacing = BODY_LINE_SPACING
         apply_hanging_indent(p, left_twips=480, hanging_twips=480)
-        # 编号与正文合并到同一书签范围，使 REF 引用显示为「[3]」
-        add_bookmark(p, ref_bookmark_name(idx), 1000 + idx)
-        set_run_font(p.add_run(f"[{idx}] {text}"), size=Pt(10.5), cn=FONT_CN_BODY)
+        # 书签必须只包住编号 run：REF 域返回的是书签范围内的文本，
+        # 若把整条文献包进去，正文引用会显示成整条文献全文。
+        num_run = p.add_run(f"[{idx}]")
+        set_run_font(num_run, size=Pt(10.5), cn=FONT_CN_BODY)
+        bm_name = ref_bookmark_name(idx)
+        bm_id = str(1000 + idx)
+        start = OxmlElement("w:bookmarkStart")
+        start.set(qn("w:id"), bm_id)
+        start.set(qn("w:name"), bm_name)
+        end = OxmlElement("w:bookmarkEnd")
+        end.set(qn("w:id"), bm_id)
+        # 直接插在编号 run 前后，保证书签范围就是这一小段文本
+        num_run._r.addprevious(start)
+        num_run._r.addnext(end)
+        set_run_font(p.add_run(" " + text), size=Pt(10.5), cn=FONT_CN_BODY)
 
 
 # ---------------------------------------------------------------- 主流程
@@ -709,7 +729,7 @@ def split_markdown(md_text: str):
 
 
 def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
-          static_toc: bool = False, fig_caption: str = DEFAULT_FIG_CAPTION,
+          static_toc: bool = False, fig_caption: str | None = None,
           md_text: str | None = None):
     """从 Markdown 生成 docx，写入 out_path。
 
@@ -727,6 +747,9 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
         warnings  解析期警告列表；本函数不依赖模块级状态，
                   可在同一进程内重复调用而不互相污染
     """
+    # 运行时读取常量，避免默认参数在函数定义时绑定旧值
+    if fig_caption is None:
+        fig_caption = DEFAULT_FIG_CAPTION
     if md_text is None:
         md_text = md_path.read_text(encoding="utf-8")
     title, body_md, ref_lines = split_markdown(md_text)
@@ -823,7 +846,7 @@ def main(argv):
             fig_caption = val
             j += 2
             continue
-        if a.startswith("--") or a in ("-h",):
+        if a.startswith("-"):   # 含单破折号，如 -x
             flags.add(a)
         else:
             positional.append(a)
@@ -835,7 +858,7 @@ def main(argv):
         if unknown:
             print(f"未知参数：{', '.join(sorted(unknown))}", file=sys.stderr)
             sys.exit(2)
-        print(USAGE)
+        print(usage_text())
         sys.exit(0)
 
     static = "--static-toc" in flags

@@ -472,23 +472,76 @@ class TestCrossref(unittest.TestCase):
                          "每条参考文献应有一个书签")
 
     def test_ref_field_has_cached_display(self):
-        """未在 Word 中更新域时也应有可见的 [n] 缓存值。"""
+        """每个 REF 域的 separate 与 end 之间必须有形如 [n] 的缓存显示值。
+
+        注意：不能用 "[1]" in xml 之类兜底——参考文献条目本身就含 [1] 字面量，
+        那样断言恒真，无法捕获缓存值缺失（正是这条曾让书签为空的问题逃过检测）。
+        """
         import re
-        self.assertTrue(re.search(r"REF _Ref_ref\d+[^<]*<[^>]*/>[^<]*<w:t[^>]*>\[\d+\]",
-                                  self.xml) or "[1]" in self.xml,
-                        "REF 域应带缓存显示值")
+        self.assertGreater(self.xml.count("REF _Ref_ref"), 0, "没有 REF 域")
+        # 每个 REF 域都应在其 fldChar separate 之后紧跟 <w:t>[n]</w:t>
+        pat = re.compile(
+            r"REF (_Ref_ref\d+)[^<]*</w:instrText>.*?fldCharType=\"separate\".*?"
+            r"<w:t[^>]*>\[(\d+)\]</w:t>", re.S)
+        found = pat.findall(self.xml)
+        n_ref_fields = self.xml.count("REF _Ref_ref")
+        self.assertEqual(len(found), n_ref_fields,
+                         f"{n_ref_fields} 个 REF 域中只有 {len(found)} 个带 [n] 缓存值")
+
+    def test_bookmark_contains_only_index(self):
+        """书签范围必须只包住 [n] 编号，不能包整条文献。
+
+        否则 REF 域会显示成整条文献全文；若书签为空，Word 更新域后引用会消失。
+        """
+        from docx.oxml.ns import qn
+        body = self.doc.element.body
+        starts = {}
+        for el in body.iter():
+            if el.tag == qn("w:bookmarkStart"):
+                nm = el.get(qn("w:name"))
+                if nm and nm.startswith("_Ref_ref"):
+                    starts[nm] = el
+        self.assertEqual(len(starts), self.n_refs, "书签数应等于文献数")
+
+        empty = []
+        for nm, st in starts.items():
+            bid = st.get(qn("w:id"))
+            seq = list(body.iter())
+            i = seq.index(st)
+            texts = []
+            for el2 in seq[i + 1:]:
+                tag2 = el2.tag.split("}")[-1]
+                if tag2 == "bookmarkEnd" and el2.get(qn("w:id")) == bid:
+                    break
+                if tag2 == "t" and (el2.text or "").strip():
+                    texts.append(el2.text.strip())
+            joined = "".join(texts)
+            if not joined:
+                empty.append((nm, "空书签"))
+            elif not (joined.startswith("[") and joined.endswith("]")):
+                empty.append((nm, f"含多余文本: {joined[:30]}"))
+        self.assertEqual(empty, [], f"书签范围不合规: {empty[:3]}")
 
     def test_no_bare_text_citation(self):
-        """正文不应再出现纯文本形式的 [n]（已全改为域）。"""
+        """正文引用不应是纯文本；参考文献条目的编号 run 不在此列。"""
         import re
+        from docx.oxml.ns import qn
+        # 先收集参考文献段落的编号 run（它们本就是纯文本 [n]，且被书签包裹）
+        ref_num_elems = set()
+        for p in self.doc.paragraphs:
+            if p.text.strip().startswith("[") and re.match(r"^\[\d+\]", p.text.strip()):
+                # 该段是参考文献条目：第一个 run 就是编号
+                if p.runs and re.fullmatch(r"\[\d+\]", p.runs[0].text.strip()):
+                    ref_num_elems.add(id(p.runs[0]._element))
         bare = 0
         for p in self.doc.paragraphs:
+            if p.text.strip().startswith("[") and re.match(r"^\[\d+\]", p.text.strip()):
+                continue  # 跳过参考文献段落本身
             for r in p.runs:
                 if re.fullmatch(r"\[\d+\](?:\[\d+\])*", r.text.strip()):
-                    # 若该 run 内没有 fldChar，则是纯文本
                     if "fldChar" not in r._element.xml:
                         bare += 1
-        self.assertEqual(bare, 0, f"仍有 {bare} 处纯文本引用")
+        self.assertEqual(bare, 0, f"正文仍有 {bare} 处纯文本引用")
 
     def test_bookmark_names_are_unique(self):
         from docx.oxml.ns import qn
