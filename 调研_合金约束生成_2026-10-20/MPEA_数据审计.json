@@ -1,0 +1,255 @@
+{
+  "source": {
+    "url": "https://raw.githubusercontent.com/CitrineInformatics/MPEA_dataset/d31e2510cccc3fb9e79d43ad62652f64ef8c2c5e/MPEA_dataset.csv",
+    "commit": "d31e2510cccc3fb9e79d43ad62652f64ef8c2c5e",
+    "bytes": 332126,
+    "sha256": "c5504d93fd324d1be26cf814d0694ee9ee95578d68a0b38aba6813b939fa2c5d"
+  },
+  "definitions": {
+    "room_temperature": "20–30摄氏度，含端点；以数据原值为准",
+    "tensile_ys": "test=T且YS是有限数字；不使用压缩YS或硬度换算",
+    "composition_signature": "原子比例归一化后按元素排序、8位小数；不将工艺差异去重",
+    "local_pair": "同DOI、同粗工艺字符串、同测试温度且不同成分，原子分数L1距离≤0.20；仅可用性统计，不证明工艺或晶粒相同"
+  },
+  "raw_records": 1545,
+  "columns": [
+    "IDENTIFIER: Reference ID",
+    "FORMULA",
+    "PROPERTY: Microstructure",
+    "PROPERTY: Processing method",
+    "PROPERTY: BCC/FCC/other",
+    "PROPERTY: grain size ($\\mu$m)",
+    "PROPERTY: Exp. Density (g/cm$^3$)",
+    "PROPERTY: Calculated Density (g/cm$^3$)",
+    "PROPERTY: HV",
+    "PROPERTY: Type of test",
+    "PROPERTY: Test temperature ($^\\circ$C)",
+    "PROPERTY: YS (MPa)",
+    "PROPERTY: UTS (MPa)",
+    "PROPERTY: Elongation (%)",
+    "PROPERTY: Elongation plastic (%)",
+    "PROPERTY: Exp. Young modulus (GPa)",
+    "PROPERTY: Calculated Young modulus (GPa)",
+    "PROPERTY: O content (wppm)",
+    "PROPERTY: N content (wppm)",
+    "PROPERTY: C content (wppm)",
+    "REFERENCE: doi",
+    "REFERENCE: year",
+    "REFERENCE: title"
+  ],
+  "formula_parse_failures": [],
+  "all_parsed": {
+    "records": 1545,
+    "unique_compositions": 630,
+    "unique_doi": 265,
+    "process_counts": {
+      "CAST": 647,
+      "WROUGHT": 300,
+      "ANNEAL": 273,
+      "POWDER": 95,
+      "": 119,
+      "OTHER": 111
+    },
+    "test_type_counts": {
+      "C": 792,
+      "T": 358,
+      "": 395
+    },
+    "with_ys": 1067,
+    "with_ys_and_elongation": 593,
+    "with_grain_size": 237
+  },
+  "room_temperature": {
+    "records": 952,
+    "unique_compositions": 555,
+    "unique_doi": 225,
+    "process_counts": {
+      "CAST": 469,
+      "WROUGHT": 208,
+      "ANNEAL": 132,
+      "POWDER": 54,
+      "": 47,
+      "OTHER": 42
+    },
+    "test_type_counts": {
+      "C": 479,
+      "T": 319,
+      "": 154
+    },
+    "with_ys": 722,
+    "with_ys_and_elongation": 472,
+    "with_grain_size": 221
+  },
+  "room_tensile_ys": {
+    "records": 287,
+    "unique_compositions": 91,
+    "unique_doi": 76,
+    "process_counts": {
+      "WROUGHT": 187,
+      "CAST": 61,
+      "OTHER": 11,
+      "ANNEAL": 21,
+      "": 7
+    },
+    "test_type_counts": {
+      "T": 287
+    },
+    "with_ys": 287,
+    "with_ys_and_elongation": 250,
+    "with_grain_size": 154
+  },
+  "room_cast_hardness": {
+    "records": 254,
+    "unique_compositions": 233,
+    "unique_doi": 55,
+    "process_counts": {
+      "CAST": 254
+    },
+    "test_type_counts": {
+      "C": 134,
+      "": 98,
+      "T": 22
+    },
+    "with_ys": 140,
+    "with_ys_and_elongation": 93,
+    "with_grain_size": 31
+  },
+  "room_tensile_ys_by_process": {
+    "": {
+      "records": 7,
+      "unique_compositions": 4,
+      "unique_doi": 2,
+      "process_counts": {
+        "": 7
+      },
+      "test_type_counts": {
+        "T": 7
+      },
+      "with_ys": 7,
+      "with_ys_and_elongation": 7,
+      "with_grain_size": 4
+    },
+    "ANNEAL": {
+      "records": 21,
+      "unique_compositions": 11,
+      "unique_doi": 11,
+      "process_counts": {
+        "ANNEAL": 21
+      },
+      "test_type_counts": {
+        "T": 21
+      },
+      "with_ys": 21,
+      "with_ys_and_elongation": 19,
+      "with_grain_size": 3
+    },
+    "CAST": {
+      "records": 61,
+      "unique_compositions": 51,
+      "unique_doi": 27,
+      "process_counts": {
+        "CAST": 61
+      },
+      "test_type_counts": {
+        "T": 61
+      },
+      "with_ys": 61,
+      "with_ys_and_elongation": 48,
+      "with_grain_size": 11
+    },
+    "OTHER": {
+      "records": 11,
+      "unique_compositions": 1,
+      "unique_doi": 2,
+      "process_counts": {
+        "OTHER": 11
+      },
+      "test_type_counts": {
+        "T": 11
+      },
+      "with_ys": 11,
+      "with_ys_and_elongation": 3,
+      "with_grain_size": 6
+    },
+    "WROUGHT": {
+      "records": 187,
+      "unique_compositions": 49,
+      "unique_doi": 51,
+      "process_counts": {
+        "WROUGHT": 187
+      },
+      "test_type_counts": {
+        "T": 187
+      },
+      "with_ys": 187,
+      "with_ys_and_elongation": 173,
+      "with_grain_size": 130
+    }
+  },
+  "room_tensile_ys_AlCoCrFeMnNi_subset": {
+    "records": 149,
+    "unique_compositions": 42,
+    "unique_doi": 40,
+    "process_counts": {
+      "WROUGHT": 107,
+      "CAST": 27,
+      "ANNEAL": 8,
+      "": 7
+    },
+    "test_type_counts": {
+      "T": 149
+    },
+    "with_ys": 149,
+    "with_ys_and_elongation": 144,
+    "with_grain_size": 92
+  },
+  "local_pair_count": 86,
+  "local_pair_unique_doi": 13,
+  "local_pair_examples": [
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.103 Ni1",
+      "Co1 Cr1 Fe1 Nb0.155 Ni1"
+    ],
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.103 Ni1",
+      "Co1 Cr1 Fe1 Nb0.206 Ni1"
+    ],
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.103 Ni1",
+      "Co1 Cr1 Fe1 Nb0.309 Ni1"
+    ],
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.103 Ni1",
+      "Co1 Cr1 Fe1 Nb0.412 Ni1"
+    ],
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.103 Ni1",
+      "Co1 Cr1 Fe1 Ni1"
+    ],
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.155 Ni1",
+      "Co1 Cr1 Fe1 Nb0.206 Ni1"
+    ],
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.155 Ni1",
+      "Co1 Cr1 Fe1 Nb0.309 Ni1"
+    ],
+    [
+      "10.1016/j.intermet.2015.01.004",
+      "Co1 Cr1 Fe1 Nb0.155 Ni1",
+      "Co1 Cr1 Fe1 Nb0.412 Ni1"
+    ]
+  ],
+  "boundaries": [
+    "粗工艺标签不等于固定热处理、冷加工量或晶粒状态",
+    "记录数和派生配对数不等于独立实验数",
+    "未验证预测器或任何新候选的真实力学性能"
+  ]
+}

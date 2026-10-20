@@ -1,0 +1,21 @@
+digraph G {
+  graph [rankdir=TB, nodesep=0.30, ranksep=0.34, bgcolor="white"];
+  node  [shape=box, style="rounded,filled", fontname="SimSun", fontsize=10.5,
+         fillcolor="#FFFFFF", color="#444444", penwidth=1.0, margin="0.20,0.09", width=4.6];
+  edge  [color="#555555", arrowsize=0.75, penwidth=1.1];
+
+  a [label="阶段一　基础审计（决定方案是否调整）\n检索质量：抽样查准率　｜　可训练样本量：多源独立报道比例\n底座模型适配潜力：小样本微调试点", fillcolor="#FDF0F0"];
+
+  b [label="阶段二　检索预算分配（研究内容 1）\n形式化：状态=证据+剩余预算，动作=检索/判断/终止\n↓\n信息增益估计 → 次模性检验 → 贪心分配\n↓\n对照：固定检索量 ／ 置信度启发式", fillcolor="#EDF3FA"];
+
+  c [label="阶段三　弱监督信号与微调（研究内容 2）\n文献独立性度量：引用·来源·内容重叠\n↓\n一致性加权 → 构造无真值训练奖励\n↓\n小模型微调 + 概率校准", fillcolor="#F2F7EE"];
+
+  d [label="阶段四　两级判断架构（研究内容 3）\n小模型初筛（高频·低成本） → 低置信升级大模型复核\n↓\n阈值由验证集确定，做代价敏感性分析", fillcolor="#FBF3EC"];
+
+  e [label="输出：材料方向推荐 ＋ 判断置信度 ＋ 证据清单", fillcolor="#EFEFEF", penwidth=1.6];
+
+  f [label="对照基线：全大模型 ／ 全小模型 ／ 朴素级联", shape=note, fillcolor="#FFFDF0", fontsize=9.5];
+
+  a -> b -> c -> d -> e;
+  f -> e [style=dashed, label="  对照", fontsize=9];
+}
