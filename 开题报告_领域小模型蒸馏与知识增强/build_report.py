@@ -30,7 +30,6 @@ import sys
 from pathlib import Path
 
 from docx import Document
-from docx.enum.section import WD_SECTION
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -77,6 +76,21 @@ DEFAULT_OUT_STATIC = "开题报告_格式版_静态目录.docx"
 
 # 图题默认编号（可用 --fig-caption 覆盖）
 DEFAULT_FIG_CAPTION = "图 4-1　技术路线图"
+
+# 命令行用法（--help 直接打印此常量，不再从 __doc__ 切割）
+USAGE = """用法：
+  python build_report.py [选项] [输入.md] [输出.docx]
+
+选项：
+  --static-toc          生成静态目录版（默认输出 开题报告_格式版_静态目录.docx）
+  --fig-caption TEXT    图题文字（默认 图 4-1　技术路线图）
+  --force               覆盖已存在的输出文件
+  -h, --help            显示本帮助
+
+两种模式的默认输出文件名不同，不会互相覆盖。若目标文件已存在且未加 --force，
+脚本提示后以退出码 2 退出。输出目录必须已存在。
+
+需要 Python >= 3.10；依赖 python-docx >= 1.0。"""
 
 
 # ---------------------------------------------------------------- 字体工具
@@ -307,15 +321,6 @@ def build_toc(doc: Document, static_entries=None):
 # ---------------------------------------------------------------- Markdown 解析
 
 
-# 解析期警告收集（供 main 汇总输出）
-WARNINGS: list[str] = []
-
-
-def warn(msg: str):
-    """记录一条解析警告。"""
-    WARNINGS.append(msg)
-
-
 RE_HEADING = re.compile(r"^(#{1,4})\s+(.*)$")
 RE_ORDERED = re.compile(r"^(\d+)[.、]\s+(.*)$")
 RE_UNORDERED = re.compile(r"^[-*+]\s+(.*)$")
@@ -323,8 +328,17 @@ RE_TABLE_SEP = re.compile(r"^\|[\s:|-]+\|$")
 
 
 def parse_markdown(md_text: str):
-    """把 Markdown 拆成块列表：(kind, payload)。"""
+    """把 Markdown 拆成块列表。
+
+    返回 (blocks, warnings)。warnings 是本函数内产生的解析警告列表，
+    不依赖任何模块级状态，可安全地在同一进程内重复调用。
+    """
     blocks = []
+    warnings: list[str] = []
+
+    def warn(msg: str):
+        warnings.append(msg)
+
     lines = md_text.splitlines()
     i = 0
     while i < len(lines):
@@ -376,12 +390,11 @@ def parse_markdown(md_text: str):
             i += 1
             continue
 
-        # 未识别的占位符
-        if re.fullmatch(r"\{\{[^}]+\}\}", stripped):
-            warn(f"第 {i + 1} 行有未识别的占位符 {stripped}，将按普通文本输出")
-            blocks.append(("para", stripped))
-            i += 1
-            continue
+        # 未识别的占位符（整行或行内）
+        unknown_ph = re.findall(r"\{\{[^}]+\}\}", stripped)
+        if unknown_ph:
+            for ph in unknown_ph:
+                warn(f"第 {i + 1} 行有未识别的占位符 {ph}，将按普通文本输出")
 
         # 有序列表
         m = RE_ORDERED.match(stripped)
@@ -401,7 +414,7 @@ def parse_markdown(md_text: str):
         blocks.append(("para", stripped))
         i += 1
 
-    return blocks
+    return blocks, warnings
 
 
 # ---------------------------------------------------------------- 富文本写入
@@ -591,7 +604,7 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
     md_text = md_path.read_text(encoding="utf-8")
     title, body_md, ref_lines = split_markdown(md_text)
 
-    blocks = parse_markdown(body_md)
+    blocks, warnings = parse_markdown(body_md)
 
     # 静态目录条目（heading level 2/3/4 -> 目录 level 1/2/3）
     entries = None
@@ -643,23 +656,42 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
     cp.comments = "由 build_report.py 从 Markdown 生成"
 
     doc.save(str(out_path))
-    return len(ref_lines), len([b for b in blocks if b[0] == "heading"])
+    n_heads = len([b for b in blocks if b[0] == "heading"])
+    return len(ref_lines), n_heads, warnings
 
 
 def main(argv):
     here = Path(__file__).resolve().parent
 
-    # ---- 参数解析 ----
-    flags = {a for a in argv[1:] if a.startswith("--")}
-    positional = [a for a in argv[1:] if not a.startswith("--")]
+    # ---- 参数解析（支持 --key value 形式的 --fig-caption）----
+    positional = []
+    flags = set()
+    fig_caption = DEFAULT_FIG_CAPTION
+    args = argv[1:]
+    j = 0
+    while j < len(args):
+        a = args[j]
+        if a == "--fig-caption":
+            if j + 1 >= len(args):
+                print("--fig-caption 缺少取值", file=sys.stderr)
+                sys.exit(2)
+            fig_caption = args[j + 1]
+            j += 2
+            continue
+        if a.startswith("--") or a in ("-h",):
+            flags.add(a)
+        else:
+            positional.append(a)
+        j += 1
 
     known = {"--static-toc", "--force", "--help", "-h"}
     unknown = flags - known
-    if unknown or "--help" in flags or "-h" in flags:
+    if unknown or flags & {"--help", "-h"}:
         if unknown:
             print(f"未知参数：{', '.join(sorted(unknown))}", file=sys.stderr)
-        print(__doc__.strip().split("用法：")[-1].strip(), file=sys.stderr)
-        sys.exit(2 if unknown else 0)
+            sys.exit(2)
+        print(USAGE)
+        sys.exit(0)
 
     static = "--static-toc" in flags
     force = "--force" in flags
@@ -682,6 +714,25 @@ def main(argv):
         print(f"找不到输入文件：{md}", file=sys.stderr)
         sys.exit(1)
 
+    # ---- G2: 输入输出同路径会销毁输入，必须拒绝 ----
+    try:
+        if out.exists() and md.exists() and out.resolve() == md.resolve():
+            print(f"输入与输出是同一个文件：{md}", file=sys.stderr)
+            print("这会销毁输入 md，已中止。请指定不同的输出路径。", file=sys.stderr)
+            sys.exit(2)
+    except OSError:
+        pass
+
+    # ---- G1: 输出目录必须存在（不自动创建，避免拼错路径静默建目录）----
+    out_parent = out.parent if out.parent != Path("") else Path(".")
+    if not out_parent.exists():
+        print(f"输出目录不存在：{out_parent}", file=sys.stderr)
+        print("请先创建该目录，或改用一个已存在的输出路径。", file=sys.stderr)
+        sys.exit(1)
+    if not out_parent.is_dir():
+        print(f"输出路径的父级不是目录：{out_parent}", file=sys.stderr)
+        sys.exit(1)
+
     # ---- 覆盖前确认 ----
     if out.exists() and not force:
         print(f"输出文件已存在：{out}", file=sys.stderr)
@@ -697,8 +748,9 @@ def main(argv):
             break
 
     # ---- 构建 ----
-    WARNINGS.clear()
-    n_refs, n_heads = build(md, out, fig_path=fig, static_toc=static)
+    n_refs, n_heads, warnings = build(
+        md, out, fig_path=fig, static_toc=static, fig_caption=fig_caption
+    )
 
     # ---- 结果汇总 ----
     print(f"[ok] {out}")
@@ -706,12 +758,13 @@ def main(argv):
     print(f"     标题数 {n_heads}，参考文献 {n_refs} 条")
     if fig:
         print(f"     已嵌入图：{fig.name}")
+        print(f"     图题：{fig_caption}")
     else:
         print("     ！未找到技术路线图，图片位置留空")
 
-    if WARNINGS:
-        print(f"\n[警告] 共 {len(WARNINGS)} 条：")
-        for w in WARNINGS:
+    if warnings:
+        print(f"\n[警告] 共 {len(warnings)} 条：")
+        for w in warnings:
             print(f"   - {w}")
     else:
         print("     无解析警告")
