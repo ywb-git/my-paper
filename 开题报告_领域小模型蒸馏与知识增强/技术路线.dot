@@ -1,0 +1,12 @@
+digraph G {
+  graph [rankdir=TB, bgcolor="white", nodesep=0.3, ranksep=0.32, dpi=180];
+  node [shape=box, style="rounded,filled", fontname="SimSun", fontsize=11,
+        fillcolor="#FFFFFF", color="#444444", margin="0.2,0.13", width=6.5];
+  edge [color="#555555", arrowsize=0.7];
+  a [label="资料与任务准备\n公开配方 / 获准本地资料 → 来源关联分组 → 训练、开发、测试隔离\n输入：设计要求与原配方　输出：候选成分、修改说明、参考依据", fillcolor="#EDF3FA"];
+  b [label="研究内容一：可核验的任务蒸馏数据\n训练资料 → 教师示范 → 约束扰动后重验 → 来源与条件绑定\n教师提供操作示范，不编造新配方的真实性能", fillcolor="#EDF3FA"];
+  c [label="研究内容二：选择性蒸馏（主要算法改进）\n学生诊断：可执行失误　＋　约束组合覆盖　－　冗余\n预算上限内正效用选样 → QLoRA 适配 → 保存本地模型", fillcolor="#F2F7EE"];
+  d [label="研究内容三：知识增强与约束生成\n本地检索可比实例 → 分步成分生成 → 数值检查与有限修正\n共用来源类型与约束状态；模型、检索、工具均在本地", fillcolor="#FBF3EC"];
+  e [label="验证与交付\n同底座、同预算强基线 → 组件消融 → 同条件教师比较\n任务质量与差距区间 / 候选多样性 / 资源代价 / 可追溯性\n交付：本地辅助原型；新配方仍须独立核验", fillcolor="#EFEFEF", penwidth=1.5];
+  a -> b -> c -> d -> e;
+}
