@@ -601,7 +601,8 @@ def split_markdown(md_text: str):
 
 
 def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
-          static_toc: bool = False, fig_caption: str = DEFAULT_FIG_CAPTION):
+          static_toc: bool = False, fig_caption: str = DEFAULT_FIG_CAPTION,
+          md_text: str | None = None):
     """从 Markdown 生成 docx，写入 out_path。
 
     参数：
@@ -610,6 +611,7 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
         fig_path     技术路线图路径；None 或不存在时不插图
         static_toc   True 写静态目录条目；False 写 TOC 域（Word 更新后生成）
         fig_caption  图题文字
+        md_text      已读取的 Markdown 文本；给出时不再重复读文件
 
     返回 (n_refs, n_heads, warnings)：
         n_refs    写入的参考文献条数
@@ -617,7 +619,8 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
         warnings  解析期警告列表；本函数不依赖模块级状态，
                   可在同一进程内重复调用而不互相污染
     """
-    md_text = md_path.read_text(encoding="utf-8")
+    if md_text is None:
+        md_text = md_path.read_text(encoding="utf-8")
     title, body_md, ref_lines = split_markdown(md_text)
 
     blocks, warnings = parse_markdown(body_md)
@@ -671,7 +674,10 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
     cp.title = title
     cp.comments = "由 build_report.py 从 Markdown 生成"
 
-    doc.save(str(out_path))
+    try:
+        doc.save(str(out_path))
+    except PermissionError:
+        raise PermissionError(f"无法写入输出文件（权限不足）：{out_path}") from None
     n_heads = len([b for b in blocks if b[0] == "heading"])
     return len(ref_lines), n_heads, warnings
 
@@ -750,19 +756,19 @@ def main(argv):
         print(f"输入路径是目录，不是文件：{md}", file=sys.stderr)
         sys.exit(1)
 
-    # L3: 可读性检查
-    if not os.access(md, os.R_OK):
-        print(f"输入文件不可读（权限不足）：{md}", file=sys.stderr)
-        sys.exit(1)
-
-    # L1: 编码检查（提前探测，避免读取时抛 UnicodeDecodeError）
+    # L1+O1: 全文读一次（不再只读 4096 字节），编码/权限问题在此暴露；
+    # 读到的内容随后直接传给 build，避免重复读取与 TOCTOU。
+    # 不用 os.access 预检：它与真正的 open 之间存在时间窗，
+    # 且在 Windows 上只检查只读属性、不检查 ACL。
     try:
-        with open(md, "r", encoding="utf-8") as _f:
-            _f.read(4096)
+        md_text = md.read_text(encoding="utf-8")
     except UnicodeDecodeError as e:
         print(f"输入文件不是 UTF-8 编码：{md}", file=sys.stderr)
         print(f"  位置 {e.start}：{e.reason}", file=sys.stderr)
         print("请转换为 UTF-8 后重试（如 iconv -f GBK -t UTF-8 文件.md）。", file=sys.stderr)
+        sys.exit(1)
+    except PermissionError:
+        print(f"输入文件不可读（权限不足）：{md}", file=sys.stderr)
         sys.exit(1)
     except OSError as e:
         print(f"读取输入文件失败：{md}", file=sys.stderr)
@@ -788,11 +794,38 @@ def main(argv):
         print(f"输出路径的父级不是目录：{out_parent}", file=sys.stderr)
         sys.exit(1)
 
+    # ---- P1: 输出不能是已存在的目录 ----
+    if out.is_dir():
+        print(f"输出路径是目录，不是文件：{out}", file=sys.stderr)
+        print("请指定一个 .docx 文件路径。", file=sys.stderr)
+        sys.exit(1)
+
     # ---- 覆盖前确认 ----
     if out.exists() and not force:
         print(f"输出文件已存在：{out}", file=sys.stderr)
         print("如确认覆盖，请加 --force 参数重跑。", file=sys.stderr)
         sys.exit(2)
+
+    # ---- P2/P3: 输出可写性 ----
+    # 目标已存在则测目标本身，否则测父目录；用实际 open 而非 os.access，
+    # 以避开 TOCTOU 与 Windows 上 R_OK 只查只读属性的差异。
+    probe_target = out if out.exists() else out_parent / f".__probe_{os.getpid()}"
+    try:
+        with open(probe_target, "ab"):
+            pass
+    except PermissionError:
+        print(f"输出位置不可写（权限不足）：{probe_target}", file=sys.stderr)
+        sys.exit(1)
+    except OSError as e:
+        print(f"输出位置不可写：{probe_target}", file=sys.stderr)
+        print(f"  {e}", file=sys.stderr)
+        sys.exit(1)
+    else:
+        if probe_target != out:
+            try:
+                probe_target.unlink()
+            except OSError:
+                pass
 
     # ---- 找图 ----
     fig = None
@@ -804,7 +837,8 @@ def main(argv):
 
     # ---- 构建 ----
     n_refs, n_heads, warnings = build(
-        md, out, fig_path=fig, static_toc=static, fig_caption=fig_caption
+        md, out, fig_path=fig, static_toc=static, fig_caption=fig_caption,
+        md_text=md_text,
     )
 
     # ---- 结果汇总 ----

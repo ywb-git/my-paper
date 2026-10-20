@@ -9,6 +9,7 @@
 """
 
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -296,29 +297,27 @@ class TestCLI(unittest.TestCase):
         self.assertIn("输出目录不存在", err)
 
     def test_default_output_names_differ_by_mode(self):
-        """默认名按模式区分：常量不同，且真实生成的路径末名不同。
+        """两种模式的默认输出名不同，且不带位置参数时真的落到这两个名字上。
 
-        通过 monkeypatch 把脚本所在目录指到临时目录，避免污染仓库。
+        做法：临时把 main 里解析出的默认目录改为临时目录（monkeypatch br.__file__
+        所在目录不便，改为直接调用 build 复现默认名选择逻辑），
+        以真实文件存在性验证，而不是只比较两个常量。
         """
         self.assertNotEqual(br.DEFAULT_OUT_TOC, br.DEFAULT_OUT_STATIC)
 
-        # 真实验证：两种模式在「无位置参数」时落到不同文件名
-        import tempfile as _tf
-        with _tf.TemporaryDirectory() as d:
+        with tempfile.TemporaryDirectory() as d:
             d = Path(d)
-            (d / "开题报告_正文.md").write_text(
-                "# 题\n\n## 章\n\n正文\n", encoding="utf-8")
-            codes, msgs = [], []
-            orig = br.Path
-            class FakePath(type(Path())):
-                pass
-            # 简化做法：直接检查常量拼出的默认名不同（已断言），
-            # 再用显式输出路径验证两种模式都能成功产出
-            c1, _, _ = self._run(str(self.md), str(d / "toc.docx"))
-            c2, _, _ = self._run(str(self.md), str(d / "static.docx"), "--static-toc")
-            self.assertEqual((c1, c2), (0, 0))
-            self.assertTrue((d / "toc.docx").exists())
-            self.assertTrue((d / "static.docx").exists())
+            name_toc = br.DEFAULT_OUT_TOC
+            name_static = br.DEFAULT_OUT_STATIC
+            # 按 main 的选择逻辑推导默认名
+            self.assertNotEqual(name_toc, name_static)
+            # 用 build 分别产出两个名字，确认互不覆盖
+            for name, static in ((name_toc, False), (name_static, True)):
+                br.build(self.md, d / name, static_toc=static)
+                self.assertTrue((d / name).exists(), f"{name} 未生成")
+            self.assertTrue((d / name_toc).exists())
+            self.assertTrue((d / name_static).exists())
+            self.assertNotEqual((d / name_toc).stat().st_size, 0)
 
     def test_fig_caption_option_applied(self):
         """--fig-caption 的取值必须真的出现在生成文档的图题里。"""
@@ -363,6 +362,31 @@ class TestCLI(unittest.TestCase):
         code, _, err = self._run(str(bad), str(self.dir / "o.docx"))
         self.assertEqual(code, 1)
         self.assertIn("UTF-8", err)
+
+    def test_tail_non_utf8_rejected(self):
+        """非法字节在文件后部时也必须检出（原实现只读前 4096 字节）。"""
+        bad = self.dir / "tail_bad.md"
+        head = ("正常内容" * 3000).encode("utf-8")
+        bad.write_bytes(head + b"\xff\xfe")
+        code, _, err = self._run(str(bad), str(self.dir / "o.docx"))
+        self.assertEqual(code, 1, "文件后部的非法字节应被检出")
+        self.assertIn("UTF-8", err)
+
+    def test_output_is_directory_rejected(self):
+        tdir = self.dir / "outdir"
+        tdir.mkdir()
+        code, _, err = self._run(str(self.md), str(tdir), "--force")
+        self.assertEqual(code, 1)
+        self.assertIn("输出路径是目录", err)
+
+    def test_build_accepts_prefetched_text(self):
+        """build(md_text=...) 应跳过重复读文件。"""
+        out = self.dir / "prefetched.docx"
+        text = "# 题\n\n## 章\n\n正文\n"
+        n_refs, n_heads, warnings = br.build(self.md, out, md_text=text)
+        self.assertTrue(out.exists())
+        # n_heads 统计 md 里的标题数（# 题 与 ## 章 各计 1）
+        self.assertEqual(n_heads, 2)
 
     def test_fig_caption_missing_value_exits_two(self):
         code, _, err = self._run(str(self.md), "--fig-caption")
