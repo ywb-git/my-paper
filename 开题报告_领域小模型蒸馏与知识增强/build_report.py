@@ -41,6 +41,7 @@ from docx.shared import Cm, Pt, RGBColor
 # 页面
 PAGE_W, PAGE_H = Cm(21.0), Cm(29.7)
 MARGIN_TB, MARGIN_LR = Cm(2.54), Cm(3.17)
+HEADER_DIST, FOOTER_DIST = Cm(1.5), Cm(1.75)
 
 # 字号
 SZ_SCHOOL = Pt(22)
@@ -250,6 +251,9 @@ def init_document() -> Document:
         s.page_width, s.page_height = PAGE_W, PAGE_H
         s.top_margin = s.bottom_margin = MARGIN_TB
         s.left_margin = s.right_margin = MARGIN_LR
+        # 页眉/页脚距边界，与唐宁俊范本一致
+        s.header_distance = HEADER_DIST
+        s.footer_distance = FOOTER_DIST
 
     # Normal：与范本一致——正文段落显式设首行缩进 2 字符（firstLineChars=200）
     # 与行距 line=312 auto（=1.3 倍），而不是只靠样式继承。
@@ -456,10 +460,10 @@ def parse_markdown(md_text: str):
             continue
 
 
-        # 有序列表
+        # 有序列表：保留原编号
         m = RE_ORDERED.match(stripped)
         if m:
-            blocks.append(("ordered", m.group(2).strip()))
+            blocks.append(("ordered", (m.group(1), m.group(2).strip())))
             i += 1
             continue
 
@@ -610,8 +614,13 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
 
         elif kind == "ordered":
             p = doc.add_paragraph()
+            apply_body_format(p)
             p.paragraph_format.left_indent = Cm(0.847)
-            add_rich_text(p, payload, size=SZ_BODY, cn=FONT_CN_BODY)
+            p.paragraph_format.first_line_indent = Cm(0)
+            num = payload[0]
+            r = p.add_run(f"{num}. ")
+            set_run_font(r, size=SZ_BODY, cn=FONT_CN_BODY)
+            add_rich_text(p, payload[1], size=SZ_BODY, cn=FONT_CN_BODY)
 
         elif kind == "bullet":
             p = doc.add_paragraph()
@@ -771,6 +780,20 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
     build_cover(doc, title)
     build_toc(doc, static_entries=entries)
     render_blocks(doc, blocks, fig_path=fig_path, fig_caption=fig_caption)
+
+    # 引用越界校验：正文出现的 [n] 必须落在 [1, len(ref_lines)] 内
+    n_refs = len(ref_lines)
+    for kind, payload in blocks:
+        if kind == "para":
+            for num in re.findall(r"\[(\d+)\]", payload):
+                if not (1 <= int(num) <= n_refs):
+                    warnings.append(
+                        f"正文引用 [{num}] 超出参考文献范围（共 {n_refs} 条），"
+                        f"Word 中将显示为「错误！未找到引用源」")
+        elif kind == "heading":
+            for num in re.findall(r"\[(\d+)\]", payload[1]):
+                if not (1 <= int(num) <= n_refs):
+                    warnings.append(f"标题引用 [{num}] 超出参考文献范围（共 {n_refs} 条）")
 
     # 参考文献标题
     hp = doc.add_paragraph(style="Heading 1")

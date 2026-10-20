@@ -301,27 +301,43 @@ class TestCLI(unittest.TestCase):
         self.assertIn("输出目录不存在", err)
 
     def test_default_output_names_differ_by_mode(self):
-        """两种模式的默认输出名不同，且不带位置参数时真的落到这两个名字上。
+        """真正调用 main()，验证不带位置参数时落到两个不同的默认文件名。
 
-        做法：临时把 main 里解析出的默认目录改为临时目录（monkeypatch br.__file__
-        所在目录不便，改为直接调用 build 复现默认名选择逻辑），
-        以真实文件存在性验证，而不是只比较两个常量。
+        用临时目录替换 build_report 模块的 __file__ 所在目录，
+        使 main 内的 here 指向临时目录，从而在临时目录里真实落盘，
+        不污染仓库。
         """
         self.assertNotEqual(br.DEFAULT_OUT_TOC, br.DEFAULT_OUT_STATIC)
 
+        import shutil
         with tempfile.TemporaryDirectory() as d:
             d = Path(d)
-            name_toc = br.DEFAULT_OUT_TOC
-            name_static = br.DEFAULT_OUT_STATIC
-            # 按 main 的选择逻辑推导默认名
-            self.assertNotEqual(name_toc, name_static)
-            # 用 build 分别产出两个名字，确认互不覆盖
-            for name, static in ((name_toc, False), (name_static, True)):
-                br.build(self.md, d / name, static_toc=static)
-                self.assertTrue((d / name).exists(), f"{name} 未生成")
-            self.assertTrue((d / name_toc).exists())
-            self.assertTrue((d / name_static).exists())
-            self.assertNotEqual((d / name_toc).stat().st_size, 0)
+            # 准备 main 需要的默认输入与图
+            (d / "开题报告_正文.md").write_text(
+                "# 题\n\n## 章\n\n正文\n", encoding="utf-8")
+            figsrc = None
+            for cand in ("技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png"):
+                if (HERE / cand).exists():
+                    figsrc = HERE / cand
+                    break
+            if figsrc:
+                shutil.copy(figsrc, d / figsrc.name)
+
+            # 用 patch 把 br.__file__ 指到临时目录，使 here 解析为临时目录
+            from unittest import mock
+            fake_file = str(d / "build_report.py")
+            with mock.patch.object(br, "__file__", fake_file):
+                code1, _, err1 = self._run()                 # 无位置参数 -> TOC 域版
+                code2, _, err2 = self._run("--static-toc")   # 无位置参数 -> 静态目录版
+
+            self.assertEqual(code1, 0, f"TOC 模式失败: {err1}")
+            self.assertEqual(code2, 0, f"静态模式失败: {err2}")
+            toc_path = d / br.DEFAULT_OUT_TOC
+            static_path = d / br.DEFAULT_OUT_STATIC
+            self.assertTrue(toc_path.exists(), f"未生成 {toc_path.name}")
+            self.assertTrue(static_path.exists(), f"未生成 {static_path.name}")
+            self.assertNotEqual(toc_path.name, static_path.name,
+                                "两种模式的默认名不能相同")
 
     def test_fig_caption_option_applied(self):
         """--fig-caption 的取值必须真的出现在生成文档的图题里。"""
