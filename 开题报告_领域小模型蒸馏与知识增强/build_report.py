@@ -12,8 +12,15 @@
 - 参考文献：List Paragraph + 自动编号，无首行缩进
 
 用法：
-    python build_report.py                    # 用默认 md 与默认输出名
-    python build_report.py in.md out.docx     # 指定输入输出
+    python build_report.py                          # TOC 域版 -> 开题报告_格式版.docx
+    python build_report.py --static-toc             # 静态目录版 -> 开题报告_格式版_静态目录.docx
+    python build_report.py in.md out.docx           # 指定输入输出
+    python build_report.py --force                  # 覆盖已存在的输出文件
+
+两种模式的默认输出文件名不同，不会互相覆盖。若目标文件已存在且未加 --force，
+脚本会提示并退出（退出码 2），避免误覆盖。
+
+需要 Python >= 3.10；依赖 python-docx >= 1.0。
 """
 
 from __future__ import annotations
@@ -64,6 +71,13 @@ COVER_FIELDS = [
 ]
 COVER_DATE = ""  # 留空由用户填写；也可写 "2026年11月"
 
+# 默认输出文件名（两种模式分开，避免互相覆盖）
+DEFAULT_OUT_TOC = "开题报告_格式版.docx"
+DEFAULT_OUT_STATIC = "开题报告_格式版_静态目录.docx"
+
+# 图题默认编号（可用 --fig-caption 覆盖）
+DEFAULT_FIG_CAPTION = "图 4-1　技术路线图"
+
 
 # ---------------------------------------------------------------- 字体工具
 
@@ -87,6 +101,12 @@ def set_run_font(run, *, size=None, bold=None, cn=FONT_CN_BODY, en=FONT_EN,
     rfonts.set(qn("w:ascii"), en)
     rfonts.set(qn("w:hAnsi"), en)
     rfonts.set(qn("w:eastAsia"), cn)
+
+
+def _clear_paragraph(paragraph):
+    """清空段落里已有的 run（避免 cell.text="" 留下空 run）。"""
+    for r in list(paragraph.runs):
+        r._element.getparent().remove(r._element)
 
 
 def style_set_font(style, *, size=None, bold=None, cn=FONT_CN_BODY, en=FONT_EN):
@@ -287,11 +307,19 @@ def build_toc(doc: Document, static_entries=None):
 # ---------------------------------------------------------------- Markdown 解析
 
 
+# 解析期警告收集（供 main 汇总输出）
+WARNINGS: list[str] = []
+
+
+def warn(msg: str):
+    """记录一条解析警告。"""
+    WARNINGS.append(msg)
+
+
 RE_HEADING = re.compile(r"^(#{1,4})\s+(.*)$")
 RE_ORDERED = re.compile(r"^(\d+)[.、]\s+(.*)$")
 RE_UNORDERED = re.compile(r"^[-*+]\s+(.*)$")
 RE_TABLE_SEP = re.compile(r"^\|[\s:|-]+\|$")
-RE_BOLD_ONLY = re.compile(r"^\*\*(.+?)\*\*$")
 
 
 def parse_markdown(md_text: str):
@@ -325,6 +353,18 @@ def parse_markdown(md_text: str):
                 cells = [c.strip() for c in lines[j].strip().strip("|").split("|")]
                 if len(cells) == len(header):
                     rows.append(cells)
+                else:
+                    # 补齐或截断到表头列数，并警告（不再静默丢行）
+                    warn(
+                        f"表格第 {j + 1} 行列数 {len(cells)} 与表头 {len(header)} 不一致，"
+                        f"已自动{'补齐' if len(cells) < len(header) else '截断'}："
+                        f"{lines[j].strip()[:60]}"
+                    )
+                    if len(cells) < len(header):
+                        cells = cells + [""] * (len(header) - len(cells))
+                    else:
+                        cells = cells[: len(header)]
+                    rows.append(cells)
                 j += 1
             blocks.append(("table", (header, rows)))
             i = j
@@ -333,6 +373,13 @@ def parse_markdown(md_text: str):
         # 图片占位
         if stripped in ("{{FIG31}}", "{{FIG41}}", "{{FIG}}"):
             blocks.append(("figure", stripped))
+            i += 1
+            continue
+
+        # 未识别的占位符
+        if re.fullmatch(r"\{\{[^}]+\}\}", stripped):
+            warn(f"第 {i + 1} 行有未识别的占位符 {stripped}，将按普通文本输出")
+            blocks.append(("para", stripped))
             i += 1
             continue
 
@@ -417,7 +464,8 @@ def _write_plain_with_refs(paragraph, text, *, size, cn, bold, superscript_refs)
 # ---------------------------------------------------------------- 正文渲染
 
 
-def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None):
+def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
+                  fig_caption: str = DEFAULT_FIG_CAPTION):
     for kind, payload in blocks:
         if kind == "heading":
             level, text = payload
@@ -432,14 +480,8 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None):
                          bold=True, cn=FONT_CN_HEAD)
 
         elif kind == "para":
-            text = payload
-            mb = RE_BOLD_ONLY.match(text)
             p = doc.add_paragraph()
-            if mb:
-                # 整段加粗（如「**其一，……**」的开头）
-                add_rich_text(p, text, size=SZ_BODY, cn=FONT_CN_BODY)
-            else:
-                add_rich_text(p, text, size=SZ_BODY, cn=FONT_CN_BODY)
+            add_rich_text(p, payload, size=SZ_BODY, cn=FONT_CN_BODY)
 
         elif kind == "ordered":
             p = doc.add_paragraph()
@@ -458,9 +500,8 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None):
             t = doc.add_table(rows=1, cols=len(header))
             t.style = "Table Grid"
             for idx, h in enumerate(header):
-                cell = t.rows[0].cells[idx]
-                cell.text = ""
-                cp = cell.paragraphs[0]
+                cp = t.rows[0].cells[idx].paragraphs[0]
+                _clear_paragraph(cp)
                 cp.paragraph_format.first_line_indent = Cm(0)
                 cp.paragraph_format.line_spacing = 1.0
                 set_run_font(cp.add_run(h.replace("**", "")), size=Pt(10.5),
@@ -468,8 +509,8 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None):
             for row in rows:
                 cells = t.add_row().cells
                 for idx, val in enumerate(row):
-                    cells[idx].text = ""
                     cp = cells[idx].paragraphs[0]
+                    _clear_paragraph(cp)
                     cp.paragraph_format.first_line_indent = Cm(0)
                     cp.paragraph_format.line_spacing = 1.0
                     set_run_font(cp.add_run(val.replace("**", "")), size=Pt(10.5),
@@ -493,7 +534,7 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None):
                 cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
                 cap.paragraph_format.first_line_indent = Cm(0)
                 cap.paragraph_format.space_after = Pt(10)
-                set_run_font(cap.add_run("图 4-1　技术路线图"), size=Pt(10.5), cn=FONT_CN_BODY)
+                set_run_font(cap.add_run(fig_caption), size=Pt(10.5), cn=FONT_CN_BODY)
 
 
 # ---------------------------------------------------------------- 参考文献
@@ -546,7 +587,7 @@ def split_markdown(md_text: str):
 
 
 def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
-          static_toc: bool = False):
+          static_toc: bool = False, fig_caption: str = DEFAULT_FIG_CAPTION):
     md_text = md_path.read_text(encoding="utf-8")
     title, body_md, ref_lines = split_markdown(md_text)
 
@@ -566,7 +607,7 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
     doc = init_document()
     build_cover(doc, title)
     build_toc(doc, static_entries=entries)
-    render_blocks(doc, blocks, fig_path=fig_path)
+    render_blocks(doc, blocks, fig_path=fig_path, fig_caption=fig_caption)
 
     # 参考文献标题
     hp = doc.add_paragraph(style="Heading 1")
@@ -594,34 +635,86 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
         settings.append(update)
     update.set(qn("w:val"), "true")
 
+    # 文档属性（避免 author 默认为 python-docx）
+    cp = doc.core_properties
+    cp.author = ""
+    cp.last_modified_by = ""
+    cp.title = title
+    cp.comments = "由 build_report.py 从 Markdown 生成"
+
     doc.save(str(out_path))
     return len(ref_lines), len([b for b in blocks if b[0] == "heading"])
 
 
 def main(argv):
     here = Path(__file__).resolve().parent
-    static = "--static-toc" in argv
-    args = [a for a in argv[1:] if not a.startswith("--")]
-    md = Path(args[0]) if len(args) > 0 else here / "开题报告_正文.md"
-    out = Path(args[1]) if len(args) > 1 else here / "开题报告_格式版.docx"
 
+    # ---- 参数解析 ----
+    flags = {a for a in argv[1:] if a.startswith("--")}
+    positional = [a for a in argv[1:] if not a.startswith("--")]
+
+    known = {"--static-toc", "--force", "--help", "-h"}
+    unknown = flags - known
+    if unknown or "--help" in flags or "-h" in flags:
+        if unknown:
+            print(f"未知参数：{', '.join(sorted(unknown))}", file=sys.stderr)
+        print(__doc__.strip().split("用法：")[-1].strip(), file=sys.stderr)
+        sys.exit(2 if unknown else 0)
+
+    static = "--static-toc" in flags
+    force = "--force" in flags
+
+    if len(positional) > 2:
+        print(f"参数过多：只接受「输入 md」与「输出 docx」两个位置参数，"
+              f"实际收到 {len(positional)} 个", file=sys.stderr)
+        sys.exit(2)
+
+    md = Path(positional[0]) if len(positional) >= 1 else here / "开题报告_正文.md"
+
+    # 两种模式的默认输出名分开，避免互相覆盖
+    if len(positional) >= 2:
+        out = Path(positional[1])
+    else:
+        out = here / (DEFAULT_OUT_STATIC if static else DEFAULT_OUT_TOC)
+
+    # ---- 输入检查 ----
     if not md.exists():
-        sys.exit(f"找不到输入文件：{md}")
+        print(f"找不到输入文件：{md}", file=sys.stderr)
+        sys.exit(1)
 
+    # ---- 覆盖前确认 ----
+    if out.exists() and not force:
+        print(f"输出文件已存在：{out}", file=sys.stderr)
+        print("如确认覆盖，请加 --force 参数重跑。", file=sys.stderr)
+        sys.exit(2)
+
+    # ---- 找图 ----
     fig = None
     for cand in ("技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png"):
-        p = here / cand
-        if p.exists():
-            fig = p
+        cand_path = here / cand
+        if cand_path.exists():
+            fig = cand_path
             break
 
+    # ---- 构建 ----
+    WARNINGS.clear()
     n_refs, n_heads = build(md, out, fig_path=fig, static_toc=static)
+
+    # ---- 结果汇总 ----
     print(f"[ok] {out}")
+    print(f"     模式：{'静态目录' if static else 'TOC 域'}")
     print(f"     标题数 {n_heads}，参考文献 {n_refs} 条")
     if fig:
         print(f"     已嵌入图：{fig.name}")
     else:
         print("     ！未找到技术路线图，图片位置留空")
+
+    if WARNINGS:
+        print(f"\n[警告] 共 {len(WARNINGS)} 条：")
+        for w in WARNINGS:
+            print(f"   - {w}")
+    else:
+        print("     无解析警告")
 
 
 if __name__ == "__main__":
