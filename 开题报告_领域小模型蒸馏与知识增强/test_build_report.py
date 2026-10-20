@@ -612,5 +612,91 @@ class TestCrossref(unittest.TestCase):
         self.fail("未找到正文段落")
 
 
+class TestPreviouslyUncovered(unittest.TestCase):
+    """子代理 CR 指出的未覆盖路径。"""
+
+    def test_ordered_list_keeps_number(self):
+        """有序列表必须保留原编号（原先序号丢失）。"""
+        blocks, _ = br.parse_markdown("1. 第一步\n2. 第二步\n")
+        ordered = [p for k, p in blocks if k == "ordered"]
+        self.assertEqual(ordered, [("1", "第一步"), ("2", "第二步")])
+
+    def test_citation_out_of_range_warns(self):
+        """正文引用超出文献条数时应告警。"""
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            md = d / "t.md"
+            md.write_text("# 题\n\n## 章\n\n引用[99]与[1]。\n\n## 参考文献\n\n[1] A.\n",
+                          encoding="utf-8")
+            _, _, warnings = br.build(md, d / "o.docx")
+            self.assertTrue(any("99" in w and "超出" in w for w in warnings),
+                            f"应告警引用越界，实际 {warnings}")
+
+    def test_title_placeholder_warns(self):
+        """标题内的未知占位符也要告警（原代码在标题分支直接 continue）。"""
+        _, warnings = br.parse_markdown("## 标题{{FIG99}}\n")
+        self.assertTrue(any("未识别" in w for w in warnings))
+
+    def test_table_cell_placeholder_warns(self):
+        """表格单元格内的未知占位符也要告警。"""
+        _, w1 = br.parse_markdown("| {{FIG99}} |\n|---|\n| a |\n")
+        self.assertTrue(any("未识别" in w for w in w1), "表格首行未告警")
+        _, w2 = br.parse_markdown("| a |\n|---|\n| {{FIG99}} |\n")
+        self.assertTrue(any("未识别" in w for w in w2), "表格数据行未告警")
+
+    def test_known_placeholder_inline_not_warned(self):
+        """行内已知占位符 {{FIG}} 不应被误报为未识别。"""
+        _, warnings = br.parse_markdown("见图 {{FIG}} 所示。\n")
+        self.assertEqual([w for w in warnings if "未识别" in w], [],
+                         f"已知占位符被误报: {warnings}")
+
+    def test_usage_text_tracks_constants(self):
+        """--help 文案必须与当前常量一致（防漂移）。"""
+        txt = br.usage_text()
+        self.assertIn(br.DEFAULT_OUT_STATIC, txt)
+        self.assertIn(br.DEFAULT_FIG_CAPTION, txt)
+
+    def test_build_fig_caption_runtime_default(self):
+        """build() 不带 fig_caption 时应读取当时常量，而非定义时快照。"""
+        import tempfile
+        old = br.DEFAULT_FIG_CAPTION
+        try:
+            br.DEFAULT_FIG_CAPTION = "图 8-8　运行时默认"
+            with tempfile.TemporaryDirectory() as d:
+                d = Path(d)
+                md = d / "t.md"
+                md.write_text("# 题\n\n## 章\n\n{{FIG}}\n", encoding="utf-8")
+                fig = None
+                for cand in ("技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png"):
+                    if (HERE / cand).exists():
+                        fig = HERE / cand
+                        break
+                if fig is None:
+                    raise unittest.SkipTest("缺少技术路线图")
+                out = d / "o.docx"
+                br.build(md, out, fig_path=fig)
+                doc = Document(str(out))
+                caps = [p.text.strip() for p in doc.paragraphs if p.text.strip().startswith("图 ")]
+                self.assertIn("图 8-8　运行时默认", caps,
+                              f"未使用运行时常量，实际 {caps}")
+        finally:
+            br.DEFAULT_FIG_CAPTION = old
+
+    def test_single_dash_arg_rejected(self):
+        """单破折号参数（如 -x）应按未知参数拒绝，而非当作文件路径。"""
+        import contextlib, io, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            out, err = io.StringIO(), io.StringIO()
+            code = 0
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+                try:
+                    br.main(["build_report.py", "-x"])
+                except SystemExit as e:
+                    code = e.code if isinstance(e.code, int) else 1
+            self.assertEqual(code, 2, f"应退出码 2，实际 {code}")
+            self.assertIn("未知参数", err.getvalue())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
