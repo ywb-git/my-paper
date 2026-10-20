@@ -1,0 +1,21 @@
+digraph G {
+  graph [rankdir=TB, nodesep=0.30, ranksep=0.34, bgcolor="white"];
+  node  [shape=box, style="rounded,filled", fontname="SimSun", fontsize=10.5,
+         fillcolor="#FFFFFF", color="#444444", penwidth=1.0, margin="0.20,0.09", width=4.6];
+  edge  [color="#555555", arrowsize=0.75, penwidth=1.1];
+
+  a [label="阶段一　可行性验证\n生成器跑通 → 测显存与批量上限\n决策模型能否处理结构文本 → 判定是否继续", fillcolor="#EDF3FA"];
+
+  b [label="阶段二　序列化与判断问题（内容 1）\n三种序列化：完整 CIF ／ 结构描述模板 ／ 混合\n↓\n判断问题集：物理合理性·体系符合·热力学可能·文献报道\n↓\n小规模人工核验，估计基线准确率", fillcolor="#EDF3FA"];
+
+  c [label="阶段三　门控训练与校准（内容 2）\n训练数据：公开结构库 + 判据分级标注（仅强否定/强支持入训）\n↓\n轻量适配 → 温度缩放 → 保形预测\n↓\n对照：不训练基线 ／ 代理模型门控（复现既有工作）", fillcolor="#F2F7EE"];
+
+  d [label="阶段四　混合推理与集成（内容 3）\n本地判断 → 置信不足则升级云端\n↓\n降级机制·一致性评估·成本—准确率权衡", fillcolor="#FBF3EC"];
+
+  e [label="系统输出：候选结构 ＋ 接受概率 ＋ 保形接受集", fillcolor="#EFEFEF", penwidth=1.6];
+
+  f [label="评测：LeMat-GenBench 公开基准\n（固定生成器·固定预算·同一标注）", shape=note, fillcolor="#FFFDF0", fontsize=9.5];
+
+  a -> b -> c -> d -> e;
+  f -> e [style=dashed, label="  评测", fontsize=9];
+}
