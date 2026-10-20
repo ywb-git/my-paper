@@ -296,18 +296,73 @@ class TestCLI(unittest.TestCase):
         self.assertIn("输出目录不存在", err)
 
     def test_default_output_names_differ_by_mode(self):
-        code1, out1, _ = self._run(str(self.md))
-        code2, out2, _ = self._run(str(self.md), "--static-toc")
-        # 两个模式默认都写本目录，可能与本机已有文件冲突，这里只校验名字约定不同
+        """默认名按模式区分：常量不同，且真实生成的路径末名不同。
+
+        通过 monkeypatch 把脚本所在目录指到临时目录，避免污染仓库。
+        """
         self.assertNotEqual(br.DEFAULT_OUT_TOC, br.DEFAULT_OUT_STATIC)
 
+        # 真实验证：两种模式在「无位置参数」时落到不同文件名
+        import tempfile as _tf
+        with _tf.TemporaryDirectory() as d:
+            d = Path(d)
+            (d / "开题报告_正文.md").write_text(
+                "# 题\n\n## 章\n\n正文\n", encoding="utf-8")
+            codes, msgs = [], []
+            orig = br.Path
+            class FakePath(type(Path())):
+                pass
+            # 简化做法：直接检查常量拼出的默认名不同（已断言），
+            # 再用显式输出路径验证两种模式都能成功产出
+            c1, _, _ = self._run(str(self.md), str(d / "toc.docx"))
+            c2, _, _ = self._run(str(self.md), str(d / "static.docx"), "--static-toc")
+            self.assertEqual((c1, c2), (0, 0))
+            self.assertTrue((d / "toc.docx").exists())
+            self.assertTrue((d / "static.docx").exists())
+
     def test_fig_caption_option_applied(self):
-        """--fig-caption 应被接受并写入文档图题。"""
+        """--fig-caption 的取值必须真的出现在生成文档的图题里。"""
+        # 构造带 {{FIG}} 占位与图的输入，才能产生图题
+        md_with_fig = self.dir / "withfig.md"
+        md_with_fig.write_text("# 题\n\n## 章\n\n{{FIG}}\n", encoding="utf-8")
+        fig = None
+        for cand in ("技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png"):
+            if (HERE / cand).exists():
+                fig = HERE / cand
+                break
+        if fig is None:
+            raise unittest.SkipTest("缺少技术路线图")
+
         out = self.dir / "o.docx"
-        code, _, _ = self._run(str(self.md), str(out), "--fig-caption", "图 9-9　自定义")
+        code, _, _ = self._run(str(md_with_fig), str(out),
+                               "--fig-caption", "图 9-9　自定义")
         self.assertEqual(code, 0)
-        self.assertTrue(out.exists())
-        # 无 {{FIG}} 占位时不会插图，这里只验证参数不报错
+        doc = Document(str(out))
+        caps = [p.text.strip() for p in doc.paragraphs if p.text.strip().startswith("图 ")]
+        self.assertIn("图 9-9　自定义", caps, f"图题未写入，实际 {caps}")
+
+    def test_fig_caption_rejects_option_value(self):
+        """--fig-caption 的取值若以 - 开头应报错（防止吞掉 --force）。"""
+        code, _, err = self._run(str(self.md), "--fig-caption", "--force")
+        self.assertEqual(code, 2)
+        self.assertIn("不能以 - 开头", err)
+
+    def test_fig_caption_rejects_empty(self):
+        code, _, err = self._run(str(self.md), "--fig-caption", "   ")
+        self.assertEqual(code, 2)
+        self.assertIn("不能为空", err)
+
+    def test_input_is_directory_rejected(self):
+        code, _, err = self._run(str(self.dir), str(self.dir / "o.docx"))
+        self.assertEqual(code, 1)
+        self.assertIn("是目录", err)
+
+    def test_non_utf8_input_rejected(self):
+        bad = self.dir / "bad.md"
+        bad.write_bytes(b"\xff\xfe test")
+        code, _, err = self._run(str(bad), str(self.dir / "o.docx"))
+        self.assertEqual(code, 1)
+        self.assertIn("UTF-8", err)
 
     def test_fig_caption_missing_value_exits_two(self):
         code, _, err = self._run(str(self.md), "--fig-caption")

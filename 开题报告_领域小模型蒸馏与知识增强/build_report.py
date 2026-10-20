@@ -25,6 +25,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -601,6 +602,21 @@ def split_markdown(md_text: str):
 
 def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
           static_toc: bool = False, fig_caption: str = DEFAULT_FIG_CAPTION):
+    """从 Markdown 生成 docx，写入 out_path。
+
+    参数：
+        md_path      输入 Markdown 路径（须为 UTF-8）
+        out_path     输出 docx 路径（父目录须已存在）
+        fig_path     技术路线图路径；None 或不存在时不插图
+        static_toc   True 写静态目录条目；False 写 TOC 域（Word 更新后生成）
+        fig_caption  图题文字
+
+    返回 (n_refs, n_heads, warnings)：
+        n_refs    写入的参考文献条数
+        n_heads   渲染的标题个数
+        warnings  解析期警告列表；本函数不依赖模块级状态，
+                  可在同一进程内重复调用而不互相污染
+    """
     md_text = md_path.read_text(encoding="utf-8")
     title, body_md, ref_lines = split_markdown(md_text)
 
@@ -675,7 +691,22 @@ def main(argv):
             if j + 1 >= len(args):
                 print("--fig-caption 缺少取值", file=sys.stderr)
                 sys.exit(2)
-            fig_caption = args[j + 1]
+            val = args[j + 1]
+            # K1: 取值不得是另一个选项，否则会把 --force 等吞掉
+            if val.startswith("-"):
+                print(f"--fig-caption 的取值不能以 - 开头：{val!r}", file=sys.stderr)
+                print("如需以 - 开头，请把图题写在配置常量 DEFAULT_FIG_CAPTION 里。",
+                      file=sys.stderr)
+                sys.exit(2)
+            # K3: 不接受空串或全空白
+            if not val.strip():
+                print("--fig-caption 的取值不能为空", file=sys.stderr)
+                sys.exit(2)
+            # K2: 重复传入时告警（后者生效）
+            if fig_caption != DEFAULT_FIG_CAPTION:
+                print(f"[警告] --fig-caption 重复传入，后者覆盖前者：{fig_caption!r} -> {val!r}",
+                      file=sys.stderr)
+            fig_caption = val
             j += 2
             continue
         if a.startswith("--") or a in ("-h",):
@@ -712,6 +743,30 @@ def main(argv):
     # ---- 输入检查 ----
     if not md.exists():
         print(f"找不到输入文件：{md}", file=sys.stderr)
+        sys.exit(1)
+
+    # L2: 输入必须是文件而非目录
+    if md.is_dir():
+        print(f"输入路径是目录，不是文件：{md}", file=sys.stderr)
+        sys.exit(1)
+
+    # L3: 可读性检查
+    if not os.access(md, os.R_OK):
+        print(f"输入文件不可读（权限不足）：{md}", file=sys.stderr)
+        sys.exit(1)
+
+    # L1: 编码检查（提前探测，避免读取时抛 UnicodeDecodeError）
+    try:
+        with open(md, "r", encoding="utf-8") as _f:
+            _f.read(4096)
+    except UnicodeDecodeError as e:
+        print(f"输入文件不是 UTF-8 编码：{md}", file=sys.stderr)
+        print(f"  位置 {e.start}：{e.reason}", file=sys.stderr)
+        print("请转换为 UTF-8 后重试（如 iconv -f GBK -t UTF-8 文件.md）。", file=sys.stderr)
+        sys.exit(1)
+    except OSError as e:
+        print(f"读取输入文件失败：{md}", file=sys.stderr)
+        print(f"  {e}", file=sys.stderr)
         sys.exit(1)
 
     # ---- G2: 输入输出同路径会销毁输入，必须拒绝 ----
