@@ -76,7 +76,7 @@ DEFAULT_OUT_TOC = "开题报告.docx"
 DEFAULT_OUT_STATIC = "开题报告_静态目录.docx"
 
 # 图题默认编号（可用 --fig-caption 覆盖）
-DEFAULT_FIG_CAPTION = "图 4-1　技术路线图"
+DEFAULT_FIG_CAPTION = "图 3-1　技术路线图"
 
 # 命令行用法（--help 直接打印此常量，不再从 __doc__ 切割）
 USAGE = """用法：
