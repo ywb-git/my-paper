@@ -12,8 +12,8 @@
 - 参考文献：List Paragraph + 自动编号，无首行缩进
 
 用法：
-    python build_report.py                          # TOC 域版 -> 开题报告_格式版.docx
-    python build_report.py --static-toc             # 静态目录版 -> 开题报告_格式版_静态目录.docx
+    python build_report.py                          # TOC 域版 -> 开题报告.docx
+    python build_report.py --static-toc             # 静态目录版 -> 开题报告_静态目录.docx
     python build_report.py in.md out.docx           # 指定输入输出
     python build_report.py --force                  # 覆盖已存在的输出文件
 
@@ -72,8 +72,8 @@ COVER_FIELDS = [
 COVER_DATE = ""  # 留空由用户填写；也可写 "2026年11月"
 
 # 默认输出文件名（两种模式分开，避免互相覆盖）
-DEFAULT_OUT_TOC = "开题报告_格式版.docx"
-DEFAULT_OUT_STATIC = "开题报告_格式版_静态目录.docx"
+DEFAULT_OUT_TOC = "开题报告.docx"
+DEFAULT_OUT_STATIC = "开题报告_静态目录.docx"
 
 # 图题默认编号（可用 --fig-caption 覆盖）
 DEFAULT_FIG_CAPTION = "图 4-1　技术路线图"
