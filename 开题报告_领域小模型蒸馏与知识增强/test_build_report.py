@@ -135,10 +135,14 @@ class TestBuildOutput(unittest.TestCase):
                               f"标题出现非黑色 {col.rgb}")
 
     def test_body_style(self):
+        """样式级只管字号与行距；首行缩进已下放到段落级（含 firstLineChars）。"""
         n = self.doc.styles["Normal"]
         self.assertEqual(Emu(n.font.size).pt, 12.0)
-        self.assertAlmostEqual(Emu(n.paragraph_format.first_line_indent).cm, 0.847, places=2)
         self.assertEqual(n.paragraph_format.line_spacing, 1.3)
+        # 首行缩进不再放在样式级：正文段落由 apply_body_format 逐个设置，
+        # 样式级重复设置会被段落级覆盖，留在样式里只会误导。
+        self.assertIsNone(n.paragraph_format.first_line_indent,
+                          "Normal 样式不应再设 first_line_indent")
 
     def test_reference_numbering_continuous(self):
         import re
@@ -492,6 +496,51 @@ class TestCrossref(unittest.TestCase):
                  for e in self.doc.element.body.iter(qn("w:bookmarkStart"))]
         ref_bm = [n for n in names if n and n.startswith("_Ref_ref")]
         self.assertEqual(len(ref_bm), len(set(ref_bm)), "书签名不得重复")
+
+    def test_reference_hanging_indent_real(self):
+        """参考文献必须是真悬挂缩进：left 与 hanging 同时存在，且无 firstLine。"""
+        from docx.oxml.ns import qn
+        target = None
+        for p in self.doc.paragraphs:
+            if p.text.strip().startswith("[1]"):
+                target = p
+                break
+        self.assertIsNotNone(target, "未找到第一条参考文献")
+        ppr = target._p.find(qn("w:pPr"))
+        ind = ppr.find(qn("w:ind"))
+        self.assertIsNotNone(ind, "参考文献缺少 w:ind")
+        self.assertEqual(ind.get(qn("w:left")), "480")
+        self.assertEqual(ind.get(qn("w:hanging")), "480",
+                         "hanging 必须为正数才能形成悬挂缩进")
+        self.assertIsNone(ind.get(qn("w:firstLine")),
+                          "firstLine 与 hanging 互斥，不应同时存在")
+
+    def test_body_paragraph_indent_chars(self):
+        """正文段落首行缩进须带 firstLineChars=200（中文 2 字符）。"""
+        from docx.oxml.ns import qn
+        for p in self.doc.paragraphs:
+            if p.style.name == "Normal" and len(p.text.strip()) > 60 \
+                    and not p.text.strip().startswith("["):
+                ppr = p._p.find(qn("w:pPr"))
+                ind = ppr.find(qn("w:ind")) if ppr is not None else None
+                self.assertIsNotNone(ind)
+                self.assertEqual(ind.get(qn("w:firstLineChars")), "200")
+                self.assertEqual(ind.get(qn("w:firstLine")), "480")
+                return
+        self.fail("未找到正文段落")
+
+    def test_line_spacing_encoded_as_multiple(self):
+        """行距须用 line=312 + lineRule=auto（1.3 倍），不能是固定 twips。"""
+        from docx.oxml.ns import qn
+        for p in self.doc.paragraphs:
+            if p.style.name == "Normal" and len(p.text.strip()) > 60:
+                ppr = p._p.find(qn("w:pPr"))
+                sp = ppr.find(qn("w:spacing")) if ppr is not None else None
+                self.assertIsNotNone(sp)
+                self.assertEqual(sp.get(qn("w:line")), "312")
+                self.assertEqual(sp.get(qn("w:lineRule")), "auto")
+                return
+        self.fail("未找到正文段落")
 
 
 if __name__ == "__main__":

@@ -249,12 +249,14 @@ def init_document() -> Document:
         s.top_margin = s.bottom_margin = MARGIN_TB
         s.left_margin = s.right_margin = MARGIN_LR
 
-    # Normal
+    # Normal：与范本一致——正文段落显式设首行缩进 2 字符（firstLineChars=200）
+    # 与行距 line=312 auto（=1.3 倍），而不是只靠样式继承。
     normal = doc.styles["Normal"]
     style_set_font(normal, size=SZ_BODY, cn=FONT_CN_BODY, en=FONT_EN)
     pf = normal.paragraph_format
     pf.line_spacing = BODY_LINE_SPACING
-    pf.first_line_indent = BODY_INDENT
+    # 首行缩进不放样式级：正文段落由 apply_body_format 逐个显式设置（含 firstLineChars），
+    # 样式级再设一次会被段落级覆盖，留在样式里只会误导。
     pf.space_before = Pt(0)
     pf.space_after = Pt(0)
 
@@ -473,6 +475,55 @@ def parse_markdown(md_text: str):
 RE_INLINE = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\^\{[^}]*\}|\$\$?[^$]+\$\$?)")
 
 
+def apply_hanging_indent(paragraph, *, left_twips: int = 480,
+                         hanging_twips: int = 480):
+    """给参考文献段落设置真正的悬挂缩进。
+
+    直接写 w:ind 的 hanging 与 left：首行从 left-hanging 处起，后续行缩进 left。
+    不用 python-docx 的 hanging_indent，因为它与已设的 left_indent 组合时会
+    生成 firstLine=0（首行不缩进），得不到悬挂效果。
+    """
+    ppr = paragraph._p.get_or_add_pPr()
+    ind = ppr.find(qn("w:ind"))
+    if ind is None:
+        ind = OxmlElement("w:ind")
+        ppr.append(ind)
+    # firstLine 与 hanging 互斥，须清掉 firstLine*
+    for a in ("w:firstLine", "w:firstLineChars"):
+        if ind.get(qn(a)) is not None:
+            del ind.attrib[qn(a)]
+    ind.set(qn("w:left"), str(left_twips))
+    ind.set(qn("w:leftChars"), "0")
+    ind.set(qn("w:hanging"), str(hanging_twips))
+    ind.set(qn("w:hangingChars"), "200")
+
+
+def apply_body_format(paragraph):
+    """给正文段落显式设置首行缩进 2 字符与 1.3 倍行距（与范本一致）。
+
+    范本的每个正文段落都带 pPr/ind[firstLine=480, firstLineChars=200]
+    与 pPr/spacing[line=312, lineRule=auto]，而不是仅靠 Normal 样式继承。
+    """
+    ppr = paragraph._p.get_or_add_pPr()
+
+    # 首行缩进：firstLineChars 是中文环境下的字符单位（200 = 2 字符）
+    ind = ppr.find(qn("w:ind"))
+    if ind is None:
+        ind = OxmlElement("w:ind")
+        ppr.append(ind)
+    ind.set(qn("w:firstLine"), "480")
+    ind.set(qn("w:firstLineChars"), "200")
+
+    # Word 的「多倍行距」用 line=240*n 编码：240 为 1 倍，312 = 240*1.3 即 1.3 倍。
+    # 必须配 lineRule=auto，否则 312 会被当作固定 twips 值解释。
+    sp = ppr.find(qn("w:spacing"))
+    if sp is None:
+        sp = OxmlElement("w:spacing")
+        ppr.append(sp)
+    sp.set(qn("w:line"), "312")
+    sp.set(qn("w:lineRule"), "auto")
+
+
 def add_rich_text(paragraph, text: str, *, size=SZ_BODY, cn=FONT_CN_BODY, base_bold=False,
                   superscript_refs=True):
     """写入带 **粗体**、`代码`、上标引用 [n] 的文本。
@@ -546,6 +597,7 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
 
         elif kind == "para":
             p = doc.add_paragraph()
+            apply_body_format(p)
             add_rich_text(p, payload, size=SZ_BODY, cn=FONT_CN_BODY)
 
         elif kind == "ordered":
@@ -617,10 +669,8 @@ def render_references(doc: Document, ref_lines: list[str]):
     for idx, line in enumerate(ref_lines, 1):
         text = re.sub(r"^\[\d+\]\s*", "", line).strip()
         p = doc.add_paragraph()
-        p.paragraph_format.first_line_indent = Cm(0)
-        p.paragraph_format.left_indent = Cm(0.847)
-        p.paragraph_format.hanging_indent = Cm(0.847)
         p.paragraph_format.line_spacing = BODY_LINE_SPACING
+        apply_hanging_indent(p, left_twips=480, hanging_twips=480)
         # 编号与正文合并到同一书签范围，使 REF 引用显示为「[3]」
         add_bookmark(p, ref_bookmark_name(idx), 1000 + idx)
         set_run_font(p.add_run(f"[{idx}] {text}"), size=Pt(10.5), cn=FONT_CN_BODY)
