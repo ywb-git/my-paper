@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V3 方向简介 · 面向合金配方辅助设计的分约束效用选样与小模型蒸馏</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --ink2:#4a4a4a; --ink3:#767676;
+    --bg:#fbfaf8; --card:#ffffff; --line:#e6e2dc;
+    --accent:#2f6f5e; --accent-bg:#eef5f2;
+    --warn:#a8632a; --warn-bg:#fdf3ea;
+    --blue:#2c5a8a; --blue-bg:#eef3f9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.8; -webkit-font-smoothing:antialiased;
+    padding:0 20px;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:56px 0 96px}
+
+  .hero{margin-bottom:48px;padding-bottom:28px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:13px;letter-spacing:.14em;color:var(--ink3);margin-bottom:14px}
+  h1{font-size:25px;line-height:1.45;font-weight:700;letter-spacing:-.01em;margin-bottom:16px}
+  .lede{
+    font-size:17px;line-height:1.75;color:var(--ink);
+    border-left:3px solid var(--accent);padding-left:16px;margin-bottom:20px;
+  }
+  .lede strong{background:linear-gradient(transparent 62%, #d9ece5 62%);padding:0 2px}
+  .meta{font-size:13px;color:var(--ink3);display:flex;gap:18px;flex-wrap:wrap}
+  .meta span{border-left:2px solid var(--line);padding-left:10px}
+
+  section{margin-bottom:44px}
+  h2{font-size:13px;letter-spacing:.12em;color:var(--ink3);
+     font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+  h2::after{content:"";flex:1;height:1px;background:var(--line)}
+  p{font-size:15.5px;color:var(--ink2);margin-bottom:14px;text-align:justify}
+  p:last-child{margin-bottom:0}
+  strong{color:var(--ink);font-weight:600}
+
+  .flow{margin:20px 0}
+  .step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:none}
+  .step .num{
+    flex:0 0 28px;height:28px;border-radius:50%;
+    background:var(--ink);color:#fff;font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step .body{flex:1}
+  .step .body b{display:block;font-size:15.5px;margin-bottom:4px}
+  .step .body span{font-size:14.5px;color:var(--ink2)}
+
+  table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14.5px;background:var(--card)}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--accent-bg);font-weight:600;font-size:13px;color:var(--accent)}
+  td{color:var(--ink2)}
+  tr:last-child td{border-bottom:none}
+
+  .note{
+    background:var(--blue-bg);border-left:3px solid var(--blue);
+    padding:16px 20px;border-radius:0 6px 6px 0;margin:18px 0;
+  }
+  .note p{color:var(--ink);font-size:14.5px;margin:0}
+
+  .warn{
+    background:var(--warn-bg);border-left:3px solid var(--warn);
+    padding:16px 20px;border-radius:0 6px 6px 0;margin:18px 0;
+  }
+  .warn p{color:var(--ink);font-size:14.5px;margin:0}
+
+  .quad{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+  @media(max-width:640px){.quad{grid-template-columns:1fr}}
+  .quad .item{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+  .quad .item b{display:block;font-size:14.5px;margin-bottom:4px}
+  .quad .item span{font-size:13.5px;color:var(--ink2)}
+
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);
+         font-size:12.5px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">开题报告 V3 · 方向简介</div>
+    <h1>面向合金配方辅助设计的分约束效用选样与小模型蒸馏方法研究</h1>
+    <p class="lede">
+      这个课题要做的事：从有限的训练样本中挑出一部分教学示范，使<strong>本地小模型能稳定执行合金成分约束</strong>，并在挑选时限制其他约束组的退化。
+    </p>
+    <div class="meta">
+      <span>应用场景：合金配方辅助生成</span>
+      <span>方法：分约束选样 + 序列级任务蒸馏</span>
+      <span>部署条件：本地单卡</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>一、研究问题与作用</h2>
+    <p>
+      本课题研究在有限教学预算下，本地小型语言模型应当学习哪些示范，才能在合金配方辅助任务中稳定执行成分约束，并保持记录可追溯。
+    </p>
+    <p>
+      这里的「教学数据选择」指：从大量候选训练样本中挑出一部分用于微调，而不是把所有样本都喂给模型。现有方法通常按质量、难度、多样性或梯度影响给每个样本算一个总分，再按分数高低挑选——这就是「单一效用分数」。压成一个分数会掩盖约束之间的取舍：一个示范可能改善锁定项表现，同时使总量平衡变差。当不同约束的影响方向不一致时，单一分数无法表达这种差异，也无法在选样阶段限制副作用。
+    </p>
+    <div class="note">
+      <p>
+        核心问题是：能否用逐约束的收益与副作用表示替代单一效用分数，并在预算与来源限制内完成教学子集选择。
+      </p>
+    </div>
+    <p><strong>实际作用。</strong>完成后的直接产出有三项：</p>
+    <p>
+      一是可本地运行的配方辅助原型。输入为自然语言要求、允许元素与比例限制，输出为候选成分、操作说明、来源标识与检查结果；系统状态区分「可核验冲突」「输入待澄清」「证据不足」「预算内未找到」。
+    </p>
+    <p>
+      二是一套分约束教学选样流程，包括来源隔离的诊断数据结构、教学样本对各约束组的收益矩阵（一张「样本 × 约束组」的影响表，每格表示该样本对某个约束组的预计改善或副作用），以及带固定参照保护的组合选样。该流程不依赖特定底座模型，可复用于其他多约束辅助生成任务。
+    </p>
+    <p>
+      三是可复现的对照与消融结果（消融指去掉某个组件后重跑，看性能下降多少，用来确认该组件是否必要）。明确方法在什么条件下有效、在什么条件下失效，包括矩阵预测失配时的退化路径与相应成本。
+    </p>
+  </section>
+
+  <section>
+    <h2>二、教师模型与学生模型</h2>
+    <p>
+      本课题沿用知识蒸馏的术语，涉及两个角色，二者在训练与部署中的分工不同。
+    </p>
+    <table>
+      <tr><th>角色</th><th>是什么</th><th>在本课题中的职责</th></tr>
+      <tr>
+        <td>教师模型</td>
+        <td>参数量较大的语言模型，拟用 Qwen3-32B 一类开放权重模型</td>
+        <td>在训练资料上生成需求解析、候选与操作示范。可分时本地运行，或通过允许该用途的服务访问公开或获准数据。只参与教学，不参与部署。</td>
+      </tr>
+      <tr>
+        <td>学生模型</td>
+        <td>本地运行的小模型，拟用 Qwen3-4B，资源允许时加入 8B 对照</td>
+        <td>从教师示范中学习任务执行方式，经 LoRA／QLoRA（只训练少量附加参数、冻结原模型权重的微调方法；QLoRA 是其中用量化降低显存的版本）适配后作为最终交付组件，在本地完成推理。</td>
+      </tr>
+    </table>
+    <p>
+      两者的关系不是把大模型能力直接搬运到小模型。蒸馏（让学生模型从教师输出中学习任务执行方式，而不是复制教师的全部能力）须先核验教师示范：来源存在、字段对应、比例与单位正确、要求与答案一致。引用存在不等于原文语义支持，语义未知不自动判成正确。部署阶段不依赖教师接口。
+    </p>
+    <p>
+      选择本地小模型的原因是配方数据不宜外发，且权重、资料快照与工具版本可以固定。这不构成「本地一定优于云端」的预设：本地部署仍需可用性检验，训练摊销、设备与调用成本分别记录，不预先承诺本地总成本更低。
+    </p>
+
+    <h3 style="font-size:15px;margin:18px 0 10px">为什么必须从教师模型蒸馏</h3>
+    <p>
+      直接部署大模型不可行：配方数据不宜发往外部接口，每次调用的成本与延迟也不适合交互式方案准备。
+    </p>
+    <p>
+      小模型直接用又不够：4B—8B 模型在零样本或少量示例条件下，难以稳定区分锁定项、总量平衡与单位换算这类约束，容易生成格式正确但数值违规的候选。
+    </p>
+    <p>
+      因此需要把「执行约束」这项能力写进小模型参数，而不是每次靠提示临时引导。实现这一点只有两条路：从零预训练，成本远超单卡范围；或从教师示范做任务蒸馏，只需教师生成的文本，不访问其参数与概率分布。本课题选择后者。
+    </p>
+    <p>
+      蒸馏的必要性还在于它把「教学」与「部署」分开：教师只在训练阶段使用，学生部署后不再依赖教师接口。这既避免数据外发，也避免长期调用成本。
+    </p>
+  </section>
+
+  <section>
+    <h2>三、训练后的小模型能做什么</h2>
+    <p>训练完成后，学生模型在本地承担两类任务，输出均以「可复核的候选」为准。</p>
+
+    <h3 style="font-size:15px;margin:18px 0 10px">主任务：按约束提候选</h3>
+    <p>输入为自然语言要求、允许元素、比例限制与可选原配方。例如：</p>
+    <div class="note">
+      <p><strong>要求：</strong>Co—Cr—Fe—Ni 体系，Ni 不低于 0.25，Cr 在 0.15—0.25 之间，不含 Al，给出三个候选。</p>
+      <p style="margin-top:8px"><strong>输出：</strong>三个候选成分（满足上述约束）；每个候选对应的记录来源与适用条件；数值检查结果（比例和为 1、元素均在允许列表内）。</p>
+    </div>
+    <p>
+      如果某个候选没有对应的观测记录，模型只把它标为「待验证编辑建议」，不继承相近配方的性能数值。两类结果分开评价。
+    </p>
+
+    <h3 style="font-size:15px;margin:18px 0 10px">辅助任务：按原配方修改</h3>
+    <p>
+      输入为一个已有配方与修改要求，例如「Ni 降低 0.05，Cr 保持不变，不新增元素」。模型输出修改后的成分、操作说明，以及修改后哪些性能陈述仍然有效、哪些已经失效。份额变化后必须更新说明与支持范围，不能保留原先已经失配的性能主张。
+    </p>
+
+    <h3 style="font-size:15px;margin:18px 0 10px">可复核性的四个动作</h3>
+    <table>
+      <tr><th>动作</th><th>说明</th></tr>
+      <tr><td>附来源</td><td>每个候选标注来自哪条记录、哪篇文献、什么测试条件</td></tr>
+      <tr><td>报冲突</td><td>约束互相矛盾时返回可核验的冲突项，由使用者决定是否放宽</td></tr>
+      <tr><td>请求澄清</td><td>要求含糊时保留未知，不自设数值上限或替代假设</td></tr>
+      <tr><td>区分两类输出</td><td>记录支持型（有观测记录）与探索编辑型（无观测记录）分开标注</td></tr>
+    </table>
+
+    <div class="warn">
+      <p>
+        它不生成晶体结构、不预测真实高温性能、不替代实验判断。数值合法不等于材料性能达标。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>四、开题意义</h2>
+    <table>
+      <tr><th>维度</th><th>意义</th></tr>
+      <tr><td>应用</td><td>降低配方方案准备中的重复查证与修改负担：整理候选、执行成分限制、回溯记录。收益须经任务质量、修正量与有限案例验证，不由界面演示推定。</td></tr>
+      <tr><td>方法</td><td>把「学生容易错」与「值得学」分开：保留教学样本对各约束组的影响向量，在预算内改善薄弱组，同时限制其他组的预测损失上升。</td></tr>
+      <tr><td>证据</td><td>教学准入、诊断标签与推理引用共用成分、条件、来源与约束状态，使哪些结论可检查、哪些尚缺依据变得明确。蒸馏学习的是经过核验的任务执行方式，不是把教师回答当真值。</td></tr>
+      <tr><td>部署</td><td>本地权重、资料快照与工具版本可固定并在相同环境中重用。该优势不依赖模型超过云端服务，也不预设本地成本更低。</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>五、研究进展</h2>
+    <p>与本课题直接相关的工作可分为四组，每组都提供了可借鉴的方法，也都留下了未覆盖的问题。</p>
+    <table>
+      <tr><th>方向</th><th>代表工作</th><th>与本课题的关系</th></tr>
+      <tr>
+        <td>材料语言模型与受约束辅助生成</td>
+        <td>LLMatDesign、BCC/B2 合金生成、LLaMat、AlloyGPT、AlloyLens、INCAR-SLM</td>
+        <td>证明语言模型可组织材料操作；但这些工作不研究「在有限教学预算下该学哪些示范」，其数据规模与算力条件也难以直接套用到单卡场景</td>
+      </tr>
+      <tr>
+        <td>知识蒸馏与参数高效适配</td>
+        <td>Distilling Step-by-Step、Orca 2、MiniLLM、LoRA、QLoRA、Qwen3</td>
+        <td>提供序列级蒸馏与低秩适配的技术基础；但这些方法不解决「选哪些示范」的问题</td>
+      </tr>
+      <tr>
+        <td>教学数据选择</td>
+        <td>Self-Instruct、DEITA、D3、LASER、LESS、GRAD-MATCH、ROSE、DRIFT、DELIFT、GIST</td>
+        <td>LESS/GRAD-MATCH 用梯度影响选样；ROSE/DRIFT 用偏好或学生错误定义效用；DELIFT 用成对效用。它们大多输出单一效用，不保留逐约束影响向量</td>
+      </tr>
+      <tr>
+        <td>约束副作用与训练保护</td>
+        <td>PCGrad、OGS、GRADE、MuSC、RAG、RAFT、PICARD</td>
+        <td>OGS/GRADE 引入锚点保护与梯度准入，但保护对象是通用能力；PCGrad 处理多任务梯度冲突，但不用于教学子集选择。本课题把保护对象换成域内约束组</td>
+      </tr>
+    </table>
+    <p>
+      据此，本课题的定位是：在已有辅助设计路线内，对「教学子集选择」这一环节做方法改进，不涉及生成器结构或基础模型能力。
+    </p>
+  </section>
+
+  <section>
+    <h2>六、工作内容划分</h2>
+    <p>研究分三部分衔接，主要算法贡献集中在第二部分。</p>
+    <div class="flow">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="body">
+          <b>可核验教学构造（3.1.1）</b>
+          <span>把资料组织为「成分—状态—测试—性质—来源」记录，用轻量任务本体表达元素、比例基准、锁定项、条件与主张类型。施加约束扰动后重新核验答案，负例须注明实际违例向量。教师示范只使用训练资料。</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="body">
+          <b>诊断代理与收益矩阵（3.1.2）</b>
+          <span>在训练资料内部另划诊断集，与教学池按来源关联组隔离（同一 DOI 派生的记录归为一组，同组记录不跨分区）。用长度归一化的对比代理构造组损失，计算教学样本梯度与诊断组梯度的一阶内积，得到「样本 × 约束组」影响矩阵。</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="body">
+          <b>预算组合选样（3.1.3）</b>
+          <span>在质量、来源与长度预算内选择子集，最大化薄弱组最小预测收益，同时要求保护组相对固定参照不退化超过容差。选定后用真实优化器状态做虚拟一步复核。</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div class="body">
+          <b>本地集成与候选输出（3.1.4）</b>
+          <span>检索保留比例基准、条件与来源标识；生成按元素集合、比例份额、引用与说明分步组织；数值工具核验总量、上下界与锁定项。系统状态区分「可核验冲突」「输入待澄清」「证据不足」「预算内未找到」。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>七、算法创新点</h2>
+    <table>
+      <tr><th>创新点</th><th>内容</th><th>与已有工作的边界</th></tr>
+      <tr>
+        <td>一 · 可靠教学协议</td>
+        <td>将资料字段、人工要求、候选操作与主张类型绑定，扰动后重新核验，避免示范流畅但不可执行或不可回溯。</td>
+        <td>任务数据构造已有前作（Self-Instruct、MuSC）；本项主张限于配方辅助的可靠教学协议与实例质量改进，分别移除扰动或显式绑定作消融。</td>
+      </tr>
+      <tr>
+        <td>二 · 分约束收益矩阵与保护约束选样</td>
+        <td>保留逐约束影响向量，在预算与来源限制内优化薄弱组收益，并限制其他可靠组相对固定参照的预测损失上升。</td>
+        <td>建立在 LESS、ROSE、DRIFT、OGS、GRADE 之上；不宣称首次防遗忘，也不宣称真实性能不退化。拟分别检验诊断代理、矩阵信息与组合保护的增量。</td>
+      </tr>
+      <tr>
+        <td>三 · 教学与生成的约束状态共用</td>
+        <td>将教学中的来源、条件与锁定状态用于检索增强生成与有限修正，检验是否减少数值修正后的说明失配。</td>
+        <td>RAG、结构化解码与修正器均为已有技术；通过普通检索、生成后过滤、同求解器与分组件消融确认任务化协同收益，不把组件数量计为算法创新。</td>
+      </tr>
+    </table>
+    <div class="warn">
+      <p>
+        三项中算法含量依次为二、一、三。首版只有三个可构造诊断组，若矩阵退化为三目标加权，创新点二应收缩表述为「约束组级保护性选样」，不使用「矩阵」一词撑新意。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>八、数据与划分</h2>
+    <p>
+      主线数据为公开的 MPEA 合金记录。全表 1545 条，按室温、铸造工艺与硬度字段有效筛选后得到 254 条目标记录，覆盖 233 种规范成分、55 个 DOI、28 个来源关联组。
+    </p>
+    <table>
+      <tr><th>数据区</th><th>用途</th><th>记录数</th><th>关联组</th></tr>
+      <tr><td>教学池</td><td>构造示范并进行监督微调</td><td>127</td><td>12</td></tr>
+      <tr><td>诊断区</td><td>收益估计、选样与阶段停止</td><td>51</td><td>8</td></tr>
+      <tr><td>开发区</td><td>冻结超参、代理尺度与任务协议</td><td>38</td><td>4</td></tr>
+      <tr><td>测试区</td><td>冻结后最终质量与成本报告</td><td>38</td><td>4</td></tr>
+    </table>
+    <p>
+      四区按来源关联组隔离，同一 DOI 派生的记录不跨区。该划分是静态示例，正式生成任务前须完成标签覆盖核验并冻结分区；若正式构造后合格任务不足 100 个或独立来源组不足 8 个，课题收缩为数值约束组窄版。
+    </p>
+  </section>
+
+  <section>
+    <h2>九、验证与退出条件</h2>
+    <table>
+      <tr><th>层次</th><th>检查内容</th><th>不通过的处理</th></tr>
+      <tr><td>标签</td><td>人工抽查受控正负对的判定是否成立</td><td>停止扩展该组，记录覆盖不足</td></tr>
+      <tr><td>预测</td><td>矩阵预测变化与真实一步变化的符号一致率、排序相关（前者指预测方向与真实方向相同的比例，后者指预测的样本优劣排序与真实排序的相关性）</td><td>符号一致率低于 70% 或排序相关低于 0.3，放弃矩阵选样，退化为按组均衡的启发式</td></tr>
+      <tr><td>任务</td><td>来源留出任务上的约束与记录对应双合格率</td><td>只报告点估计与组级区间，不宣称显著优于基线</td></tr>
+    </table>
+    <p>
+      开发与测试各仅 4 个关联组，组级置信区间（估计值的不确定范围）较宽。首版不做显著性检验（判断差异是否可能由随机波动造成的统计方法）；若不足以区分方法差异，报告为「点估计方向一致但区间重叠」。
+    </p>
+  </section>
+
+  <section>
+    <h2>十、资源与时间</h2>
+    <p>
+      资源规划为单张约 32 GB 显卡起步，必要时租用 48—60 GB 显卡，约 64 GB 内存与足够的固态存储。只提取 LoRA 参数梯度，分批缓存特征，不存全参数 Hessian（二阶导数矩阵，记录参数之间相互影响的完整信息，存储代价很高），不引入专家集成或强化学习选择器。教师示范可分时生成，避免教师与学生同时常驻。
+    </p>
+    <table>
+      <tr><th>阶段</th><th>时间</th><th>主要工作</th></tr>
+      <tr><td>一</td><td>第 1 月</td><td>核定任务、许可、来源关联规则与字段范围；检查诊断标签；冻结先导数据身份与分区；记录实际任务量</td></tr>
+      <tr><td>二</td><td>第 2 月</td><td>构造并抽查教师示范、受控正负对与干扰资料；完成底座、普通检索与常规任务蒸馏基线；测量资源预算</td></tr>
+      <tr><td>三</td><td>第 3—4 月</td><td>完成收益矩阵与有限组合选择；先核验一步预测，再开展阶段适配；对照聚合效用、组保护、求解与成本，冻结最终方案</td></tr>
+      <tr><td>四</td><td>第 5 月</td><td>集成本地检索、分步候选生成与数值复核；完成同工具强对照及组件消融；确认记录支持型与探索型输出边界</td></tr>
+      <tr><td>五</td><td>第 6 月</td><td>完成来源留出、未见约束组合与教师比较；汇总任务指标、不确定性、失败与总成本；有条件时进行有限案例试用</td></tr>
+      <tr><td>六</td><td>第 7—8 月</td><td>整理复现材料、论文与局限性；完成修改及答辩准备</td></tr>
+    </table>
+    <p>
+      资源不足时缩减额外模型、刷新与外部扩展，但不删除证明核心增量所需的公平对照。
+    </p>
+  </section>
+
+  <section>
+    <h2>十一、研究边界</h2>
+    <table>
+      <tr><th>边界</th><th>说明</th></tr>
+      <tr><td>不生成完整晶体结构</td><td>只做配方层面的成分候选与编辑建议</td></tr>
+      <tr><td>不预测新合金真实高温性能</td><td>无可靠数据与实验条件，性能陈述须对应具体记录</td></tr>
+      <tr><td>数值合法不等于性能达标</td><td>记录支持型与探索编辑型结果分开评价</td></tr>
+      <tr><td>不预设本地优于 API</td><td>训练摊销、设备与调用成本分别记录</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>十二、当前进度</h2>
+    <p>
+      已完成：文献核查、数据字段统计、来源关联组划分示例、诊断数据静态审计。
+    </p>
+    <p>
+      未完成：教学集构造、梯度收益矩阵实测、模型微调、本地原型与用户试用。方法核心假设——一步梯度影响能否预测多步训练变化——尚未经实验验证。
+    </p>
+  </section>
+
+  <section>
+    <h2>附：本课题自造术语</h2>
+    <p>以下词汇为本课题自行定义，在正文中有明确所指，不是通用术语。</p>
+    <table>
+      <tr><th>术语</th><th>本课题中的含义</th></tr>
+      <tr><td>分约束效用选样</td><td>课题核心方法名：为每个约束组单独估计教学样本的收益与副作用，再按组选择教学子集，而不是把所有约束压成一个总分。</td></tr>
+      <tr><td>诊断组</td><td>收益矩阵的列，首版为锁定项、总量／范围、明确单位换算三个可构造的诊断约束组。诊断组用诊断区的样本估计，不进入训练。</td></tr>
+      <tr><td>薄弱组 W</td><td>当前表现较差、需要优先改善的约束组。首版设为锁定项与单位换算。</td></tr>
+      <tr><td>保护组 P</td><td>不能退化的约束组。首版设为总量／范围。选样时要求保护组相对固定参照不退化超过容差。</td></tr>
+      <tr><td>收益矩阵</td><td>「教学样本 × 约束组」的影响表，每个元素表示某个样本对某个约束组的预计改善（正）或副作用（负）。</td></tr>
+      <tr><td>一步代理</td><td>用一阶梯度内积估计样本影响的方式，只用梯度、不用二阶项，因此只适用于小步长。</td></tr>
+      <tr><td>虚拟一步</td><td>选定子集后，用真实优化器状态做一次模拟更新，检查组代理的实际变化；完成后恢复参数、优化器与随机数。</td></tr>
+      <tr><td>固定参照保护</td><td>保护约束的参照点固定为初始模型 θ₀，而不是上一次的检查点，防止「每次允许退一点」累积成显著退化。</td></tr>
+      <tr><td>来源关联隔离</td><td>按 DOI 与规范成分连边、取传递闭包后分组，同一组记录不跨训练／诊断／开发／测试分区。</td></tr>
+      <tr><td>受控正负对</td><td>人为构造的教学样本：同一需求下给出已核验的正确回答与明确违例的错误回答，并注明违例向量。</td></tr>
+      <tr><td>记录支持型候选</td><td>有具体观测记录与适用条件支撑的候选，属于主任务。</td></tr>
+      <tr><td>探索编辑型建议</td><td>缺少对应观测、只作为待验证编辑建议的候选，不继承原配方或相近配方的性能数值，属于辅助任务。</td></tr>
+      <tr><td>来源留出</td><td>按来源分组划分测试集，确保测试记录与训练记录来自不同文献。</td></tr>
+      <tr><td>约束扰动</td><td>在明确原配方基础上增加锁定项、允许元素或范围要求，然后重新核验答案的构造方式。</td></tr>
+      <tr><td>可核验教学构造</td><td>教学样本的构造原则：来源存在、字段对应、比例与单位正确、要求与答案一致；引用存在不等于语义支持。</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    开题报告 V3 · 方向简介<br>
+    本页为概览，具体表述、公式、引用与边界以《开题报告_算法增强版_V3.md》正文为准。
+  </footer>
+
+</div>
+</body>
+</html>

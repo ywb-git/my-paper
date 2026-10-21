@@ -31,6 +31,7 @@ import sys
 from pathlib import Path
 
 from docx import Document
+from docx.enum.section import WD_SECTION
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
@@ -55,6 +56,7 @@ SZ_BODY = Pt(12)
 # 字体
 FONT_CN_BODY = "宋体"
 FONT_CN_HEAD = "黑体"
+FONT_CN_COVER = "楷体"   # 封面校名与大标题，与范本一致
 FONT_EN = "Times New Roman"
 
 # 正文段落格式
@@ -71,6 +73,13 @@ COVER_FIELDS = [
     ("入学时间：", ""),
 ]
 COVER_DATE = ""  # 留空由用户填写；也可写 "2026年11月"
+
+# 校徽（从范本封面提取，4.88cm 见方）
+LOGO_PATH = Path(__file__).resolve().parent / "assets" / "校徽.jpeg"
+LOGO_WIDTH = Cm(4.88)
+
+# 页眉文字（与范本一致；封面节不显示）
+HEADER_TEXT = "北京科技大学研究生开题报告"
 
 # 默认输出文件名（两种模式分开，避免互相覆盖）
 DEFAULT_OUT_TOC = "开题报告.docx"
@@ -240,6 +249,62 @@ def add_page_number_footer(section):
     add_field(p, " PAGE ", placeholder="1")
 
 
+# ---------------------------------------------------------------- 分节与页眉页脚
+
+
+def _set_page_numbering(section, *, fmt=None, start=None):
+    """设置该节的页码格式（upperRoman / decimal）与起始值。"""
+    sect_pr = section._sectPr
+    pg = sect_pr.find(qn("w:pgNumType"))
+    if pg is None:
+        pg = OxmlElement("w:pgNumType")
+        sect_pr.append(pg)
+    if fmt:
+        pg.set(qn("w:fmt"), fmt)
+    if start is not None:
+        pg.set(qn("w:start"), str(start))
+
+
+def _replace_header(section, text: str):
+    section.header.is_linked_to_previous = False
+    p = section.header.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    for r in list(p.runs):
+        r._element.getparent().remove(r._element)
+    set_run_font(p.add_run(text), size=Pt(9), cn=FONT_CN_BODY)
+
+
+def _replace_footer_page(section):
+    section.footer.is_linked_to_previous = False
+    p = section.footer.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    for r in list(p.runs):
+        r._element.getparent().remove(r._element)
+    add_field(p, " PAGE ", placeholder="1")
+
+
+def setup_sections(doc: Document):
+    """按范本设置分节：封面 / 目录 / 正文 / 参考文献。
+
+    - 封面：无页眉页脚
+    - 目录：页眉 + 罗马数字页码（I 起）
+    - 正文与参考文献：页眉 + 阿拉伯数字页码（正文从 1 起）
+    """
+    secs = doc.sections
+    if len(secs) >= 1:
+        secs[0].header.is_linked_to_previous = False
+        secs[0].footer.is_linked_to_previous = False
+    if len(secs) >= 2:
+        _replace_header(secs[1], HEADER_TEXT)
+        _replace_footer_page(secs[1])
+        _set_page_numbering(secs[1], fmt="upperRoman", start=1)
+    for idx in range(2, len(secs)):
+        _replace_header(secs[idx], HEADER_TEXT)
+        _replace_footer_page(secs[idx])
+        if idx == 2:
+            _set_page_numbering(secs[idx], fmt="decimal", start=1)
+
+
 # ---------------------------------------------------------------- 文档初始化
 
 
@@ -305,10 +370,18 @@ def build_cover(doc: Document, title: str):
         p.paragraph_format.first_line_indent = Cm(0)
         p.paragraph_format.line_spacing = 1.0
         p.paragraph_format.space_after = Pt(space_after)
-        set_run_font(p.add_run(text), size=size, bold=bold, cn=FONT_CN_HEAD)
+        set_run_font(p.add_run(text), size=size, bold=bold, cn=FONT_CN_COVER)
         return p
 
     blank(2)
+    # 校徽（范本封面有，居中，4.88cm 见方）
+    if LOGO_PATH.exists():
+        lp = doc.add_paragraph()
+        lp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        lp.paragraph_format.first_line_indent = Cm(0)
+        lp.paragraph_format.line_spacing = 1.0
+        lp.paragraph_format.space_after = Pt(12)
+        lp.add_run().add_picture(str(LOGO_PATH), width=LOGO_WIDTH)
     center_line("北 京 科 技 大 学", SZ_SCHOOL, bold=True, space_after=18)
     center_line("硕士学位研究生", SZ_TITLE_BIG, bold=True, space_after=6)
     center_line("选题报告及文献综述", SZ_TITLE_BIG, bold=True, space_after=30)
@@ -340,8 +413,7 @@ def build_cover(doc: Document, title: str):
     blank(3)
     center_line(COVER_DATE if COVER_DATE else " " * 6 + "＿" * 8, SZ_COVER_INFO)
 
-    # 分页
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+    # 分页由调用方用 add_section 处理（封面独立成节，无页眉页脚）
 
 
 # ---------------------------------------------------------------- 目录
@@ -373,7 +445,7 @@ def build_toc(doc: Document, static_entries=None):
             label = f"　" * (level - 1) * 2 + text
             set_run_font(tp.add_run(label), size=Pt(12), cn=FONT_CN_BODY)
 
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+    # 分页由调用方用 add_section 处理（目录独立成节，罗马页码）
 
 
 # ---------------------------------------------------------------- Markdown 解析
@@ -778,7 +850,9 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
 
     doc = init_document()
     build_cover(doc, title)
+    doc.add_section(WD_SECTION.NEW_PAGE)   # 目录节
     build_toc(doc, static_entries=entries)
+    doc.add_section(WD_SECTION.NEW_PAGE)   # 正文节
     render_blocks(doc, blocks, fig_path=fig_path, fig_caption=fig_caption)
 
     # 引用越界校验：正文出现的 [n] 必须落在 [1, len(ref_lines)] 内
@@ -796,11 +870,12 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
                     warnings.append(f"标题引用 [{num}] 超出参考文献范围（共 {n_refs} 条）")
 
     # 参考文献标题
+    doc.add_section(WD_SECTION.NEW_PAGE)   # 参考文献节
     hp = doc.add_paragraph(style="Heading 1")
     set_run_font(hp.add_run("参考文献"), size=SZ_H1, bold=True, cn=FONT_CN_HEAD)
     render_references(doc, ref_lines)
 
-    add_page_number_footer(doc.sections[0])
+    setup_sections(doc)
 
     # 清理末尾空段落，避免生成空白尾页
     body = doc.element.body
@@ -983,7 +1058,7 @@ def main(argv):
 
     # ---- 找图 ----
     fig = None
-    for cand in ("技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png"):
+    for cand in ("技术路线_算法增强版.png", "技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png"):
         cand_path = here / cand
         if cand_path.exists():
             fig = cand_path
