@@ -74,6 +74,27 @@
   .cmp .k{font-weight:600;color:var(--ink);white-space:nowrap}
 
   /* 数字 */
+  /* 技术路线流程图 */
+  .roadmap{margin:26px 0}
+  .rm-node{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:14px 18px;position:relative;
+  }
+  .rm-node .hd{font-size:12px;letter-spacing:.08em;font-weight:650;margin-bottom:6px}
+  .rm-node .tt{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--ink)}
+  .rm-node .dd{font-size:13.5px;color:var(--ink2);line-height:1.65}
+  .rm-node.n1{border-left:3px solid var(--blue);background:var(--blue-bg)}
+  .rm-node.n1 .hd{color:var(--blue)}
+  .rm-node.n2{border-left:3px solid var(--blue);background:var(--blue-bg)}
+  .rm-node.n2 .hd{color:var(--blue)}
+  .rm-node.n3{border-left:3px solid var(--accent);background:var(--accent-bg);box-shadow:0 1px 6px rgba(47,111,94,.10)}
+  .rm-node.n3 .hd{color:var(--accent)}
+  .rm-node.n4{border-left:3px solid var(--warn);background:var(--warn-bg)}
+  .rm-node.n4 .hd{color:var(--warn)}
+  .rm-node.n5{border-left:3px solid var(--ink3);background:#f4f4f2}
+  .rm-node.n5 .hd{color:var(--ink2)}
+  .rm-arrow{text-align:center;color:var(--line);font-size:20px;line-height:1;padding:7px 0;user-select:none}
+
   .nums{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--line);
         border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:20px 0}
   .num-cell{background:var(--card);padding:20px}
@@ -249,6 +270,60 @@
   </section>
 
   <section>
+    <h2>整体怎么走：一条五段的路线</h2>
+    <h3>从资料准备到验证交付</h3>
+
+    <div class="roadmap">
+      <div class="rm-node n1">
+        <div class="hd">第 1 段 · 准备</div>
+        <div class="tt">资料与任务准备</div>
+        <div class="dd">公开配方与获准的本地资料 → 按来源关联分组 → 训练、开发、测试严格隔离。<br>
+        <b>输入</b>：设计要求与原配方　<b>输出</b>：候选成分、修改说明、参考依据</div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n2">
+        <div class="hd">第 2 段 · 研究内容一</div>
+        <div class="tt">可核验的任务蒸馏数据</div>
+        <div class="dd">训练资料 → 教师示范 → <b>约束扰动后重新核验</b> → 来源与条件绑定。<br>
+        教师只提供操作示范，<b>不编造新配方的真实性能</b>。</div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n3">
+        <div class="hd">第 3 段 · 研究内容二 · 主要算法改进</div>
+        <div class="tt">选择性蒸馏</div>
+        <div class="dd">学生诊断：<b>可执行失误</b> ＋ <b>约束组合覆盖</b> － 冗余<br>
+        预算上限内正效用选样 → QLoRA 适配 → 保存本地模型</div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n4">
+        <div class="hd">第 4 段 · 研究内容三</div>
+        <div class="tt">知识增强与约束生成</div>
+        <div class="dd">本地检索可比实例 → 分步成分生成 → 数值检查与有限修正<br>
+        共用来源类型与约束状态；模型、检索、工具<b>全部在本地</b></div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n5">
+        <div class="hd">第 5 段 · 验证</div>
+        <div class="tt">验证与交付</div>
+        <div class="dd">同底座、同预算强基线 → 组件消融 → 同条件教师比较<br>
+        报告任务质量与差距区间 / 候选多样性 / 资源代价 / 可追溯性<br>
+        <b>交付</b>：本地辅助原型；新配方仍须独立核验</div>
+      </div>
+    </div>
+
+    <div class="info" style="margin-top:18px">
+      <div class="label">这张图的读法</div>
+      <p>五段是一条单向链路，前一段的输出是后一段的输入。<b>绿色的第 3 段是主贡献所在</b>；
+      第 2 段和第 4 段的作用是让第 3 段可以被公平地验证——没有干净的教材，无法判断选样方法好不好；
+      没有可核验的输出，无法界定什么算「做对」。</p>
+    </div>
+  </section>
+
+  <section>
     <h2>三个创新点分别是做什么的</h2>
     <h3>先说清楚哪些不算创新</h3>
     <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0">
@@ -353,10 +428,85 @@
         所以不能把"记录间的差异"简单当成测量误差，这是本课题在设计上要小心处理的地方。
       </p>
     </div>
+
+    <h3>为什么是这份数据，而不是别的</h3>
+    <p>合金数据集其实很多，我排查过八个数据源，但大多数用不了。原因在下面这张表里。</p>
+
+    <table class="cmp">
+      <thead>
+        <tr><th>数据里必须有什么</th><th>MPEA 有没有</th><th>为什么必须有</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="k">成分</td><td>✓ 630 种</td><td>配方任务的对象</td></tr>
+        <tr><td class="k">材料状态</td><td>✓ 相结构、工艺、晶粒尺寸</td><td>同样成分不同状态，性能完全不同</td></tr>
+        <tr><td class="k">测试条件</td><td>✓ 测试温度、试验类型</td><td>非可比条件下比较结果是错的</td></tr>
+        <tr><td class="k">来源标识</td><td>✓ 265 个 DOI</td><td>按来源分组划分，防止测试集泄漏</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info" style="margin-top:16px">
+      <div class="label">为什么不换一个更大的数据集</div>
+      <p>
+        难熔合金方向确实有更大的库（ULTERA，约 <b>2,700 种合金、6,500 条数据</b>，是 MPEA 的四倍），
+        但它的数据<b>不公开</b>，需要走合作申请。其他公开数据集多数只提供
+        「成分 + 性能」两列，<b>缺测试条件和来源</b>——数据量再大，也支撑不了「条件可比」的判断。
+        所以选 MPEA 不是因为规模，而是因为四类字段齐全。
+      </p>
+    </div>
   </section>
 
   <section>
     <h2>怎么证明做成了</h2>
+
+    <h3>核心实验：五种挑教材的方法，同台比</h3>
+    <p>
+      主贡献是「怎么挑教材」。要证明它有用，就必须让其他四种挑法拿到<b>完全相同的条件</b>：
+      同一批候选教材、同一个学生模型、同样多的训练量。只比总量不同的实验说明不了问题。
+    </p>
+
+    <table class="cmp">
+      <thead>
+        <tr><th>组别</th><th>怎么挑教材</th><th>这一组用来回答什么</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="k">本方法</td>
+          <td>按可核验失误 + 约束覆盖 + 去冗余</td>
+          <td>主结果</td>
+        </tr>
+        <tr>
+          <td class="k">随机挑</td>
+          <td>等量随机抽取</td>
+          <td><b>最重要的对照</b>：赢不过随机，方法就不成立</td>
+        </tr>
+        <tr>
+          <td class="k">只挑最难</td>
+          <td>按模型困惑度取最高的</td>
+          <td>检验「只用难度」是否已经够</td>
+        </tr>
+        <tr>
+          <td class="k">只按覆盖</td>
+          <td>只看约束类型覆盖度</td>
+          <td>检验「只用覆盖」是否已经够</td>
+        </tr>
+        <tr>
+          <td class="k">成熟方法</td>
+          <td>DEITA 式的质量—复杂度—多样性评分</td>
+          <td>与已有的主流做法正面比</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note" style="margin-top:16px">
+      <div class="label">为什么必须把「随机」当强基线，而不是凑数</div>
+      <p>
+        2026 年有研究明确指出：<b>定向挑选教材并不稳定优于均匀随机采样</b>，
+        随机采样在若干设置下是有竞争力的基线。这不是我给自己找退路，
+        而是说：<b>如果本方法只赢过「什么都不挑」，那不叫贡献。</b>
+        所以我把随机设为必做对照，并且只有显著赢过它，才把增益算作本方法的功劳。
+      </p>
+    </div>
+
     <h3>不是看"回答像不像老师"，而是看能不能用</h3>
     <table class="cmp">
       <tr><th>检查项</th><th>怎么算</th></tr>
