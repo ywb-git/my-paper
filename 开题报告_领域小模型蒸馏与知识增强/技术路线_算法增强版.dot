@@ -1,0 +1,12 @@
+digraph Proposal {
+  graph [rankdir=TB, bgcolor="white", nodesep=0.26, ranksep=0.30, dpi=200];
+  node [shape=box, style="rounded,filled", color="#39424C", fillcolor="#FFFFFF", fontname="SimSun", fontsize=11, width=6.7, margin="0.18,0.13"];
+  edge [color="#465260", arrowsize=0.7];
+  data [label="资料与任务准备\n固定MPEA版本 → 全图来源关联 → 目标记录与条件核验\n教学池 / 选样诊断 / 开发 / 测试：先隔离来源，再构造任务", fillcolor="#EDF3F8"];
+  teach [label="研究内容一：可靠教学\n训练资料 → 教师操作示范 → 约束扰动后重验\n绑定成分、条件、来源及主张类型；未知语义不自动造标签", fillcolor="#EDF3F8"];
+  matrix [label="研究内容二：主要算法改进\n教学SFT梯度 × 分约束诊断梯度 → 修复收益与副作用矩阵\n冻结检查点的一步代理；不等同于多步训练效果", fillcolor="#EEF5EA"];
+  select [label="预算组合选择与阶段适配\n薄弱组收益目标 ＋ 固定参照保护 ＋ 长度与来源限制\n有限搜索 → 实际优化器虚拟一步 → 常规QLoRA阶段微调\n保存失败、退化及全部选样开销", fillcolor="#EEF5EA"];
+  system [label="研究内容三：本地辅助生成\n本地检索可比记录 → 候选与编辑 → 数值复核及来源标注\n记录支持型候选 / 未验证编辑建议：分开评价", fillcolor="#FAF1E7"];
+  verify [label="方法与应用验证\n同诊断强基线 / 同矩阵消融 / 同工具传统优化器\n来源留出任务质量、逐组错误、教师差距与总成本\n静态划分是已核验准备；训练与方法增益尚待验证", fillcolor="#F1F1F1", penwidth=1.4];
+  data -> teach -> matrix -> select -> system -> verify;
+}
