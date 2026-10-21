@@ -340,25 +340,66 @@
 
   <section>
     <h2>这个研究的价值在哪</h2>
-    <h3>三句话说清</h3>
-    <ul class="plain">
-      <li>
-        <b>方法层面</b>：数据选择本身是活跃研究方向（DEITA、LESS、D3 都在做）。
-        本课题的差异在于：用<strong>任务检查器给出的可核验失误类型</strong>判断学生薄弱在哪，
-        而不是用文本困惑度。这个差异是具体可检验的，但它是否带来实际增益，
-        要靠"随机挑 / 只挑难 / 只挑多样 / 全量"四组对照来回答。
-      </li>
-      <li>
-        <b>可核验层面</b>：这套设计要求每个性能数字都能对应到具体记录及其测试条件，
-        并区分"文献观测值""模型估计值""未验证的目标值"。
-        这是输出形态的改变，不需要先证明它比谁更准。
-      </li>
-      <li>
-        <b>实证层面</b>：明确测量"在这么多数据、这么多算力下，小模型到底能到什么水平"，
-        以及"与教师、与通用大模型的差距有多大"。
-        <strong>不预设差距一定能缩小；即便结论是"没达到可用水平"，也是有价值的答案。</strong>
-      </li>
-    </ul>
+    <h3>三层递进：不是并列，后一层由前一层推出</h3>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
+      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">1</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">现实层面：有可拆解的重复劳动</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
+          配方研究里的资料筛选、条件核对、成分改写、结果整理，都能拆成边界明确的操作。
+          把这些交给本地模型，研究者可以把精力留给真正需要判断的部分。
+        </div>
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
+      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">2</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">方法层面：现有"难度信号"在这类任务上失效（核心论点）</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
+          现在的教法都是"挑学生做错的题重点练"。但"做错"怎么判断？主流方法看模型自己的表现：
+          困惑度高、答不出来、想的步骤少。<br><br>
+          <strong>这个判断有个前提：题目只有唯一正确答案。</strong>
+          数学题成立——答错了就是错了。但配方不是这样：同一个要求可以有很多个都合格的配方，
+          模型没照着参考答案写，可能只是选了另一条同样合法的路，也可能真的违反了硬约束。
+          <strong>把"跟参考答案不一样"当成"做错"，就会把合格的答案当成错误重点训练。</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="background:var(--accent-bg);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:8px">本课题的做法</div>
+      <div style="font-size:15px;color:var(--ink);line-height:1.7">
+        把"什么算错"的判断，从<strong>模型内部</strong>搬到<strong>外部一个可执行的检查器</strong>上。
+        不用模型自以为的难度，而用检查器对"总量对不对、锁定项有没有动、单位有没有混、引用的条件对不对"的判定结果。
+        <strong>这样"薄弱"这个词就有了明确含义：指的是能指出、能复现的执行错误，而不是模型输出跟参考文本的表面差异。</strong>
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0">
+      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">3</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">更一般的意义：不限于合金</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
+          任何"约束是硬的、但答案不唯一"的专业生成任务，都有同样的困难——配方、结构、工艺参数、实验方案。
+          模型行为类的难度信号在这些任务上会遇到同样的失效。
+          本课题以合金配方为载体，把"可核验性"从一个模型能力问题，转化为一个数据工程问题。
+          <strong>若在本题场景下成立，其形式可直接迁移；若不成立，这个否证同样限定了它的适用边界。</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:18px 22px;border-radius:0 8px 8px 0;margin:20px 0">
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--blue);font-weight:650;margin-bottom:8px">还有一条必须说清的边界</div>
+      <div style="font-size:15px;color:var(--ink);line-height:1.7">
+        这个思路 2026 年已有相近研究：有工作在"可验证奖励"的强化学习里，
+        只用验证器判为失败的样本就大幅提升了数据效率；也有工作证明通用大模型不微调也能做约束成分生成。
+        本课题与它们的差别是具体的、不是话术：<strong>对方的验证器面向答案唯一的任务，
+        而本课题要处理的是"多个答案都合法"时如何区分真错与合法差异</strong>。
+        这个差别能不能成立，要靠同预算对照来回答——不能靠主张。
+      </div>
+    </div>
   </section>
 
   <section>
