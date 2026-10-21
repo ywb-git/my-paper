@@ -249,6 +249,74 @@
   </section>
 
   <section>
+    <h2>三个创新点分别是做什么的</h2>
+    <h3>先说清楚哪些不算创新</h3>
+    <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0">
+      <div style="font-size:14.5px;color:var(--ink);line-height:1.7">
+        <b>蒸馏本身、LoRA 微调、量化、检索增强、做个界面——这些都不算创新</b>，它们是现成的工具，
+        谁都能用。报告里明确这么写了，不把这些包装成贡献。
+        真正算创新的只有下面三项，而且<b>主贡献集中在第二项</b>，另两项是让第二项能成立的条件。
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
+      <div class="num" style="flex:0 0 32px;height:32px;border-radius:50%;background:#e8f0fe;color:var(--blue);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:6px">造教材的方法：让每道题都能验、都能查来源</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.75">
+          普通做法是让大模型批量生成"问题—答案"对。问题在于：材料领域的答案常常看着合理但执行不了，
+          或者说不清依据。<br>
+          本课题的做法是<b>先改要求、再重新核验答案</b>：每次要求变化（改比例、锁定元素、禁用某元素），
+          都让答案重新过一遍检查器；同时把每个性能数字标注成<b>"文献实测"或"模型估计"或"未验证目标"</b>三类，
+          前一类必须能追到具体记录和测试条件。<br>
+          <span style="color:var(--ink3, #6b7280);font-size:13.5px">验证方式：分别去掉"改要求"和"绑证据"这两个环节，看任务效果掉多少。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="background:var(--accent-bg);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:10px">2 · 主贡献 · 挑教材的方法</div>
+      <div style="font-size:15px;color:var(--ink);line-height:1.75">
+        这是整个课题真正的核心。现有方法判断"学生哪道题没学会"，看的是模型自己的表现——
+        困惑度高、答不出来、想得步骤少。<b>这套判断有个前提：题目只有唯一正确答案。</b><br><br>
+        配方不是这样。同一个要求，可以有很多个都合格的配方。模型没照着参考答案写，
+        可能只是选了另一条同样合法的路。<b>把"跟参考答案不一样"当成"做错"，就会把合格答案当成错误重点练。</b><br><br>
+        <b>本课题把"什么算错"的判断，从模型内部搬到外面一个可执行的检查器上。</b>
+        不用模型自以为的难度，而用检查器对"总量对不对、锁定项有没有动、单位有没有混、引用的条件对不对"
+        的判定结果。这样"薄弱"就有了明确含义：<b>指的是能指出、能复现的执行错误</b>，
+        而不是模型输出跟参考文本的表面差异。<br><br>
+        再叠加第二个维度：<b>约束类型的覆盖</b>。学生练了很多"改比例"，但没练过"锁定元素"，
+        那就优先补后者——按约束组合算覆盖度，而不是按文章主题算。
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08);font-size:13.5px;color:var(--ink2)">
+        <b>怎么验证它有用：</b>同一批教材、同一个底座、同样多的训练量，
+        比较五种挑法——本方法 / 随机抽 / 只挑最难的 / 只按覆盖挑 / 成熟的 DEITA 式挑法。
+        <b>只有明显赢过随机挑选，这个创新才成立</b>；赢不过就如实写负结果。
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0">
+      <div class="num" style="flex:0 0 32px;height:32px;border-radius:50%;background:#e8f0fe;color:var(--blue);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center">3</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:6px">生成时的方法：先选可比证据，再分步生成</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.75">
+          检索到一段"某合金抗拉强度 800 MPa"，如果它的测试温度和样品状态跟用户问的不一样，
+          直接拿来用就是错的。所以本课题<b>先在预算内挑"条件可比"的证据</b>，条件不符的不进上下文。<br>
+          生成也拆成几步：<b>先定元素集合 → 再定整数比例份额 → 最后补上引用和说明</b>，
+          中间由数值工具改写和检查。这样每一步都能被检查，而不是一步生成完再猜对不对。<br>
+          <span style="color:var(--ink3, #6b7280);font-size:13.5px">这一项的创新层级低于第二项，主要作用是保证输出可核验。</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:16px 20px;background:#fef9ec;border-left:3px solid #d69e2e;border-radius:0 8px 8px 0;font-size:14px;color:var(--ink);line-height:1.7">
+      <b>为什么主贡献只给一项：</b>一篇硕士论文能说清一个改动、比一个基线好多少，就已经算站住了。
+      硬凑三个"创新"反而每个都单薄。<b>第一、三项的作用是让第二项能被验证</b>——
+      没有干净的教材（第一项），无法判断选样方法好不好；没有可核验的输出（第三项），无法界定什么算"做对"。
+    </div>
+  </section>
+
+  <section>
     <h2>拿什么数据做实验</h2>
     <h3>一个公开的多主元合金数据集（MPEA）</h3>
 
