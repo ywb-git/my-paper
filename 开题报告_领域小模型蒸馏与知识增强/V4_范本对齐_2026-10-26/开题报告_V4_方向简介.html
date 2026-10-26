@@ -258,6 +258,19 @@
       <div class="step">
         <div class="num">4</div>
         <div class="body">
+          <div class="t">教它判断"这条证据能不能用"（创新点二上半）</div>
+          <div class="d">
+            检索到一段性能数据，<b>主题相关但测试温度或样品状态对不上，直接引用就是错的</b>。
+            通用检索模型只按语义像不像排序，分不出这种「看着相关、其实不可用」的证据。<br>
+            本课题自己造训练数据：找同一成分在不同条件下的记录，配对成「条件可比」和「条件冲突」，
+            <b>冲突样本只改条件字段、主题照样相关</b>，逼模型学条件一致性而不是词汇相似。
+            模型只要百兆级参数，单张卡一个下午就能训完。
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">5</div>
+        <div class="body">
           <div class="t">配一个"checker"兜底</div>
           <div class="d">
             模型生成候选后，再由一个<b>纯规则程序</b>做检查：加起来是不是 100%？
@@ -283,26 +296,26 @@
       <div class="rm-arrow">↓</div>
 
       <div class="rm-node n2">
-        <div class="hd">第 2 段 · 研究内容一</div>
-        <div class="tt">可核验的任务蒸馏数据</div>
+        <div class="hd">第 2 段 · 前置准备</div>
+        <div class="tt">可核验的任务教学数据</div>
         <div class="dd">训练资料 → 教师示范 → <b>约束扰动后重新核验</b> → 来源与条件绑定。<br>
         教师只提供操作示范，<b>不编造新配方的真实性能</b>。</div>
       </div>
       <div class="rm-arrow">↓</div>
 
       <div class="rm-node n3">
-        <div class="hd">第 3 段 · 研究内容二 · 主要算法改进</div>
-        <div class="tt">选择性蒸馏</div>
+        <div class="hd">第 3 段 · 研究内容一 · 创新点一 · 主贡献</div>
+        <div class="tt">可核验失误驱动的选择性蒸馏</div>
         <div class="dd">学生诊断：<b>可执行失误</b> ＋ <b>约束组合覆盖</b> － 冗余<br>
         预算上限内正效用选样 → QLoRA 适配 → 保存本地模型</div>
       </div>
       <div class="rm-arrow">↓</div>
 
       <div class="rm-node n4">
-        <div class="hd">第 4 段 · 研究内容三</div>
-        <div class="tt">知识增强与约束生成</div>
-        <div class="dd">本地检索可比实例 → 分步成分生成 → 数值检查与有限修正<br>
-        共用来源类型与约束状态；模型、检索、工具<b>全部在本地</b></div>
+        <div class="hd">第 4 段 · 研究内容二 · 创新点二</div>
+        <div class="tt">条件感知重排与约束生成</div>
+        <div class="dd">微调条件感知重排器（判断证据条件是否可比）→ 分步成分生成 → 数值检查与有限修正<br>
+        教学与推理<b>共用同一套条件判据</b>；模型、检索、工具全部在本地</div>
       </div>
       <div class="rm-arrow">↓</div>
 
@@ -317,77 +330,75 @@
 
     <div class="info" style="margin-top:18px">
       <div class="label">这张图的读法</div>
-      <p>五段是一条单向链路，前一段的输出是后一段的输入。<b>绿色的第 3 段是主贡献所在</b>；
-      第 2 段和第 4 段的作用是让第 3 段可以被公平地验证——没有干净的教材，无法判断选样方法好不好；
-      没有可核验的输出，无法界定什么算「做对」。</p>
+      <p>五段是一条单向链路，前一段的输出是后一段的输入。<b>第 3 段是创新点一，也是主贡献</b>；
+      第 4 段是创新点二。<b>第 2 段和第 4 段共同的作用是让第 3 段能被公平地验证</b>——
+      没有干净可追溯的教材，就说不清学生答错是没学会还是数据有问题；
+      没有条件可比的证据，也说不清错误来自模型能力还是检索质量。</p>
     </div>
   </section>
 
   <section>
-    <h2>三个创新点分别是做什么的</h2>
+    <h2>两个创新点分别是做什么的</h2>
     <h3>先说清楚哪些不算创新</h3>
     <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0">
       <div style="font-size:14.5px;color:var(--ink);line-height:1.7">
         <b>蒸馏本身、LoRA 微调、量化、检索增强、做个界面——这些都不算创新</b>，它们是现成的工具，
-        谁都能用。报告里明确这么写了，不把这些包装成贡献。
-        真正算创新的只有下面三项，而且<b>主贡献集中在第二项</b>，另两项是让第二项能成立的条件。
-      </div>
-    </div>
-
-    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
-      <div class="num" style="flex:0 0 32px;height:32px;border-radius:50%;background:#e8f0fe;color:var(--blue);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>
-      <div class="body" style="flex:1;padding-top:2px">
-        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:6px">造教材的方法：让每道题都能验、都能查来源</div>
-        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.75">
-          普通做法是让大模型批量生成"问题—答案"对。问题在于：材料领域的答案常常看着合理但执行不了，
-          或者说不清依据。<br>
-          本课题的做法是<b>先改要求、再重新核验答案</b>：每次要求变化（改比例、锁定元素、禁用某元素），
-          都让答案重新过一遍检查器；同时把每个性能数字标注成<b>"文献实测"或"模型估计"或"未验证目标"</b>三类，
-          前一类必须能追到具体记录和测试条件。<br>
-          <span style="color:var(--ink3, #6b7280);font-size:13.5px">验证方式：分别去掉"改要求"和"绑证据"这两个环节，看任务效果掉多少。</span>
-        </div>
+        谁都能用。另外还有一个「落地项目」：把整套东西做成能在本地跑的原型，这是验证载体，
+        也不算算法创新。<b>真正算创新的只有两项，主贡献在第一项。</b>
       </div>
     </div>
 
     <div class="callout" style="background:var(--accent-bg);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
-      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:10px">2 · 主贡献 · 挑教材的方法</div>
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:10px">创新点一 · 主贡献 · 挑教材的方法</div>
       <div style="font-size:15px;color:var(--ink);line-height:1.75">
-        这是整个课题真正的核心。现有方法判断"学生哪道题没学会"，看的是模型自己的表现——
+        现有方法判断「学生哪道题没学会」，看的是模型自己的表现——
         困惑度高、答不出来、想得步骤少。<b>这套判断有个前提：题目只有唯一正确答案。</b><br><br>
         配方不是这样。同一个要求，可以有很多个都合格的配方。模型没照着参考答案写，
-        可能只是选了另一条同样合法的路。<b>把"跟参考答案不一样"当成"做错"，就会把合格答案当成错误重点练。</b><br><br>
-        <b>本课题把"什么算错"的判断，从模型内部搬到外面一个可执行的检查器上。</b>
-        不用模型自以为的难度，而用检查器对"总量对不对、锁定项有没有动、单位有没有混、引用的条件对不对"
-        的判定结果。这样"薄弱"就有了明确含义：<b>指的是能指出、能复现的执行错误</b>，
-        而不是模型输出跟参考文本的表面差异。<br><br>
-        再叠加第二个维度：<b>约束类型的覆盖</b>。学生练了很多"改比例"，但没练过"锁定元素"，
-        那就优先补后者——按约束组合算覆盖度，而不是按文章主题算。
+        可能只是选了另一条同样合法的路。<b>把「跟参考答案不一样」当成「做错」，就会把合格答案当成错误重点练。</b><br><br>
+        <b>本课题把「什么算错」的判断，从模型内部搬到外面一个可执行的检查器上。</b>
+        不用模型自以为的难度，而用检查器对「总量对不对、锁定项有没有动、单位有没有混、引用的条件对不对」
+        的判定结果。这样「薄弱」就有了明确含义：<b>指的是能指出、能复现的执行错误</b>。<br><br>
+        再叠加第二个维度：<b>约束类型的覆盖</b>。学生练了很多「改比例」，但没练过「锁定元素」，
+        那就优先补后者——按约束组合算覆盖度，而不是按文章主题算。<br><br>
+        <b>另外还有一半工作在「造教材」上：</b>每改一次要求，就让答案重新过一遍检查器；
+        每个性能数字都标注它是「文献实测」「模型估计」还是「未验证目标」。这样教材本身就是可追溯的。
       </div>
       <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08);font-size:13.5px;color:var(--ink2)">
-        <b>怎么验证它有用：</b>同一批教材、同一个底座、同样多的训练量，
+        <b>怎么证明它有用：</b>同一批教材、同一个底座、同样多的训练量，
         比较五种挑法——本方法 / 随机抽 / 只挑最难的 / 只按覆盖挑 / 成熟的 DEITA 式挑法。
+        再加四组消融：分别去掉失误信号、去掉覆盖、两个都去掉、关掉去重，看各自掉多少。
         <b>只有明显赢过随机挑选，这个创新才成立</b>；赢不过就如实写负结果。
       </div>
     </div>
 
-    <div class="step" style="display:flex;gap:16px;padding:18px 0">
-      <div class="num" style="flex:0 0 32px;height:32px;border-radius:50%;background:#e8f0fe;color:var(--blue);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center">3</div>
-      <div class="body" style="flex:1;padding-top:2px">
-        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:6px">生成时的方法：先选可比证据，再分步生成</div>
-        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.75">
-          检索到一段"某合金抗拉强度 800 MPa"，如果它的测试温度和样品状态跟用户问的不一样，
-          直接拿来用就是错的。所以本课题<b>先在预算内挑"条件可比"的证据</b>，条件不符的不进上下文。<br>
-          生成也拆成几步：<b>先定元素集合 → 再定整数比例份额 → 最后补上引用和说明</b>，
-          中间由数值工具改写和检查。这样每一步都能被检查，而不是一步生成完再猜对不对。<br>
-          <span style="color:var(--ink3, #6b7280);font-size:13.5px">这一项的创新层级低于第二项，主要作用是保证输出可核验。</span>
-        </div>
+    <div class="callout" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--blue);font-weight:650;margin-bottom:10px">创新点二 · 让「查证据」和「写配方」用同一套标准</div>
+      <div style="font-size:15px;color:var(--ink);line-height:1.75">
+        <b>上半部分：训练一个小模型来判断「这条证据能不能用」。</b><br>
+        检索到一段「某合金抗拉强度 800 MPa」，如果它的测试温度和样品状态跟用户问的不一样，
+        直接引用就是错的。但通用检索模型只按「语义像不像」排序，
+        会把<b>主题相关但条件不符</b>的证据排到前面——这正是通用检索器在材料文献上最容易出错的地方。<br><br>
+        本课题的做法是自己造训练数据：找同一成分在不同温度、不同状态下的记录，
+        配对成「条件可比」和「条件冲突」的正负样本。<b>冲突样本只改条件字段，主题照样相关</b>，
+        逼着模型学的是条件一致性，而不是词汇相似。<br>
+        模型只要百兆级参数，单张显卡一个下午就能微调完，不增加算力负担。<br><br>
+        <b>下半部分：生成时分成三步走，每一步都能检查。</b><br>
+        先定元素集合 → 再定整数比例 → 最后补引用和说明。
+        这样如果比例被改动了，就能发现「引用和说明对不上了」；
+        而不是整段生成完，看起来流畅但里面数字和理由互相矛盾。
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.08);font-size:13.5px;color:var(--ink2)">
+        <b>怎么证明它有用：</b>对照组四组——不作条件区分的通用重排器、按规则硬过滤、
+        只用元数据字段匹配、本课题的微调重排器。<b>只改重排策略，其他全部固定</b>，
+        这样测出来的就是「条件判断交给模型」本身的收益。消融再加四组：三类判定压成二值、
+        关掉分步生成、关掉修正后同步更新等。
       </div>
     </div>
 
     <div style="margin-top:20px;padding:16px 20px;background:#fef9ec;border-left:3px solid #d69e2e;border-radius:0 8px 8px 0;font-size:14px;color:var(--ink);line-height:1.7">
       <b>为什么主贡献只给一项：</b>一篇硕士论文能说清一个改动、比一个基线好多少，就已经算站住了。
-      硬凑三个"创新"反而每个都单薄。<b>第一、三项的作用是让第二项能被验证</b>——
-      没有干净的教材（第一项），无法判断选样方法好不好；没有可核验的输出（第三项），无法界定什么算"做对"。
+      硬凑三个「创新」反而每个都单薄。<b>第二项的作用是让第一项能被验证</b>——
+      如果检索来的证据本身条件不对，就说不清学生答错到底是没学会还是证据有问题。
     </div>
   </section>
 
@@ -504,6 +515,34 @@
         随机采样在若干设置下是有竞争力的基线。这不是我给自己找退路，
         而是说：<b>如果本方法只赢过「什么都不挑」，那不叫贡献。</b>
         所以我把随机设为必做对照，并且只有显著赢过它，才把增益算作本方法的功劳。
+      </p>
+    </div>
+
+    <h3>八组消融：每一步改动都要能单独验证</h3>
+    <p>光有主对照还不够——主对照只能说明「比谁好」，说不清「好在哪」。所以每条改动都单独拆开测一遍。</p>
+
+    <table class="cmp">
+      <thead>
+        <tr><th>创新点</th><th>消融组</th><th>要回答什么</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="k" rowspan="5">创新点一<br>选样方法</td><td>去掉失误信号项</td><td>可核验失误是否比覆盖本身更有信息量</td></tr>
+        <tr><td>去掉覆盖项</td><td>约束组合覆盖是否带来额外增益</td></tr>
+        <tr><td>两个都去掉</td><td>收益是否来自评分框架本身</td></tr>
+        <tr><td>关掉去重</td><td>冗余惩罚是否必要</td></tr>
+        <tr><td>去掉约束扰动 / 去掉证据绑定</td><td>区分「选样带来的增益」和「造教材带来的增益」</td></tr>
+        <tr><td class="k" rowspan="3">创新点二<br>重排与生成</td><td>通用重排器替换微调重排器</td><td>条件感知是否真的必要</td></tr>
+        <tr><td>三类判定压成二值匹配</td><td>「未知」这个状态是否贡献信息</td></tr>
+        <tr><td>关掉分步生成，改成生成后过滤</td><td>中间状态可检查是否真能减少解释失配</td></tr>
+      </tbody>
+    </table>
+
+    <div class="note" style="margin-top:16px">
+      <div class="label">主对照和消融分开报告</div>
+      <p>
+        主对照回答「所提方法是否优于既有方法」，消融回答「增益来自哪个组件」。
+        <b>两者如果打架，以消融来解释主对照里增益的来源</b>，而不是拿总量差异搪塞过去。
+        这也是这个课题的自我约束：<b>不要求方法全新，但要求能证明改进出自我改的那个地方。</b>
       </p>
     </div>
 
