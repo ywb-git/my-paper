@@ -304,25 +304,25 @@
         <div class="hd">环节 3 · 研究内容一</div>
         <div class="tt">条件感知检索</div>
         <div class="dd">按语义与条件召回候选 → 规则判定相符／冲突／未知<br>
-        <b>规则可判定约 89%＋7%，冲突样本占约 58%</b></div>
+        <b>已知冲突候选 5,881 对（另 1,571 对为字段缺失，不计入冲突）</b></div>
       </div>
       <div class="rm-arrow">↓</div>
 
       <div class="rm-node n4">
         <div class="hd">环节 4 · 研究内容二</div>
-        <div class="tt">条件冲突处置与答案生成</div>
-        <div class="dd">规则处置基线 vs 小模型处置（经过程示范蒸馏）<br>
-        相符作直接支持／冲突降级或排除／未知标注不确定<br>
-        <b>答案强制标注所依据记录的条件</b></div>
+        <div class="tt">条件处置与答案生成</div>
+        <div class="dd">规则弱标签（仅作标注起点）＋ 人工核验确定最终处置<br>
+        教师示范逐项说明：哪个槽位冲突、问题意图为何、证据承担何角色<br>
+        <b>小模型经过程示范蒸馏后补位</b></div>
       </div>
       <div class="rm-arrow">↓</div>
 
       <div class="rm-node n5">
         <div class="hd">环节 5 · 验证</div>
         <div class="tt">评估与归因</div>
-        <div class="dd">分问题类型答案正确率；按有无干扰项分层增益<br>
-        错误三类归因：检索未命中／条件误用／生成错误<br>
-        Oracle 设置分离检索、条件处理、生成三环节</div>
+        <div class="dd">答案正确率（条件敏感／无关分组）；<b>正确性与标注完整性分开计分</b><br>
+        同题受控加减干扰度量条件处理的作用；有／无干扰分层仅作机制线索<br>
+        错误三类归因、Oracle 设置分离检索与生成环节</div>
       </div>
     </div>
 
