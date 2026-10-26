@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>这个开题在做什么 · 通俗版</title>
+<title>面向材料文献问答的条件可比 RAG 与小模型蒸馏方法研究 · 方向说明</title>
 <style>
   :root{
     --ink:#1a1a1a; --ink2:#4a4a4a; --ink3:#767676;
@@ -21,258 +21,221 @@
   }
   .wrap{max-width:780px;margin:0 auto;padding:56px 0 96px}
 
-  /* 封面 */
   .hero{margin-bottom:56px;padding-bottom:32px;border-bottom:2px solid var(--ink)}
   .eyebrow{font-size:13px;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-bottom:16px}
-  h1{font-size:32px;line-height:1.35;font-weight:700;letter-spacing:-.01em;margin-bottom:18px}
+  h1{font-size:29px;line-height:1.42;font-weight:700;letter-spacing:-.01em;margin-bottom:18px}
   h1 .hl{background:linear-gradient(transparent 62%, #d9ece5 62%);padding:0 2px}
-  .sub{font-size:16px;color:var(--ink2);line-height:1.8}
+  .sub{font-size:16px;color:var(--ink2);line-height:1.85}
   .meta{margin-top:24px;font-size:13px;color:var(--ink3);display:flex;gap:18px;flex-wrap:wrap}
   .meta span{border-left:2px solid var(--line);padding-left:10px}
 
-  /* 章节 */
   section{margin-bottom:52px}
   h2{font-size:13px;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;
-     font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+     font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:12px}
   h2::after{content:"";flex:1;height:1px;background:var(--line)}
-  h3{font-size:20px;font-weight:650;margin-bottom:12px;letter-spacing:-.005em}
-  p{font-size:16px;color:var(--ink2);margin-bottom:16px}
-  p:last-child{margin-bottom:0}
-  strong{color:var(--ink);font-weight:600}
+  h3{font-size:20px;font-weight:650;margin-bottom:12px;letter-spacing:-.005em;line-height:1.5}
+  h4{font-size:16px;font-weight:650;margin:26px 0 10px;color:var(--ink)}
+  p{font-size:16px;color:var(--ink2);margin-bottom:14px;line-height:1.85}
+  strong,b{color:var(--ink);font-weight:600}
+  .lede{font-size:16.5px;color:var(--ink);line-height:1.8}
 
-  /* 类比卡片 */
-  .analogy{
-    background:var(--accent-bg); border-left:3px solid var(--accent);
-    padding:20px 24px; border-radius:0 8px 8px 0; margin:20px 0;
+  .table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+  .table th{
+    background:#f4f2ee; color:var(--ink); font-weight:650; text-align:left;
+    padding:11px 14px; border-bottom:1px solid var(--line);
   }
-  .analogy .label{font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:8px}
-  .analogy p{color:var(--ink);font-size:15.5px;margin:0}
+  .table td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+  .table tr:last-child td{border-bottom:none}
+  .table .k{font-weight:600;color:var(--ink);white-space:nowrap}
 
-  /* 流程图 */
-  .flow{margin:24px 0}
-  .step{
-    display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);
+  .box{
+    background:var(--card); border-left:3px solid var(--line);
+    padding:18px 22px; margin:20px 0; border-radius:0 6px 6px 0;
   }
+  .box .label{font-size:11.5px;letter-spacing:.12em;font-weight:650;
+              text-transform:uppercase;margin-bottom:9px;color:var(--ink3)}
+  .box p{margin-bottom:10px}
+  .box p:last-child{margin-bottom:0}
+  .box ul:last-child,.box ol:last-child{margin-bottom:0}
+  .box.accent{border-left-color:var(--accent);background:var(--accent-bg)}
+  .box.accent .label{color:var(--accent)}
+  .box.blue{border-left-color:var(--blue);background:var(--blue-bg)}
+  .box.blue .label{color:var(--blue)}
+  .box.warn{border-left-color:var(--warn);background:var(--warn-bg)}
+  .box.warn .label{color:var(--warn)}
+
+  .steps{margin:24px 0}
+  .step{display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)}
   .step:last-child{border-bottom:none}
   .step .num{
-    flex:0 0 30px;height:30px;border-radius:50%;
-    background:var(--ink);color:#fff;font-size:14px;font-weight:600;
-    display:flex;align-items:center;justify-content:center;
+    flex:0 0 26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;
+    font-size:13px;font-weight:650;display:flex;align-items:center;justify-content:center;
+    margin-top:3px;
   }
-  .step .body{flex:1;padding-top:2px}
-  .step .t{font-size:16px;font-weight:600;margin-bottom:4px}
-  .step .d{font-size:14.5px;color:var(--ink2);line-height:1.7}
+  .step .body{flex:1}
+  .step .t{font-size:16px;font-weight:650;margin-bottom:6px;color:var(--ink)}
+  .step .d{font-size:14.5px;color:var(--ink2);line-height:1.75}
 
-  /* 对比表 */
-  .cmp{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
-  .cmp th{
-    text-align:left;padding:11px 14px;background:#f2efea;
-    font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--ink2);
+  .chain{margin:26px 0}
+  .chain .node{
+    background:var(--card); border:1px solid var(--line); border-left:3px solid var(--line);
+    padding:16px 20px; border-radius:0 6px 6px 0;
   }
-  .cmp td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
-  .cmp tr:last-child td{border-bottom:none}
-  .cmp .k{font-weight:600;color:var(--ink);white-space:nowrap}
+  .chain .node .hd{font-size:11.5px;letter-spacing:.1em;font-weight:650;margin-bottom:6px;color:var(--ink3)}
+  .chain .node .tt{font-size:15px;font-weight:650;margin-bottom:7px;color:var(--ink)}
+  .chain .node .dd{font-size:13.5px;color:var(--ink2);line-height:1.7}
+  .chain .node.n1,.chain .node.n2{border-left-color:var(--blue);background:var(--blue-bg)}
+  .chain .node.n1 .hd,.chain .node.n2 .hd{color:var(--blue)}
+  .chain .node.n3{border-left-color:var(--accent);background:var(--accent-bg)}
+  .chain .node.n3 .hd{color:var(--accent)}
+  .chain .node.n4{border-left-color:var(--warn);background:var(--warn-bg)}
+  .chain .node.n4 .hd{color:var(--warn)}
+  .chain .node.n5{border-left-color:var(--ink3);background:#f4f4f2}
+  .chain .node.n5 .hd{color:var(--ink2)}
+  .chain .arrow{text-align:center;color:var(--line);font-size:18px;line-height:1;padding:6px 0;user-select:none}
 
-  /* 数字 */
-  /* 技术路线流程图 */
-  .roadmap{margin:26px 0}
-  .rm-node{
-    background:var(--card);border:1px solid var(--line);border-radius:8px;
-    padding:14px 18px;position:relative;
+  .nums{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
+        border:1px solid var(--line);margin:22px 0}
+  .num-cell{background:var(--card);padding:20px 22px}
+  .num-cell .v{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.2;color:var(--ink)}
+  .num-cell .u{font-size:13px;color:var(--ink3);margin-top:4px}
+
+  ul,ol{margin:0 0 16px;padding-left:22px;color:var(--ink2)}
+  li{margin-bottom:8px;line-height:1.8}
+  li b{color:var(--ink)}
+
+  footer{
+    margin-top:64px;padding-top:26px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink3);line-height:1.85;
   }
-  .rm-node .hd{font-size:12px;letter-spacing:.08em;font-weight:650;margin-bottom:6px}
-  .rm-node .tt{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--ink)}
-  .rm-node .dd{font-size:13.5px;color:var(--ink2);line-height:1.65}
-  .rm-node.n1{border-left:3px solid var(--blue);background:var(--blue-bg)}
-  .rm-node.n1 .hd{color:var(--blue)}
-  .rm-node.n2{border-left:3px solid var(--blue);background:var(--blue-bg)}
-  .rm-node.n2 .hd{color:var(--blue)}
-  .rm-node.n3{border-left:3px solid var(--accent);background:var(--accent-bg);box-shadow:0 1px 6px rgba(47,111,94,.10)}
-  .rm-node.n3 .hd{color:var(--accent)}
-  .rm-node.n4{border-left:3px solid var(--warn);background:var(--warn-bg)}
-  .rm-node.n4 .hd{color:var(--warn)}
-  .rm-node.n5{border-left:3px solid var(--ink3);background:#f4f4f2}
-  .rm-node.n5 .hd{color:var(--ink2)}
-  .rm-arrow{text-align:center;color:var(--line);font-size:20px;line-height:1;padding:7px 0;user-select:none}
-
-  .nums{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--line);
-        border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:20px 0}
-  .num-cell{background:var(--card);padding:20px}
-  .num-cell .v{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
-  .num-cell .v small{font-size:15px;font-weight:500;color:var(--ink3);margin-left:2px}
-  .num-cell .k{font-size:13px;color:var(--ink3);margin-top:6px}
-
-  /* 提醒块 */
-  .note{
-    background:var(--warn-bg);border-left:3px solid var(--warn);
-    padding:18px 22px;border-radius:0 8px 8px 0;margin:20px 0;
-  }
-  .note .label{font-size:12px;letter-spacing:.1em;color:var(--warn);font-weight:650;margin-bottom:8px}
-  .note p{color:var(--ink);font-size:15px;margin:0}
-
-  .info{
-    background:var(--blue-bg);border-left:3px solid var(--blue);
-    padding:18px 22px;border-radius:0 8px 8px 0;margin:20px 0;
-  }
-  .info .label{font-size:12px;letter-spacing:.1em;color:var(--blue);font-weight:650;margin-bottom:8px}
-  .info p{color:var(--ink);font-size:15px;margin:0}
-
-  /* 列表 */
-  ul.plain{list-style:none;margin:16px 0}
-  ul.plain li{
-    padding:10px 0 10px 22px;position:relative;
-    font-size:15px;color:var(--ink2);border-bottom:1px dashed var(--line);
-  }
-  ul.plain li:last-child{border-bottom:none}
-  ul.plain li::before{
-    content:"—";position:absolute;left:0;color:var(--ink3);
-  }
-  ul.plain li b{color:var(--ink);font-weight:600}
-
-  /* 一句话总结 */
-  .oneline{
-    background:var(--ink);color:#fff;padding:28px 30px;border-radius:10px;margin:24px 0;
-  }
-  .oneline .label{font-size:11px;letter-spacing:.16em;opacity:.65;margin-bottom:10px}
-  .oneline p{color:#fff;font-size:17px;line-height:1.7;margin:0}
-
-  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);
-         font-size:13px;color:var(--ink3);line-height:1.8}
-
-  @media(max-width:600px){
-    .wrap{padding:36px 0 64px}
-    h1{font-size:25px}
-    .nums{grid-template-columns:1fr}
-    .num-cell .v{font-size:24px}
-    .step{gap:12px}
-  }
+  footer b{color:var(--ink2)}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="hero">
-    <div class="eyebrow">硕士学位论文开题 · 通俗说明</div>
-    <h1>让小模型查文献时<br>不再<span class="hl">张冠李戴</span></h1>
+    <div class="eyebrow">硕士学位论文开题 · 方向说明</div>
+    <h1>面向材料文献问答的<br><span class="hl">条件可比检索增强生成</span>与小模型蒸馏</h1>
     <p class="sub">
-      材料文献里，同一个合金在不同温度、不同工艺下测出来的性能，<b>字面上看起来几乎一样</b>。<br>
-      检索系统会把它们一并返回。小模型如果不加分辨地引用，就会拿 800℃ 的数据回答室温的问题——
-      <b>数字来自真实文献、引用可追溯，结论却是错的</b>。<br>
-      这个课题要做的，是给每条证据绑上"观察条件"，让小模型学会判断这条证据配不配用来回答这个问题。
+      材料文献中，同一成分在不同测试温度、制备工艺与试验类型下的性能记录，
+      在文本层面高度相似，在物理层面并不构成同一条件下的观测。
+      检索系统无法识别这一差别；语言模型若不加以区分地引用，
+      便会以条件不符的记录支撑当前结论——数值来自真实文献、引用可追溯，结论却不成立。
+      本课题研究把实验条件作为证据的显式属性组织进知识库，并在生成前完成条件判定，
+      以提升条件敏感问题的答案正确率。
     </p>
     <div class="meta">
       <span>面向非专业读者</span>
-      <span>全文约 6 分钟</span>
-      <span>所有数字均来自实际数据审计</span>
+      <span>全文约 7 分钟</span>
+      <span>所引数据均来自实际数据审计</span>
     </div>
   </div>
 
   <section>
-    <h2>先说清楚要解决什么问题</h2>
-    <h3>同一个合金，换个测试条件就是另一回事</h3>
+    <h2>一 · 问题定义</h2>
+    <h3>语义相似与物理不可比并存</h3>
+    <p class="lede">材料性能数据的可用性不由文本相似度决定，而由观测条件决定。</p>
     <p>
-      合金的成分就是一堆元素的比例。比如某个配方是"铁 60%、镍 20%、铬 15%、锰 5%"。
-      研究者经常要改它：<strong>钴太贵了能不能降一点</strong>、<strong>镍含量必须保持不变</strong>、
-      <strong>不许引入新元素</strong>。
+      一条性能记录要成立，至少需要绑定三项条件：<strong>测试温度、制备工艺、试验类型</strong>。
+      条件不同则数值不可直接比较。而文献数据库中，同一成分往往存在多条记录，
+      分别来自不同工艺与不同测试条件，其文本表述几乎一致。
     </p>
-    <p>
-      改的时候有几条硬规矩：所有元素加起来必须是 100%；
-      降了一种元素，就得从别的元素里补回来；被锁定的元素一点都不能动。
-    </p>
-
-    <div class="analogy">
-      <div class="label">就像这样</div>
+    <div class="box">
+      <div class="label">一个具体情形</div>
       <p>
-        你有 100 块钱要分给 5 个人。现在要求"少给甲 10 块"，那这 10 块必须分给别人——
-        但乙的钱锁死了不能动，丙丁戊也各有上下限。分得对不对，一眼能查。
+        库中存在一条记录：「某合金在 800 ℃ 下的抗压强度为 1200 MPa」。
+        用户询问该合金的室温性能。语义检索会把这条记录排在前列——它在主题与指标上都高度相关。
+        <strong>但这条数据对室温问题不可用。</strong>
       </p>
     </div>
-
     <p>
-      但还有一层更难的要求：<strong>改完之后，这个配方得"讲得通"</strong>——
-      你得说得出依据，比如"这个成分在某某文献里被报道过，测试条件是室温拉伸"。
-      不能随便编一个数。
+      这类失效不体现在语法或数值层面：输出通顺、数字真实、引用可查，错误隐藏在条件不一致之中。
+      既有以文本相似度为核心的检索与排序机制，对此没有判别能力。
     </p>
   </section>
 
   <section>
-    <h2>为什么要用"小模型"跑这个知识库</h2>
-    <h3>大模型好用，但用起来有三个麻烦</h3>
-    <table class="cmp">
-      <tr><th>麻烦</th><th>具体是什么</th></tr>
-      <tr><td class="k">配方不能外发</td><td>合金配方是企业的核心资料，传到第三方服务器上就有泄露风险</td></tr>
-      <tr><td class="k">版本会变</td><td>云端模型随时更新。今天调好的流程，三个月后可能就变了，实验没法复现</td></tr>
-      <tr><td class="k">按次收费</td><td>用得越多花得越多，且成本随使用量线性增长</td></tr>
+    <h2>二 · 研究动机</h2>
+    <h3>本地化部署的约束与代价</h3>
+    <p>
+      在材料研发场景中，文献库与配方记录通常涉及未公开数据，无法上传至第三方服务。
+      这一约束使本地部署成为实际需求。
+    </p>
+    <table class="table">
+      <thead><tr><th>约束</th><th>具体表现</th></tr></thead>
+      <tbody>
+        <tr><td class="k">数据不可外发</td><td>配方与内部记录上传至第三方服务器构成泄露风险</td></tr>
+        <tr><td class="k">版本需稳定</td><td>云端模型持续更新，实验流程难以长期复现</td></tr>
+        <tr><td class="k">成本随用量增长</td><td>按调用计费，使用量上升时成本线性增加</td></tr>
+      </tbody>
     </table>
     <p>
-      所以人们希望把能力"搬"到本地的一台机器上。但本地能跑的模型只有 40 亿到 80 亿参数
-      （大模型是这个的几十倍），能力差距很大。这就是本课题要处理的矛盾。
+      本地可部署的模型参数量通常在 4B 至 8B 区间，与云端大模型存在数量级差距。
+      本课题要处理的矛盾即在于此：<strong>在受限算力下，使本地小模型在限定的文献问答任务上达到可用水平。</strong>
     </p>
-
-    <div class="info">
-      <div class="label">顺便说个关键约束</div>
+    <div class="box blue">
+      <div class="label">一项不可绕过的约束</div>
       <p>
-        不能用 GPT 或 Claude 这类商业模型当"老师"来教学——它们的服务条款
-        <strong>明确禁止用其输出去训练别的模型</strong>。所以教师只能用开源的模型
-        （比如 Qwen3-235B，Apache 2.0 许可，允许这样做）。
+        用于生成训练示范的教师模型，须选用许可允许其输出被用于训练的模型。
+        部分商业模型的服务条款对此类用途有明确限制，因此教师候选限定为开放权重模型。
+        具体许可须按实际采用版本的服务条款核对，不能依据历史版本的开源协议推断当前条款。
       </p>
     </div>
   </section>
 
   <section>
-    <h2>核心做法：给证据绑条件，再判断能不能用</h2>
-    <h3>四步走</h3>
-
-    <div class="flow">
+    <h2>三 · 方法设计</h2>
+    <h3>条件作为证据的一等属性</h3>
+    <p class="lede">方法由四个环节构成，核心是把条件从隐含假设变为可判定的显式字段。</p>
+    <div class="steps">
       <div class="step">
         <div class="num">1</div>
         <div class="body">
-          <div class="t">建知识库：每条记录绑上"观察条件"</div>
+          <div class="t">建立条件感知的本地知识库</div>
           <div class="d">
-            把文献里的性能数据整理进本地知识库，每条记录除了<b>成分和数值</b>，
-            还绑定三类条件：<b>测试温度、制备工艺、试验类型</b>。<br>
-            这一步是基础——没有条件信息，后面所有判断都无从谈起。<br>
-            <span style="color:var(--ink3);font-size:13.5px">字段缺失就标"未知"，不默认填一个值凑数。</span>
+            文献经解析后，每条性能记录除成分与数值外，绑定测试温度、制备工艺、试验类型
+            三类条件字段，并保留来源标识。字段缺失标注为未知，不以默认值填充。<br>
+            单位不单设字段：主线数据中每个指标的单位由其列名唯一确定，
+            不存在跨单位换算情形，故作为指标类型的附属属性记录。
           </div>
         </div>
       </div>
-
       <div class="step">
         <div class="num">2</div>
         <div class="body">
-          <div class="t">检索时判条件：相符、冲突、还是未知</div>
+          <div class="t">检索阶段判定条件关系</div>
           <div class="d">
-            用户问「某合金室温下的硬度」，系统不光要找到讲这个合金的记录，
-            还要判断<b>这条记录的条件跟问题对不对得上</b>。<br>
-            这里有个实测发现：MPEA 数据的条件字段高度标准化（工艺就 CAST/WROUGHT/ANNEAL 几种，
-            温度是数字），<b>规则能判定的比例高达约 89%</b>。
-            所以这一步主要靠规则，不靠模型。
+            先由问题解析出所需条件，再与候选证据的条件字段逐项比对，
+            得到相符、冲突、未知三种状态。<br>
+            对主线数据的实测表明，条件字段已高度标准化，规则可判定的比例较高，
+            <strong>因而该环节以规则为主，模型不承担主要判断</strong>。
           </div>
         </div>
       </div>
-
       <div class="step">
         <div class="num">3</div>
         <div class="body">
-          <div class="t">冲突了怎么办：这才是让模型学的地方（创新点二）</div>
+          <div class="t">冲突证据的处置决策</div>
           <div class="d">
-            规则判出"冲突"只是给结论，<b>怎么处理没有标准答案</b>：
-            有时候该整条排除，有时候降级成背景信息，有时候该向用户说明条件差异再给部分回答。<br>
-            实测显示<b>冲突样本占约 58%</b>，空间足够。
-            本课题让大模型演示"看到这类冲突该怎么处置"，再蒸馏进小模型。<br>
-            <span style="color:var(--ink3);font-size:13.5px">关键对照：如果模型只学会"一律说不知道"，那蒸馏就没意义——所以专门设了这条廉价基线。</span>
+            规则给出「冲突」只是判定结论，如何处置并无唯一答案，
+            且<strong>取决于问题意图与候选证据集合的整体情况</strong>：
+            用户询问「室温性能」时，高温记录不应作为答案；
+            但询问「温度如何影响性能」时，这些记录恰是必要证据。<br>
+            此处由规则给出弱标签作为标注起点，经人工核验确定最终处置，
+            再由教师示范决策过程，蒸馏进小模型。
           </div>
         </div>
       </div>
-
       <div class="step">
         <div class="num">4</div>
         <div class="body">
-          <div class="t">生成答案：必须标明依据哪条记录的条件</div>
+          <div class="t">答案生成与依据标注</div>
           <div class="d">
-            答案里不能只给数字，要写清<b>这个数字是在什么条件下测的</b>。
-            条件不符时明确说明"未找到该条件下的数据"，而不是拿相近条件的数据凑一个。<br>
-            <b>这一步决定答案能不能被用户核查。</b>
+            答案须区分条件状态组织证据：相符者可作直接支持，冲突者降级为背景或排除，
+            未知者标注为不确定。<br>
+            同时要求答案写明所依据记录的条件，使结论的适用范围随答案一并给出。
+            条件不符时如实说明未找到该条件下的数据，不以相近条件的数据替代。
           </div>
         </div>
       </div>
@@ -280,364 +243,329 @@
   </section>
 
   <section>
-    <h2>整体怎么走：五个环节</h2>
-    <h3>从文献解析到答案评估</h3>
-
-    <div class="roadmap">
-      <div class="rm-node n1">
-        <div class="hd">环节 1 · 输入</div>
+    <h2>四 · 技术路线</h2>
+    <h3>五个环节的单向链路</h3>
+    <div class="chain">
+      <div class="node n1">
+        <div class="hd">环节一 · 输入</div>
         <div class="tt">文献解析与条件字段抽取</div>
-        <div class="dd">PDF → 结构化文本（MinerU）→ 抽取成分、性能、测试温度、制备工艺、试验类型<br>
-        缺失字段标注为未知，<b>不默认填充</b></div>
+        <div class="dd">PDF 转为结构化文本后，抽取成分、性能、测试温度、制备工艺、试验类型。
+        缺失字段标注为未知，不默认填充。</div>
       </div>
-      <div class="rm-arrow">↓</div>
-
-      <div class="rm-node n2">
-        <div class="hd">环节 2 · 建库</div>
-        <div class="tt">条件元组绑定与本地知识库构建</div>
-        <div class="dd">每条性能记录绑定测试温度、制备工艺、试验类型<br>
-        MPEA 基础库 + 文献补充库，统一记录结构与来源标识</div>
+      <div class="arrow">↓</div>
+      <div class="node n2">
+        <div class="hd">环节二 · 建库</div>
+        <div class="tt">条件字段绑定与本地知识库构建</div>
+        <div class="dd">每条性能记录绑定三类条件字段。基础库与文献补充库采用统一记录结构与来源标识，
+        其中条件完整记录 1,062 条。</div>
       </div>
-      <div class="rm-arrow">↓</div>
-
-      <div class="rm-node n3">
-        <div class="hd">环节 3 · 研究内容一</div>
+      <div class="arrow">↓</div>
+      <div class="node n3">
+        <div class="hd">环节三 · 研究内容一</div>
         <div class="tt">条件感知检索</div>
-        <div class="dd">按语义与条件召回候选 → 规则判定相符／冲突／未知<br>
-        <b>已知冲突候选 5,881 对（另 1,571 对为字段缺失，不计入冲突）</b></div>
+        <div class="dd">按语义与条件召回候选，再由规则判定相符、冲突或未知。
+        已知冲突候选 5,881 对；另有 1,571 对因字段缺失，不计入冲突样本。</div>
       </div>
-      <div class="rm-arrow">↓</div>
-
-      <div class="rm-node n4">
-        <div class="hd">环节 4 · 研究内容二</div>
+      <div class="arrow">↓</div>
+      <div class="node n4">
+        <div class="hd">环节四 · 研究内容二</div>
         <div class="tt">条件处置与答案生成</div>
-        <div class="dd">规则弱标签（仅作标注起点）＋ 人工核验确定最终处置<br>
-        教师示范逐项说明：哪个槽位冲突、问题意图为何、证据承担何角色<br>
-        <b>小模型经过程示范蒸馏后补位</b></div>
+        <div class="dd">规则给出弱标签作为标注起点，经人工核验确定最终处置。
+        教师示范逐项说明冲突所在字段、问题意图与证据应承担的角色，
+        由小模型经蒸馏习得该决策过程。</div>
       </div>
-      <div class="rm-arrow">↓</div>
-
-      <div class="rm-node n5">
-        <div class="hd">环节 5 · 验证</div>
-        <div class="tt">评估与归因</div>
-        <div class="dd">答案正确率（条件敏感／无关分组）；<b>正确性与标注完整性分开计分</b><br>
-        同题受控加减干扰度量条件处理的作用；有／无干扰分层仅作机制线索<br>
-        错误三类归因、Oracle 设置分离检索与生成环节</div>
-      </div>
-    </div>
-
-    <div class="info" style="margin-top:18px">
-      <div class="label">这张表的读法</div>
-      <p>五个环节是一条单向链路。<b>环节 3 是创新点一</b>（把条件作为检索判据），
-      <b>环节 4 是创新点二</b>（让小模型学会处置冲突）。环节 5 不只是报个总分——
-      它要把错误拆成三类，否则<b>说不清改进到底发生在哪一环</b>。</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>两个创新点分别是做什么的</h2>
-    <h3>先说清楚哪些不算创新</h3>
-    <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0">
-      <div style="font-size:14.5px;color:var(--ink);line-height:1.7">
-        <b>检索增强、大模型蒸馏、LoRA、做个界面——这些都不算创新</b>，是现成的工具。
-        另有一个「落地项目」：把整套流程做成能在本地跑的问答原型，这是验证载体，也不算算法创新。
-        <b>真正算创新的只有两项，主贡献在第一项。</b>
+      <div class="arrow">↓</div>
+      <div class="node n5">
+        <div class="hd">环节五 · 评估</div>
+        <div class="tt">评估与错误归因</div>
+        <div class="dd">分问题类型统计答案正确率，正确性与依据标注完整性分开计分。
+        以同题受控加减干扰度量条件处理的作用；有无干扰的分层结果仅作机制线索。
+        错误按检索未命中、条件误用、生成错误三类归因，并以 Oracle 设置分离各环节贡献。</div>
       </div>
     </div>
-
-    <div class="callout" style="background:var(--accent-bg);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
-      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:10px">创新点一 · 主贡献 · 把条件变成检索判据</div>
-      <div style="font-size:15px;color:var(--ink);line-height:1.75">
-        现有的文献问答系统，把每条证据当成<b>一段独立的文本</b>来检索和排序。
-        这个结构表达不了一件事：<b>同一成分的两条记录之间存在「物理上不可互换」的关系。</b><br><br>
-        举个具体的例子。库里有一条「某合金 800℃ 下强度 1200 MPa」，用户问的是室温性能。
-        语义检索会把这条记录排得很靠前——它讲的就是这个合金、这个指标。
-        <b>但这条数据对室温问题是不可用的。</b><br><br>
-        本课题的做法是：<b>把测试温度、制备工艺、试验类型作为记录的一等属性绑进知识库</b>，
-        让检索结果自带「这条数据在什么条件下成立」的信息；
-        生成前先判定条件关系，<b>相符的才能作直接支持，冲突的只能作背景或排除</b>。
-      </div>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08);font-size:13.5px;color:var(--ink2)">
-        <b>怎么证明它有用：</b>关键是那个「文本拼接对照」——
-        把条件字段拼成一句话写进检索单元、<b>不做结构化绑定</b>。
-        如果这个做法和本课题效果一样，那就说明「只要把温度写进文本就行」，条件元组这个设计不成立。<br><br>
-        另一个证据是<b>分层增益</b>：如果条件元组真在起作用，增益应集中出现在「库里有同成分不同条件干扰项」的题上，在没有干扰项的题上接近零。<b>这个数据本来就分得开。</b>
-      </div>
-    </div>
-
-    <div class="callout" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
-      <div style="font-size:12px;letter-spacing:.1em;color:var(--blue);font-weight:650;margin-bottom:10px">创新点二 · 让小模型学会「冲突了怎么办」</div>
-      <div style="font-size:15px;color:var(--ink);line-height:1.75">
-        <b>这里有一个实测发现改变了原设计。</b><br><br>
-        原本设想：规则判不了的部分（比如「铸态」写作「as-cast」、温度写成「室温」）交给模型补位。
-        但实测 MPEA 数据后发现——<b>条件字段全是标准化枚举</b>，工艺只有 CAST/WROUGHT/ANNEAL/POWDER 几个值，
-        试验类型只有压缩和拉伸，温度是数字。<b>报告里假设的「表述变体」一个都没有。</b><br><br>
-        实测结果：<b>规则能完全判定约 89%，部分判定约 7%，真正需要模型的只有约 4%</b>，
-        而且那 4% 是<b>字段没填</b>，不是表述模糊——没填的模型也补不出来。<br><br>
-        <b>所以模型的角色改了：</b>不再判「条件是否相符」（规则已能判 95%），
-        而是判「<b>规则说这条冲突了，答案里该怎么处理</b>」——
-        整条排除？降级成背景？还是说明条件差异后给部分回答？
-        这个决策<b>没有标准答案、规则无法枚举</b>，而冲突样本占约 <b>58%</b>，空间足够。<br><br>
-        做法是大模型演示这个决策过程，再蒸馏进小模型。
-      </div>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,0.08);font-size:13.5px;color:var(--ink2)">
-        <b>最关键的对照：</b>「<b>一律标注为不确定</b>」这条廉价基线。
-        如果模型只是学会了保守（遇事就说不知道），那蒸馏就白做了。
-        <b>必须证明它比「一律说不知道」强，否则这个创新点不成立。</b>
-      </div>
-    </div>
-
-    <div style="margin-top:20px;padding:16px 20px;background:#fef9ec;border-left:3px solid #d69e2e;border-radius:0 8px 8px 0;font-size:14px;color:var(--ink);line-height:1.7">
-      <b>为什么主贡献只给一项：</b>一篇硕士论文能说清一个改动、比一个基线好多少，就已经算站住了。
-      <b>第二项的作用是让第一项能被验证</b>——如果模型不懂得正确处置冲突证据，
-      条件判定的价值就无法在最终答案上体现出来。
+    <div class="box">
+      <div class="label">环节之间的关系</div>
+      <p>
+        五个环节构成单向链路。环节三对应第一项研究内容，环节四对应第二项。
+        环节五不止于报告总体正确率，其作用在于把错误归因到具体环节，
+        否则无法判断改进来自何处。
+      </p>
     </div>
   </section>
 
   <section>
-    <h2>拿什么数据做实验</h2>
-    <h3>一个公开的多主元合金数据集（MPEA）</h3>
-
-    <div class="nums">
-      <div class="num-cell">
-        <div class="v">1,545</div>
-        <div class="k">条记录</div>
-      </div>
-      <div class="num-cell">
-        <div class="v">630</div>
-        <div class="k">种不同成分</div>
-      </div>
-      <div class="num-cell">
-        <div class="v">265</div>
-        <div class="k">篇来源文献</div>
-      </div>
-      <div class="num-cell">
-        <div class="v">287</div>
-        <div class="k">条室温拉伸强度记录</div>
-      </div>
-    </div>
-
+    <h2>五 · 研究内容与创新点</h2>
+    <h3>方法贡献的界定</h3>
     <p>
-      数据是 Apache 2.0 许可的公开数据集，可自由使用。
-      但规模并不宽裕——能用来做"室温拉伸强度"任务的只有 287 条。
+      检索增强、知识蒸馏、参数高效微调与系统实现均属既有技术，不构成方法贡献。
+      另有一项工程交付物：可在本地运行的问答原型，其定位为验证载体，亦不主张算法创新。
+      <strong>方法贡献集中于以下两项，主贡献在第一项。</strong>
     </p>
 
-    <div class="note">
-      <div class="label">一个必须提前说清的限制</div>
+    <div class="box accent" style="margin-top:26px">
+      <div class="label">研究内容一 · 主贡献</div>
+      <h4 style="margin-top:0">条件可比的证据组织与答案生成方法</h4>
       <p>
-        这些记录里，<strong>同一个成分可能被不同论文用不同工艺做出来，性能差很多</strong>。
-        我在审查时核对过原始数据：同一个成分、同一篇论文、同样的粗工艺标签，
-        屈服强度能差三四倍——因为晶粒尺寸等细节不同。
-        所以不能把"记录间的差异"简单当成测量误差，这是本课题在设计上要小心处理的地方。
+        既有检索增强与类型化知识图谱工作关注语义覆盖与关系抽取的完整性，
+        其知识组织以实体与关系为主，部分工作亦保存证据窗口与出处。
+        「同一成分在不同温度下的两条记录不可直接互换」这一约束是否被显式表达，
+        须视具体实现而定，不能笼统断言其无法表达。
+      </p>
+      <p>
+        本项的可检验主张是：<strong>把条件字段作为记录的显式属性、并在生成前执行条件判定，
+        相对仅保存条件文本或依赖语义相似度排序的做法，能在条件敏感问题上取得可测的正确率差异。</strong>
+      </p>
+      <p style="margin-bottom:0">
+        <b>验证方式：</b>关键是设置「文本拼接对照」——把条件字段拼成自然语言写入检索单元，
+        不做结构化绑定。若该做法与完整方案效果相当，则条件字段的结构化组织方式不构成贡献。
+        另一项证据是按库内是否存在同成分干扰项分层报告增益：
+        若条件处理确实起作用，增益应较多出现在存在干扰项的题目上。
       </p>
     </div>
 
-    <h3>为什么是这份数据，而不是别的</h3>
-    <p>合金数据集其实很多，我排查过八个数据源，但大多数用不了。原因在下面这张表里。</p>
+    <div class="box blue">
+      <div class="label">研究内容二 · 支撑性工作</div>
+      <h4 style="margin-top:0">基于过程示范的小模型条件处置蒸馏</h4>
+      <p>
+        此处有一个实测发现修正了原设计。原设想是：规则无法处理的部分
+        （如表述变体、单位换算）交由模型补位。但对主线数据的核查表明，
+        条件字段已高度标准化——制备工艺仅有若干枚举取值，试验类型分压缩与拉伸，
+        温度为数值型字段，<strong>预期中的表述变体并未出现</strong>。
+      </p>
+      <p>
+        按问题与证据的配对统计，规则能够完全判定的情形约占 89%，另有约 7% 可部分判定，
+        真正需要模型介入的约 4%，且这部分主要是字段缺失而非表述歧义，
+        而缺失字段无法由判断补回。
+      </p>
+      <p>
+        因此模型的任务被重新界定：不再判断条件是否相符，而是判断
+        <strong>在规则判定为冲突之后，该证据在答案中应承担何种角色</strong>——
+        整条排除、降级为背景，或说明条件差异后给出部分回答。
+        这类决策依赖问题意图，规则无法枚举，而冲突样本占有相当比例，空间足够。
+      </p>
+      <p style="margin-bottom:0">
+        <b>对照设计：</b>设「一律标注为不确定」为廉价基线。
+        若模型表现仅与该基线相当，则说明其只学会了保守策略，蒸馏的必要性需要重新论证。
+      </p>
+    </div>
 
-    <table class="cmp">
-      <thead>
-        <tr><th>数据里必须有什么</th><th>MPEA 有没有</th><th>为什么必须有</th></tr>
-      </thead>
+    <div class="box warn">
+      <div class="label">两项内容的分工</div>
+      <p style="margin-bottom:0">
+        硕士阶段的方法贡献宜集中于一处。第一项是主张的核心；
+        第二项的作用在于使第一项的价值能够在最终答案上体现——
+        若模型不能正确处理冲突证据，条件判定的作用便无法传导至输出。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>六 · 数据基础</h2>
+    <h3>公开多主元合金数据集（MPEA）</h3>
+    <div class="nums">
+      <div class="num-cell"><div class="v">1,545</div><div class="u">条记录</div></div>
+      <div class="num-cell"><div class="v">630</div><div class="u">种归一化成分</div></div>
+      <div class="num-cell"><div class="v">265</div><div class="u">个来源 DOI</div></div>
+      <div class="num-cell"><div class="v">1,062</div><div class="u">条条件完整记录</div></div>
+    </div>
+    <p>
+      该数据集采用 Apache 2.0 许可，可自由使用。但其规模并不宽裕：
+      条件完整（同时具备性能值、测试温度、制备工艺与试验类型）的记录仅 1,062 条。
+    </p>
+
+    <h4>字段可得性实测</h4>
+    <p>预期使用的四类条件槽位在数据中的实际覆盖情况如下，这组数字是判断数据是否够用的依据。</p>
+    <table class="table">
+      <thead><tr><th>槽位</th><th>对应字段</th><th>非空率</th><th>说明</th></tr></thead>
       <tbody>
-        <tr><td class="k">成分</td><td>✓ 630 种</td><td>配方任务的对象</td></tr>
-        <tr><td class="k">材料状态</td><td>✓ 相结构、工艺、晶粒尺寸</td><td>同样成分不同状态，性能完全不同</td></tr>
-        <tr><td class="k">测试条件</td><td>✓ 测试温度、试验类型</td><td>非可比条件下比较结果是错的</td></tr>
-        <tr><td class="k">来源标识</td><td>✓ 265 个 DOI</td><td>按来源分组划分，防止测试集泄漏</td></tr>
+        <tr><td class="k">成分</td><td>FORMULA</td><td>100.0%</td><td>可作比对基准</td></tr>
+        <tr><td class="k">状态 · 制备工艺</td><td>Processing method</td><td>92.3%</td><td>粗粒度标签</td></tr>
+        <tr><td class="k">状态 · 相结构</td><td>BCC/FCC/other</td><td>100.0%</td><td>状态差异的一个维度</td></tr>
+        <tr><td class="k">状态 · 热处理</td><td>无对应字段</td><td>—</td><td>主线数据中不存在</td></tr>
+        <tr><td class="k">测试 · 测试温度</td><td>Test temperature</td><td>88.3%</td><td>条件判定的主要依据</td></tr>
+        <tr><td class="k">测试 · 试验类型</td><td>Type of test</td><td>74.4%</td><td>决定性能可否跨记录比较</td></tr>
+        <tr><td class="k">测试 · 测量方法</td><td>无对应字段</td><td>—</td><td>主线数据中不存在</td></tr>
+        <tr><td class="k">性能 · 硬度</td><td>HV</td><td>34.3%</td><td>覆盖率偏低</td></tr>
+        <tr><td class="k">性能 · 屈服强度</td><td>YS</td><td>69.1%</td><td>相对完整</td></tr>
       </tbody>
     </table>
-
-    <div class="info" style="margin-top:16px">
-      <div class="label">为什么不换一个更大的数据集</div>
-      <p>
-        难熔合金方向确实有更大的库（ULTERA，约 <b>2,700 种合金、6,500 条数据</b>，是 MPEA 的四倍），
-        但它的数据<b>不公开</b>，需要走合作申请。其他公开数据集多数只提供
-        「成分 + 性能」两列，<b>缺测试条件和来源</b>——数据量再大，也支撑不了「条件可比」的判断。
-        所以选 MPEA 不是因为规模，而是因为四类字段齐全。
+    <div class="box warn">
+      <div class="label">须正面说明的边界</div>
+      <p style="margin-bottom:0">
+        四类槽位中，热处理与测量方法在主线数据中无对应字段，这不是数据清洗能解决的问题。
+        因此首版本体只启用主线数据中确有的槽位，这两项作为文献补充库的目标字段，
+        待补充数据经检查通过后再纳入判定。该取舍在开题阶段即予声明，
+        避免后期因字段缺失而被迫修改标签体系。
       </p>
     </div>
+
+    <h4>可构造的评测规模</h4>
+    <p>
+      630 种成分中有 186 种存在多于一条记录，按同成分两两配对可得 8,857 对；
+      其中测试温度或制备工艺取值不同者 7,452 对。须进一步区分：
+      这 7,452 对中有 1,571 对至少一侧字段为空，属缺失而非已知冲突；
+      扣除后<strong>两侧均有值且取值不同者 5,881 对</strong>，才构成已知冲突的候选。
+    </p>
+    <p>
+      但判定对是记录之间的关系，而评测需要的是问题、答案与证据齐全的三元组。
+      按条件完整记录折算，以每条记录生成一题计，条件敏感问答对在数百题量级；
+      划分后测试集规模有限，不足以支撑「问题类型 × 错误类型」的交叉分析，故须扩题。
+      达成方式为同一记录生成多种问法，并保证同记录的不同问法不跨数据分区。
+      实际可用题数在首次构造后报告，此处不填预计数值。
+    </p>
+
+    <h4>数据源的选择依据</h4>
+    <p style="margin-bottom:0">
+      难熔合金方向存在规模更大的数据库（如 ULTERA，报告约 2,700 种合金、6,500 条性质数据、
+      540 篇文献），但其数据未公开，需经合作申请获取。其他以性能汇总为主的数据集
+      侧重成分与性能两列，缺少可比的测试条件与来源字段，无法支撑条件适用性判定。
+      选择 MPEA 的依据不在于规模，而在于同时提供成分、状态、测试条件与来源标识四类字段。
+    </p>
   </section>
 
   <section>
-    <h2>怎么证明做成了</h2>
-    <h3>主指标：答案正确率，按问题类型分开报</h3>
+    <h2>七 · 验证方案</h2>
+    <h3>指标、对照与归因</h3>
+
+    <h4>主指标</h4>
     <p>
-      不报一个笼统的"准确率"。把问题分成两组：<b>条件敏感题</b>（如指定温度下的性能查询）
-      和<b>条件无关题</b>（如相结构列举）。<br>
-      <b>条件敏感组的提升是主要结论，条件无关组必须持平</b>——
-      如果两组都涨，说明提升来自别的地方，不是条件处理起的作用。
+      主要指标为分问题类型的答案正确率。问题按是否涉及条件敏感查询分为两组：
+      条件敏感组与条件无关组。两组分别报告，
+      <strong>条件敏感组的差异作为主要结论依据，条件无关组用作对照</strong>，
+      以排除整体性提升来自其他因素。
+    </p>
+    <p>
+      正确性判定与依据标注完整性<strong>分开计分</strong>。正确性只看所述数值是否与所引记录一致、
+      所引记录的条件是否与问题要求相符、条件不符时是否如实拒答；
+      依据标注是否完整作为独立指标报告。这样消融中移除依据标注的一组，
+      其正确率不会因定义而必然下降。
     </p>
 
-    <h3>五组对照，其中一组是关键</h3>
-    <table class="cmp">
-      <thead><tr><th>组别</th><th>怎么做</th><th>这一组回答什么</th></tr></thead>
+    <h4>对照组设置</h4>
+    <table class="table">
+      <thead><tr><th>组别</th><th>做法</th><th>该组回答的问题</th></tr></thead>
       <tbody>
         <tr><td class="k">常规 RAG</td><td>不作条件区分</td><td>基线</td></tr>
-        <tr><td class="k" style="background:#fef9ec">文本拼接对照</td><td>把条件字段拼成一句话进检索单元，不做结构化绑定</td><td><b>最关键</b>：如果它和本方法一样好，说明条件元组这个设计不必要</td></tr>
-        <tr><td class="k">语义重排 RAG</td><td>只按语义相似度重排</td><td>看语义排序是否已经够用</td></tr>
-        <tr><td class="k">规则硬过滤 RAG</td><td>只用条件字段做硬筛</td><td>分离"字段有用"与"过滤有用"</td></tr>
-        <tr><td class="k">大模型直接问答</td><td>最强模型直接答</td><td>性能上界参考</td></tr>
+        <tr><td class="k">文本拼接对照</td><td>条件字段拼成自然语言写入检索单元，不做结构化绑定</td><td>条件字段的结构化组织是否必要</td></tr>
+        <tr><td class="k">语义重排 RAG</td><td>仅按语义相似度重排</td><td>语义排序是否已足够</td></tr>
+        <tr><td class="k">规则硬过滤 RAG</td><td>仅按条件字段硬性筛选</td><td>分离「字段有用」与「过滤有用」</td></tr>
+        <tr><td class="k">大模型直接问答</td><td>最强模型直接作答</td><td>性能上界参考</td></tr>
       </tbody>
     </table>
 
-    <h3>分层增益：这是证明因果最强的证据</h3>
+    <h4>因果归因设计</h4>
     <p>
-      条件敏感组内再按<b>有没有干扰项</b>分两层：库里有同成分但条件不同的记录 vs 没有。<br>
-      <b>如果条件元组真在起作用，增益应该集中在有干扰项的题上</b>，无干扰项的那层应接近零。
-      如果两层涨幅相当，说明提升来自其他因素。<br>
-      <span style="color:var(--ink3);font-size:13.5px">这个分层数据天然存在：有干扰项约 722 条、无干扰项约 340 条，不用额外构造。</span>
+      条件敏感组内做两类分层报告，用途不同。第一类按库内是否存在同成分干扰项分层，
+      <strong>这是机制线索而非因果证据</strong>：分层由数据固有属性决定，并非随机分配，
+      不能把两层差异直接称为因果。
+    </p>
+    <p style="margin-bottom:0">
+      第二类为<strong>同题受控加减干扰</strong>：对同一道题，分别在候选集合中保留与移除
+      同成分不同条件的干扰记录，其余设置完全固定，比较答案正确率的变化。
+      这是随机可控的比较，其差值直接度量条件处理的作用。
     </p>
 
-    <h3>错误要拆成三类，不能只报总分</h3>
-    <table class="cmp">
-      <thead><tr><th>错误类型</th><th>怎么判</th><th>怎么才能测出来</th></tr></thead>
+    <h4>错误归因</h4>
+    <table class="table">
+      <thead><tr><th>错误类型</th><th>判定方式</th><th>测量条件</th></tr></thead>
       <tbody>
-        <tr><td class="k">检索未命中</td><td>正确记录没出现在候选里</td><td>脚本可判（需金标注）</td></tr>
-        <tr><td class="k">条件误用</td><td>记录检索到了但条件不符仍被采用</td><td>脚本可判（条件已结构化）</td></tr>
-        <tr><td class="k">生成错误</td><td>证据和条件都对，表述却出错</td><td><b>需 Oracle 设置</b>：给正确证据再错，就排除检索因素；给正确证据+正确条件标注再错，就是纯生成问题</td></tr>
+        <tr><td class="k">检索未命中</td><td>正确记录未出现在候选中</td><td>脚本可判（需金标注）</td></tr>
+        <tr><td class="k">条件误用</td><td>记录被检索到但条件不符仍被采用</td><td>脚本可判（条件已结构化）</td></tr>
+        <tr><td class="k">生成错误</td><td>证据与条件均正确而表述出错</td><td>需 Oracle 设置分离</td></tr>
       </tbody>
     </table>
-    <div class="note" style="margin-top:16px">
-      <div class="label">为什么必须有 Oracle 设置</div>
-      <p>不设这个对照，三类错误只能事后猜。设了之后，<b>每一类都可以被直接测出来</b>，
-      改进发生在哪一环也就有了依据。这是从"报个总分"到"说清问题在哪"的区别。</p>
-    </div>
-
-    <h3>消融：四个组件分别去掉看</h3>
-    <table class="cmp">
-      <thead><tr><th>去掉什么</th><th>回答什么</th></tr></thead>
-      <tbody>
-        <tr><td class="k">条件元组绑定</td><td>退回常规 RAG，测条件信息本身值多少</td></tr>
-        <tr><td class="k">条件判定</td><td>保留字段但不判定，测前置判定相对"让模型自己看着办"的增益</td></tr>
-        <tr><td class="k">依据标注</td><td>答案不写条件，测"答案携带适用范围"对可用性的影响</td></tr>
-        <tr><td class="k">模型（仅用规则）</td><td><b>测规则的天花板</b>，界定模型是否必要</td></tr>
-      </tbody>
-    </table>
-  </section>
-
-    <h2>为什么不能直接用大模型</h2>
-    <h3>因为大模型在材料题上确实不准</h3>
-    <p>
-      这一点有公开的实测数据。一个叫 MatSciBench 的基准，收了 1,340 道大学材料学教材水平的题，
-      测了当前主流大模型：
-    </p>
-    <table class="cmp">
-      <tr><th>测试</th><th>最好成绩</th></tr>
-      <tr><td class="k">纯文本题</td><td>DeepSeek-R1 取得 <strong>75.22%</strong>——错了近四分之一</td></tr>
-      <tr><td class="k">含图题</td><td>GPT-5 取得 <strong>53.02%</strong>——刚过一半</td></tr>
-    </table>
-    <p>
-      研究者进一步分析了错在哪里，结论是四类：<strong>领域知识不足、计算错误、题意理解失败、
-      图表信息提取困难</strong>。
-    </p>
-    <div class="info">
-      <div class="label">这个事实恰恰是本研究存在的理由</div>
-      <p>
-        前两类问题正好能对症处理：<strong>知识不足</strong>靠领域微调补，
-        <strong>计算不可靠</strong>靠规则检查器兜底。
-        大模型不够准，不代表不需要专门的工具——恰恰说明需要把"想"和"算"分开。
+    <div class="box">
+      <div class="label">Oracle 设置的作用</div>
+      <p style="margin-bottom:0">
+        分别设「给定正确证据」与「给定正确证据且条件已正确标注」两种评测条件。
+        前者若仍出错，即可排除检索因素；后者若仍出错，则为纯生成问题。
+        两种条件下的结果与自然条件并列报告，其差值分别对应检索环节与条件处理环节的贡献。
+        未经此设置，三类错误只能事后推断。
       </p>
     </div>
-    <p>
-      所以这个课题从不假设"老师很准"。它的逻辑是：
-      老师的示范提供<strong>任务怎么做</strong>，而<strong>材料事实是否成立</strong>
-      必须回到记录、文献和可执行检查上。两者是分开的。
-    </p>
 
-  <section>
-    <h2>这个研究的价值在哪</h2>
-    <h3>三层递进：不是并列，后一层由前一层推出</h3>
-
-    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
-      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">1</div>
-      <div class="body" style="flex:1;padding-top:2px">
-        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">现实层面：有可拆解的重复劳动</div>
-        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
-          配方研究里的资料筛选、条件核对、成分改写、结果整理，都能拆成边界明确的操作。
-          把这些交给本地模型，研究者可以把精力留给真正需要判断的部分。
-        </div>
-      </div>
-    </div>
-
-    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
-      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">2</div>
-      <div class="body" style="flex:1;padding-top:2px">
-        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">方法层面：现有"难度信号"在这类任务上失效（核心论点）</div>
-        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
-          现在的教法都是"挑学生做错的题重点练"。但"做错"怎么判断？主流方法看模型自己的表现：
-          困惑度高、答不出来、想的步骤少。<br><br>
-          <strong>这个判断有个前提：题目只有唯一正确答案。</strong>
-          数学题成立——答错了就是错了。但配方不是这样：同一个要求可以有很多个都合格的配方，
-          模型没照着参考答案写，可能只是选了另一条同样合法的路，也可能真的违反了硬约束。
-          <strong>把"跟参考答案不一样"当成"做错"，就会把合格的答案当成错误重点训练。</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="callout" style="background:var(--accent-bg);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
-      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:8px">本课题的做法</div>
-      <div style="font-size:15px;color:var(--ink);line-height:1.7">
-        把"什么算错"的判断，从<strong>模型内部</strong>搬到<strong>外部一个可执行的检查器</strong>上。
-        不用模型自以为的难度，而用检查器对"总量对不对、锁定项有没有动、单位有没有混、引用的条件对不对"的判定结果。
-        <strong>这样"薄弱"这个词就有了明确含义：指的是能指出、能复现的执行错误，而不是模型输出跟参考文本的表面差异。</strong>
-      </div>
-    </div>
-
-    <div class="step" style="display:flex;gap:16px;padding:18px 0">
-      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">3</div>
-      <div class="body" style="flex:1;padding-top:2px">
-        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">更一般的意义：不限于合金</div>
-        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
-          任何"约束是硬的、但答案不唯一"的专业生成任务，都有同样的困难——配方、结构、工艺参数、实验方案。
-          模型行为类的难度信号在这些任务上会遇到同样的失效。
-          本课题以合金配方为载体，把"可核验性"从一个模型能力问题，转化为一个数据工程问题。
-          <strong>若在本题场景下成立，其形式可直接迁移；若不成立，这个否证同样限定了它的适用边界。</strong>
-        </div>
-      </div>
-    </div>
-
-    <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:18px 22px;border-radius:0 8px 8px 0;margin:20px 0">
-      <div style="font-size:12px;letter-spacing:.1em;color:var(--blue);font-weight:650;margin-bottom:8px">还有一条必须说清的边界</div>
-      <div style="font-size:15px;color:var(--ink);line-height:1.7">
-        这个思路 2026 年已有相近研究：有工作在"可验证奖励"的强化学习里，
-        只用验证器判为失败的样本就大幅提升了数据效率；也有工作证明通用大模型不微调也能做约束成分生成。
-        本课题与它们的差别是具体的、不是话术：<strong>对方的验证器面向答案唯一的任务，
-        而本课题要处理的是"多个答案都合法"时如何区分真错与合法差异</strong>。
-        这个差别能不能成立，要靠同预算对照来回答——不能靠主张。
-      </div>
-    </div>
+    <h4>消融设计</h4>
+    <table class="table">
+      <thead><tr><th>移除的组件</th><th>回答的问题</th></tr></thead>
+      <tbody>
+        <tr><td class="k">条件字段绑定</td><td>退回常规 RAG，测条件信息本身的贡献</td></tr>
+        <tr><td class="k">条件判定</td><td>保留字段但不做判定，测前置判定相对交由生成环节自行处理的增益</td></tr>
+        <tr><td class="k">依据标注</td><td>答案不写条件，测「答案携带适用范围」对可用性的影响</td></tr>
+        <tr><td class="k">模型（仅用规则）</td><td>测规则方法的天花板，界定模型的必要性</td></tr>
+      </tbody>
+    </table>
   </section>
 
   <section>
-    <h2>可能失败的地方</h2>
-    <h3>写在开题里，不回避</h3>
-    <ul class="plain">
-      <li><b>数据太少</b>：287 条室温拉伸记录，按来源分组后训练集可能只剩两百多个来源。够不够训练，要试了才知道。</li>
-      <li><b>挑教材没用</b>：如果四组对照显示所提方法不如随机，这个改进就不成立。</li>
-      <li><b>小模型学不会</b>：40 亿参数的模型能不能掌握这套任务，尚无公开数据。</li>
-      <li><b>文本拼接对照打平</b>：如果只把条件字段拼成一句话进文本就能达到同样效果，那条件元组这个设计就不成立——这条对照本身就可能否定创新点一。：单轮问答的蒸馏已有成熟做法，但"先查什么、再调什么工具、什么时候停"这类多步行为能否蒸进小模型，公开证据集中在推理任务，材料设计场景尚无验证。</li>
-      <li><b>只是算术题</b>：如果任务本质只是"改数字凑 100%"，那传统优化器就够用，不需要语言模型——所以实验里专门加了一组"约束优化器"对照。</li>
+    <h2>八 · 与既有工作的关系</h2>
+    <h3>定位与差异</h3>
+    <p>本课题的方向与大方向已有工作重合，差异落在实现层面与评测口径上。以下三项工作的实际定位经检索核对。</p>
+    <table class="table">
+      <thead><tr><th>工作</th><th>实际做法</th><th>与本课题的差别</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="k">EGT-KG</td>
+          <td>用类型化知识图谱改进本地小模型的科学文献检索，对比自动生成与专家定义两种关系 schema</td>
+          <td>其知识组织单位为实体与关系；本课题的组织单位为条件字段</td>
+        </tr>
+        <tr>
+          <td class="k">DRAG</td>
+          <td>把大模型 RAG 的证据与知识图谱蒸馏进小模型，以缓解幻觉</td>
+          <td>其蒸馏对象为检索与生成的整体行为；本课题聚焦条件处置的决策过程</td>
+        </tr>
+        <tr>
+          <td class="k">MDSK-RAG</td>
+          <td>材料领域的双源离线检索增强，整合文献与结构化数据</td>
+          <td>本课题在数据组织上思路相近，但把条件字段作为独立维度处理</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-bottom:0">
+      这些工作的存在说明该方向具备研究基础与评审认可度。本课题的增量不建立在「他人未涉及」之上，
+      而在于条件字段这一组织维度是否带来可测量的差异——这需要由前述对照实验回答，不能预设结论。
+    </p>
+  </section>
+
+  <section>
+    <h2>九 · 预期贡献与局限</h2>
+
+    <h4>预期贡献</h4>
+    <ul>
+      <li><b>方法层面：</b>一套条件可比的证据组织与答案生成方法，其有效性由文本拼接对照与受控干扰实验检验。</li>
+      <li><b>训练层面：</b>以规则弱标签加人工核验构造条件处置训练集的方式，及其规模与一致性的实测报告。</li>
+      <li><b>评测层面：</b>分问题类型的正确率、正确性与标注完整性的分离计分、以及错误三类的归因结果。</li>
+      <li><b>工程交付：</b>可在本地运行、判定过程可追溯的问答原型。</li>
     </ul>
+
+    <h4>已识别的局限</h4>
+    <ul>
+      <li><b>数据规模受限：</b>条件完整记录仅 1,062 条，折算后测试集规模有限，须扩题并如实报告。</li>
+      <li><b>两个槽位缺失：</b>热处理与测量方法在主数据中不存在，仅能由文献补充库提供。</li>
+      <li><b>标注成本：</b>冲突处置标签须人工核验，规模受人工成本约束，规则弱标签与人工判断的一致率须如实报告。</li>
+      <li><b>教师非真值来源：</b>教师模型提供任务示范，材料事实的依据来自记录、文献与可执行检查，
+          不能将教师输出等同于材料真值。</li>
+    </ul>
+
+    <div class="box warn">
+      <div class="label">可能推翻本方案的情形</div>
+      <p>以下结果将直接削弱或否定方案，均已在设计中预留观测点：</p>
+      <ul style="margin-bottom:0">
+        <li>文本拼接对照与完整方案效果相当——说明条件字段的结构化组织不必要。</li>
+        <li>受控加减干扰对正确率无显著影响——说明提升来自其他因素。</li>
+        <li>模型表现与「一律标注为不确定」基线相当——说明蒸馏未带来实质能力。</li>
+        <li>规则弱标签与人工判断的一致率过低——说明规则不足以支撑该标注任务。</li>
+      </ul>
+    </div>
   </section>
 
-  <div class="oneline">
-    <div class="label">一句话总结</div>
-    <p>
-      做一个能在普通显卡上跑的本地材料文献问答系统。核心改动是<b>给每条文献证据绑上"测试温度、制备工艺、试验类型"</b>——
-      因为同一合金换了条件就是另一回事，光看文字像不像会把 800℃ 的数据用到室温问题上。<br>
-      检索时用规则判断条件对不对得上（实测规则能判 95% 以上）；<b>判出冲突之后怎么处理，交给蒸馏过的小模型决定</b>——
-      整条排除、降级成背景、还是说明差异给部分回答。答案必须标明依据哪条记录的条件。<br>
-      最后诚实地测：<b>条件敏感题的正确率涨没涨</b>、涨的部分是不是真来自条件处理（用文本拼接对照和分层增益来验），
-      以及小模型到底比"一律说不知道"强多少。
-    </p>
-  </div>
   <footer>
-    本页为《面向材料文献问答的条件可比 RAG 与小模型蒸馏方法研究》的通俗说明，
-    内容与开题报告正文一致。文中数据规模（1,545 条 / 630 成分 / 265 DOI / 287 条）
-    均来自对公开 MPEA 数据集的实测审计，可复现。
+    <b>说明：</b>本页为《面向材料文献问答的条件可比 RAG 与小模型蒸馏方法研究》的方向说明，
+    内容与开题报告正文一致。文中数据（1,545 条记录 / 630 种成分 / 265 个 DOI /
+    1,062 条条件完整记录 / 5,881 对已知冲突候选 / 各字段非空率）均来自对公开 MPEA
+    数据集的实际审计，可复现。
     <br><br>
-    注意：本课题为研究计划，知识库构建、条件判定、冲突处置模型训练与问答评测均尚未实施。
-    本页说明的是"打算做什么、怎么验证"，不是"已经做出了什么"。
+    <b>边界：</b>本课题为研究计划。知识库构建、条件判定、冲突处置模型训练与问答评测均尚未实施。
+    本页说明的是拟开展的工作与验证方式，不代表已取得的结果。
   </footer>
 
 </div>
