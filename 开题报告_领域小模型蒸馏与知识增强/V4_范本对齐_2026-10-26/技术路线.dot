@@ -1,12 +1,13 @@
 digraph G {
-  graph [rankdir=TB, bgcolor="white", nodesep=0.3, ranksep=0.32, dpi=180];
+  graph [rankdir=TB, bgcolor="white", nodesep=0.3, ranksep=0.3, dpi=180];
   node [shape=box, style="rounded,filled", fontname="SimSun", fontsize=11,
         fillcolor="#FFFFFF", color="#444444", margin="0.2,0.13", width=6.5];
   edge [color="#555555", arrowsize=0.7];
   a [label="① 文献解析与条件字段抽取\nPDF → 结构化文本（MinerU）→ 抽取成分、性能、测试温度、制备工艺、试验类型\n缺失字段标注为未知，不默认填充", fillcolor="#EDF3FA"];
-  b [label="② 条件元组绑定与本地知识库构建\n每条性能记录绑定测试温度、制备工艺、试验类型三类条件\nMPEA 基础库（1,062 条条件完整记录）+ 文献补充库，统一来源标识", fillcolor="#EDF3FA"];
-  c [label="③ 条件感知检索（创新点一）\n按语义与条件召回候选 → 规则判定相符／冲突／未知\n已知冲突候选 5,881 对（另 1,571 对为缺失，不计入冲突）", fillcolor="#F2F7EE"];
-  d [label="④ 条件处置与答案生成（创新点二）\n规则弱标签（仅标注起点）＋ 人工核验确定最终处置\n教师示范逐项说明：哪个槽位冲突、问题意图为何、证据承担何角色\n小模型经过程示范蒸馏后补位 → 答案按正确性判定", fillcolor="#FBF3EC"];
-  e [label="⑤ 评估与归因\n答案正确率（条件敏感／无关分组）；正确性与标注完整性分开计分\n同题受控加减干扰度量条件处理的作用；有／无干扰分层作机制线索\n错误三类归因、Oracle 设置分离检索与生成环节", fillcolor="#EFEFEF", penwidth=1.5];
-  a -> b -> c -> d -> e;
+  b [label="② 条件字段绑定与本地知识库构建\n每条性能记录绑定三类条件字段\nMPEA 基础库（1,062 条条件完整记录）＋ 约两万篇论文语料补充库", fillcolor="#EDF3FA"];
+  c [label="③ 条件感知检索（研究内容一）\n按语义与条件召回候选 → 规则判定相符／冲突／未知\n已知冲突候选 5,881 对（另 1,571 对为缺失，不计入冲突）", fillcolor="#F2F7EE"];
+  d [label="④ 条件处置与答案生成（研究内容二）\n规则弱标签（仅标注起点）＋ 人工核验确定最终处置\n教师示范逐项说明槽位冲突／问题意图／证据角色 → 小模型蒸馏补位", fillcolor="#FBF3EC"];
+  e [label="⑤ 多步 Agent 执行与决策留痕（验证载体）\n固定动作空间：检索／条件判定／证据取舍／澄清追问／终止作答\n逐轮保存状态与动作依据；执行器不主张算法创新", fillcolor="#F5EEF8"];
+  f [label="⑥ 评估与归因\n主指标：分问题类型答案正确率；正确性与标注完整性分开计分\n同题受控加减干扰度量条件处理作用；补充指标：任务完成度\n错误三类归因、Oracle 设置分离检索与生成环节", fillcolor="#EFEFEF", penwidth=1.5];
+  a -> b -> c -> d -> e -> f;
 }
