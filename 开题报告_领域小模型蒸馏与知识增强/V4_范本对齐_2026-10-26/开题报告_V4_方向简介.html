@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>这个开题在做什么 · 通俗版</title>
+<style>
+  :root{
+    --ink:#1a1a1a; --ink2:#4a4a4a; --ink3:#767676;
+    --bg:#fbfaf8; --card:#ffffff; --line:#e6e2dc;
+    --accent:#2f6f5e; --accent-bg:#eef5f2;
+    --warn:#a8632a; --warn-bg:#fdf3ea;
+    --blue:#2c5a8a; --blue-bg:#eef3f9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75; -webkit-font-smoothing:antialiased;
+    padding:0 20px;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:56px 0 96px}
+
+  /* 封面 */
+  .hero{margin-bottom:56px;padding-bottom:32px;border-bottom:2px solid var(--ink)}
+  .eyebrow{font-size:13px;letter-spacing:.14em;color:var(--ink3);text-transform:uppercase;margin-bottom:16px}
+  h1{font-size:32px;line-height:1.35;font-weight:700;letter-spacing:-.01em;margin-bottom:18px}
+  h1 .hl{background:linear-gradient(transparent 62%, #d9ece5 62%);padding:0 2px}
+  .sub{font-size:16px;color:var(--ink2);line-height:1.8}
+  .meta{margin-top:24px;font-size:13px;color:var(--ink3);display:flex;gap:18px;flex-wrap:wrap}
+  .meta span{border-left:2px solid var(--line);padding-left:10px}
+
+  /* 章节 */
+  section{margin-bottom:52px}
+  h2{font-size:13px;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;
+     font-weight:600;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+  h2::after{content:"";flex:1;height:1px;background:var(--line)}
+  h3{font-size:20px;font-weight:650;margin-bottom:12px;letter-spacing:-.005em}
+  p{font-size:16px;color:var(--ink2);margin-bottom:16px}
+  p:last-child{margin-bottom:0}
+  strong{color:var(--ink);font-weight:600}
+
+  /* 类比卡片 */
+  .analogy{
+    background:var(--accent-bg); border-left:3px solid var(--accent);
+    padding:20px 24px; border-radius:0 8px 8px 0; margin:20px 0;
+  }
+  .analogy .label{font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:8px}
+  .analogy p{color:var(--ink);font-size:15.5px;margin:0}
+
+  /* 流程图 */
+  .flow{margin:24px 0}
+  .step{
+    display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);
+  }
+  .step:last-child{border-bottom:none}
+  .step .num{
+    flex:0 0 30px;height:30px;border-radius:50%;
+    background:var(--ink);color:#fff;font-size:14px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step .body{flex:1;padding-top:2px}
+  .step .t{font-size:16px;font-weight:600;margin-bottom:4px}
+  .step .d{font-size:14.5px;color:var(--ink2);line-height:1.7}
+
+  /* 对比表 */
+  .cmp{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+  .cmp th{
+    text-align:left;padding:11px 14px;background:#f2efea;
+    font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--ink2);
+  }
+  .cmp td{padding:11px 14px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+  .cmp tr:last-child td{border-bottom:none}
+  .cmp .k{font-weight:600;color:var(--ink);white-space:nowrap}
+
+  /* 数字 */
+  /* 技术路线流程图 */
+  .roadmap{margin:26px 0}
+  .rm-node{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:14px 18px;position:relative;
+  }
+  .rm-node .hd{font-size:12px;letter-spacing:.08em;font-weight:650;margin-bottom:6px}
+  .rm-node .tt{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--ink)}
+  .rm-node .dd{font-size:13.5px;color:var(--ink2);line-height:1.65}
+  .rm-node.n1{border-left:3px solid var(--blue);background:var(--blue-bg)}
+  .rm-node.n1 .hd{color:var(--blue)}
+  .rm-node.n2{border-left:3px solid var(--blue);background:var(--blue-bg)}
+  .rm-node.n2 .hd{color:var(--blue)}
+  .rm-node.n3{border-left:3px solid var(--accent);background:var(--accent-bg);box-shadow:0 1px 6px rgba(47,111,94,.10)}
+  .rm-node.n3 .hd{color:var(--accent)}
+  .rm-node.n4{border-left:3px solid var(--warn);background:var(--warn-bg)}
+  .rm-node.n4 .hd{color:var(--warn)}
+  .rm-node.n5{border-left:3px solid var(--ink3);background:#f4f4f2}
+  .rm-node.n5 .hd{color:var(--ink2)}
+  .rm-arrow{text-align:center;color:var(--line);font-size:20px;line-height:1;padding:7px 0;user-select:none}
+
+  .nums{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;background:var(--line);
+        border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:20px 0}
+  .num-cell{background:var(--card);padding:20px}
+  .num-cell .v{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+  .num-cell .v small{font-size:15px;font-weight:500;color:var(--ink3);margin-left:2px}
+  .num-cell .k{font-size:13px;color:var(--ink3);margin-top:6px}
+
+  /* 提醒块 */
+  .note{
+    background:var(--warn-bg);border-left:3px solid var(--warn);
+    padding:18px 22px;border-radius:0 8px 8px 0;margin:20px 0;
+  }
+  .note .label{font-size:12px;letter-spacing:.1em;color:var(--warn);font-weight:650;margin-bottom:8px}
+  .note p{color:var(--ink);font-size:15px;margin:0}
+
+  .info{
+    background:var(--blue-bg);border-left:3px solid var(--blue);
+    padding:18px 22px;border-radius:0 8px 8px 0;margin:20px 0;
+  }
+  .info .label{font-size:12px;letter-spacing:.1em;color:var(--blue);font-weight:650;margin-bottom:8px}
+  .info p{color:var(--ink);font-size:15px;margin:0}
+
+  /* 列表 */
+  ul.plain{list-style:none;margin:16px 0}
+  ul.plain li{
+    padding:10px 0 10px 22px;position:relative;
+    font-size:15px;color:var(--ink2);border-bottom:1px dashed var(--line);
+  }
+  ul.plain li:last-child{border-bottom:none}
+  ul.plain li::before{
+    content:"—";position:absolute;left:0;color:var(--ink3);
+  }
+  ul.plain li b{color:var(--ink);font-weight:600}
+
+  /* 一句话总结 */
+  .oneline{
+    background:var(--ink);color:#fff;padding:28px 30px;border-radius:10px;margin:24px 0;
+  }
+  .oneline .label{font-size:11px;letter-spacing:.16em;opacity:.65;margin-bottom:10px}
+  .oneline p{color:#fff;font-size:17px;line-height:1.7;margin:0}
+
+  footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);
+         font-size:13px;color:var(--ink3);line-height:1.8}
+
+  @media(max-width:600px){
+    .wrap{padding:36px 0 64px}
+    h1{font-size:25px}
+    .nums{grid-template-columns:1fr}
+    .num-cell .v{font-size:24px}
+    .step{gap:12px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">硕士学位论文开题 · 通俗说明</div>
+    <h1>让一个<span class="hl">小模型</span>学会<br>给合金改配方</h1>
+    <p class="sub">
+      这篇开题研究的是：怎么把一个能力强但跑不动的"大模型"的本事，
+      教给一个能力弱但能在普通显卡上跑"小模型"，让它能按要求修改合金成分。
+    </p>
+    <div class="meta">
+      <span>面向非专业读者</span>
+      <span>全文约 6 分钟</span>
+      <span>所有数字均来自实际数据审计</span>
+    </div>
+  </div>
+
+  <section>
+    <h2>先说清楚要解决什么问题</h2>
+    <h3>合金配方设计，本质是一道"受限制的改数字"题</h3>
+    <p>
+      合金的成分就是一堆元素的比例。比如某个配方是"铁 60%、镍 20%、铬 15%、锰 5%"。
+      研究者经常要改它：<strong>钴太贵了能不能降一点</strong>、<strong>镍含量必须保持不变</strong>、
+      <strong>不许引入新元素</strong>。
+    </p>
+    <p>
+      改的时候有几条硬规矩：所有元素加起来必须是 100%；
+      降了一种元素，就得从别的元素里补回来；被锁定的元素一点都不能动。
+    </p>
+
+    <div class="analogy">
+      <div class="label">就像这样</div>
+      <p>
+        你有 100 块钱要分给 5 个人。现在要求"少给甲 10 块"，那这 10 块必须分给别人——
+        但乙的钱锁死了不能动，丙丁戊也各有上下限。分得对不对，一眼能查。
+      </p>
+    </div>
+
+    <p>
+      但还有一层更难的要求：<strong>改完之后，这个配方得"讲得通"</strong>——
+      你得说得出依据，比如"这个成分在某某文献里被报道过，测试条件是室温拉伸"。
+      不能随便编一个数。
+    </p>
+  </section>
+
+  <section>
+    <h2>为什么要用"小模型"</h2>
+    <h3>大模型好用，但用起来有三个麻烦</h3>
+    <table class="cmp">
+      <tr><th>麻烦</th><th>具体是什么</th></tr>
+      <tr><td class="k">配方不能外发</td><td>合金配方是企业的核心资料，传到第三方服务器上就有泄露风险</td></tr>
+      <tr><td class="k">版本会变</td><td>云端模型随时更新。今天调好的流程，三个月后可能就变了，实验没法复现</td></tr>
+      <tr><td class="k">按次收费</td><td>用得越多花得越多，且成本随使用量线性增长</td></tr>
+    </table>
+    <p>
+      所以人们希望把能力"搬"到本地的一台机器上。但本地能跑的模型只有 40 亿到 80 亿参数
+      （大模型是这个的几十倍），能力差距很大。这就是本课题要处理的矛盾。
+    </p>
+
+    <div class="info">
+      <div class="label">顺便说个关键约束</div>
+      <p>
+        不能用 GPT 或 Claude 这类商业模型当"老师"来教学——它们的服务条款
+        <strong>明确禁止用其输出去训练别的模型</strong>。所以教师只能用开源的模型
+        （比如 Qwen3-235B，Apache 2.0 许可，允许这样做）。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>核心做法：老师教、学生学</h2>
+    <h3>四个步骤</h3>
+
+    <div class="flow">
+      <div class="step">
+        <div class="num">1</div>
+        <div class="body">
+          <div class="t">造教材</div>
+          <div class="d">
+            先把散落的合金数据整理成规范格式：<b>成分、工艺、测试条件、性能、出处</b>。
+            然后构造题目——比如"把这个配方的钴降到 8% 以下，镍保持不变"，
+            再让"老师"（大模型）给出答案和推理过程。
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="body">
+          <div class="t">挑教材（这是主要的算法创新）</div>
+          <div class="d">
+            老师能生成很多题，但训练预算有限。<b>挑哪些题最有用？</b>
+            不是随便抽，而是优先挑两类：学生<b>现在做错的</b>题，
+            以及能<b>补齐尚未覆盖的约束类型</b>的题（比如学生练了很多"改比例"，
+            但没练过"锁定某元素"）。同时避免重复。
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="body">
+          <div class="t">学生学</div>
+          <div class="d">
+            用挑出来的教材微调本地小模型。训练时不动原模型的大参数，
+            只训练一小块"适配层"——这样一张普通显卡就能完成。
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="num">4</div>
+        <div class="body">
+          <div class="t">配一个"checker"兜底</div>
+          <div class="d">
+            模型生成候选后，再由一个<b>纯规则程序</b>做检查：加起来是不是 100%？
+            锁定项有没有被动过？有没有引入禁用的元素？不合格就打回去修。
+            <b>模型负责"想"，程序负责"算"。</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>整体怎么走：一条五段的路线</h2>
+    <h3>从资料准备到验证交付</h3>
+
+    <div class="roadmap">
+      <div class="rm-node n1">
+        <div class="hd">第 1 段 · 准备</div>
+        <div class="tt">资料与任务准备</div>
+        <div class="dd">公开配方与获准的本地资料 → 按来源关联分组 → 训练、开发、测试严格隔离。<br>
+        <b>输入</b>：设计要求与原配方　<b>输出</b>：候选成分、修改说明、参考依据</div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n2">
+        <div class="hd">第 2 段 · 研究内容一</div>
+        <div class="tt">可核验的任务蒸馏数据</div>
+        <div class="dd">训练资料 → 教师示范 → <b>约束扰动后重新核验</b> → 来源与条件绑定。<br>
+        教师只提供操作示范，<b>不编造新配方的真实性能</b>。</div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n3">
+        <div class="hd">第 3 段 · 研究内容二 · 主要算法改进</div>
+        <div class="tt">选择性蒸馏</div>
+        <div class="dd">学生诊断：<b>可执行失误</b> ＋ <b>约束组合覆盖</b> － 冗余<br>
+        预算上限内正效用选样 → QLoRA 适配 → 保存本地模型</div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n4">
+        <div class="hd">第 4 段 · 研究内容三</div>
+        <div class="tt">知识增强与约束生成</div>
+        <div class="dd">本地检索可比实例 → 分步成分生成 → 数值检查与有限修正<br>
+        共用来源类型与约束状态；模型、检索、工具<b>全部在本地</b></div>
+      </div>
+      <div class="rm-arrow">↓</div>
+
+      <div class="rm-node n5">
+        <div class="hd">第 5 段 · 验证</div>
+        <div class="tt">验证与交付</div>
+        <div class="dd">同底座、同预算强基线 → 组件消融 → 同条件教师比较<br>
+        报告任务质量与差距区间 / 候选多样性 / 资源代价 / 可追溯性<br>
+        <b>交付</b>：本地辅助原型；新配方仍须独立核验</div>
+      </div>
+    </div>
+
+    <div class="info" style="margin-top:18px">
+      <div class="label">这张图的读法</div>
+      <p>五段是一条单向链路，前一段的输出是后一段的输入。<b>绿色的第 3 段是主贡献所在</b>；
+      第 2 段和第 4 段的作用是让第 3 段可以被公平地验证——没有干净的教材，无法判断选样方法好不好；
+      没有可核验的输出，无法界定什么算「做对」。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>三个创新点分别是做什么的</h2>
+    <h3>先说清楚哪些不算创新</h3>
+    <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0">
+      <div style="font-size:14.5px;color:var(--ink);line-height:1.7">
+        <b>蒸馏本身、LoRA 微调、量化、检索增强、做个界面——这些都不算创新</b>，它们是现成的工具，
+        谁都能用。报告里明确这么写了，不把这些包装成贡献。
+        真正算创新的只有下面三项，而且<b>主贡献集中在第二项</b>，另两项是让第二项能成立的条件。
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
+      <div class="num" style="flex:0 0 32px;height:32px;border-radius:50%;background:#e8f0fe;color:var(--blue);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center">1</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:6px">造教材的方法：让每道题都能验、都能查来源</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.75">
+          普通做法是让大模型批量生成"问题—答案"对。问题在于：材料领域的答案常常看着合理但执行不了，
+          或者说不清依据。<br>
+          本课题的做法是<b>先改要求、再重新核验答案</b>：每次要求变化（改比例、锁定元素、禁用某元素），
+          都让答案重新过一遍检查器；同时把每个性能数字标注成<b>"文献实测"或"模型估计"或"未验证目标"</b>三类，
+          前一类必须能追到具体记录和测试条件。<br>
+          <span style="color:var(--ink3, #6b7280);font-size:13.5px">验证方式：分别去掉"改要求"和"绑证据"这两个环节，看任务效果掉多少。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="background:var(--accent-bg);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:10px">2 · 主贡献 · 挑教材的方法</div>
+      <div style="font-size:15px;color:var(--ink);line-height:1.75">
+        这是整个课题真正的核心。现有方法判断"学生哪道题没学会"，看的是模型自己的表现——
+        困惑度高、答不出来、想得步骤少。<b>这套判断有个前提：题目只有唯一正确答案。</b><br><br>
+        配方不是这样。同一个要求，可以有很多个都合格的配方。模型没照着参考答案写，
+        可能只是选了另一条同样合法的路。<b>把"跟参考答案不一样"当成"做错"，就会把合格答案当成错误重点练。</b><br><br>
+        <b>本课题把"什么算错"的判断，从模型内部搬到外面一个可执行的检查器上。</b>
+        不用模型自以为的难度，而用检查器对"总量对不对、锁定项有没有动、单位有没有混、引用的条件对不对"
+        的判定结果。这样"薄弱"就有了明确含义：<b>指的是能指出、能复现的执行错误</b>，
+        而不是模型输出跟参考文本的表面差异。<br><br>
+        再叠加第二个维度：<b>约束类型的覆盖</b>。学生练了很多"改比例"，但没练过"锁定元素"，
+        那就优先补后者——按约束组合算覆盖度，而不是按文章主题算。
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08);font-size:13.5px;color:var(--ink2)">
+        <b>怎么验证它有用：</b>同一批教材、同一个底座、同样多的训练量，
+        比较五种挑法——本方法 / 随机抽 / 只挑最难的 / 只按覆盖挑 / 成熟的 DEITA 式挑法。
+        <b>只有明显赢过随机挑选，这个创新才成立</b>；赢不过就如实写负结果。
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0">
+      <div class="num" style="flex:0 0 32px;height:32px;border-radius:50%;background:#e8f0fe;color:var(--blue);font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center">3</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:6px">生成时的方法：先选可比证据，再分步生成</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.75">
+          检索到一段"某合金抗拉强度 800 MPa"，如果它的测试温度和样品状态跟用户问的不一样，
+          直接拿来用就是错的。所以本课题<b>先在预算内挑"条件可比"的证据</b>，条件不符的不进上下文。<br>
+          生成也拆成几步：<b>先定元素集合 → 再定整数比例份额 → 最后补上引用和说明</b>，
+          中间由数值工具改写和检查。这样每一步都能被检查，而不是一步生成完再猜对不对。<br>
+          <span style="color:var(--ink3, #6b7280);font-size:13.5px">这一项的创新层级低于第二项，主要作用是保证输出可核验。</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:16px 20px;background:#fef9ec;border-left:3px solid #d69e2e;border-radius:0 8px 8px 0;font-size:14px;color:var(--ink);line-height:1.7">
+      <b>为什么主贡献只给一项：</b>一篇硕士论文能说清一个改动、比一个基线好多少，就已经算站住了。
+      硬凑三个"创新"反而每个都单薄。<b>第一、三项的作用是让第二项能被验证</b>——
+      没有干净的教材（第一项），无法判断选样方法好不好；没有可核验的输出（第三项），无法界定什么算"做对"。
+    </div>
+  </section>
+
+  <section>
+    <h2>拿什么数据做实验</h2>
+    <h3>一个公开的多主元合金数据集（MPEA）</h3>
+
+    <div class="nums">
+      <div class="num-cell">
+        <div class="v">1,545</div>
+        <div class="k">条记录</div>
+      </div>
+      <div class="num-cell">
+        <div class="v">630</div>
+        <div class="k">种不同成分</div>
+      </div>
+      <div class="num-cell">
+        <div class="v">265</div>
+        <div class="k">篇来源文献</div>
+      </div>
+      <div class="num-cell">
+        <div class="v">287</div>
+        <div class="k">条室温拉伸强度记录</div>
+      </div>
+    </div>
+
+    <p>
+      数据是 Apache 2.0 许可的公开数据集，可自由使用。
+      但规模并不宽裕——能用来做"室温拉伸强度"任务的只有 287 条。
+    </p>
+
+    <div class="note">
+      <div class="label">一个必须提前说清的限制</div>
+      <p>
+        这些记录里，<strong>同一个成分可能被不同论文用不同工艺做出来，性能差很多</strong>。
+        我在审查时核对过原始数据：同一个成分、同一篇论文、同样的粗工艺标签，
+        屈服强度能差三四倍——因为晶粒尺寸等细节不同。
+        所以不能把"记录间的差异"简单当成测量误差，这是本课题在设计上要小心处理的地方。
+      </p>
+    </div>
+
+    <h3>为什么是这份数据，而不是别的</h3>
+    <p>合金数据集其实很多，我排查过八个数据源，但大多数用不了。原因在下面这张表里。</p>
+
+    <table class="cmp">
+      <thead>
+        <tr><th>数据里必须有什么</th><th>MPEA 有没有</th><th>为什么必须有</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="k">成分</td><td>✓ 630 种</td><td>配方任务的对象</td></tr>
+        <tr><td class="k">材料状态</td><td>✓ 相结构、工艺、晶粒尺寸</td><td>同样成分不同状态，性能完全不同</td></tr>
+        <tr><td class="k">测试条件</td><td>✓ 测试温度、试验类型</td><td>非可比条件下比较结果是错的</td></tr>
+        <tr><td class="k">来源标识</td><td>✓ 265 个 DOI</td><td>按来源分组划分，防止测试集泄漏</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info" style="margin-top:16px">
+      <div class="label">为什么不换一个更大的数据集</div>
+      <p>
+        难熔合金方向确实有更大的库（ULTERA，约 <b>2,700 种合金、6,500 条数据</b>，是 MPEA 的四倍），
+        但它的数据<b>不公开</b>，需要走合作申请。其他公开数据集多数只提供
+        「成分 + 性能」两列，<b>缺测试条件和来源</b>——数据量再大，也支撑不了「条件可比」的判断。
+        所以选 MPEA 不是因为规模，而是因为四类字段齐全。
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>怎么证明做成了</h2>
+
+    <h3>核心实验：五种挑教材的方法，同台比</h3>
+    <p>
+      主贡献是「怎么挑教材」。要证明它有用，就必须让其他四种挑法拿到<b>完全相同的条件</b>：
+      同一批候选教材、同一个学生模型、同样多的训练量。只比总量不同的实验说明不了问题。
+    </p>
+
+    <table class="cmp">
+      <thead>
+        <tr><th>组别</th><th>怎么挑教材</th><th>这一组用来回答什么</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="k">本方法</td>
+          <td>按可核验失误 + 约束覆盖 + 去冗余</td>
+          <td>主结果</td>
+        </tr>
+        <tr>
+          <td class="k">随机挑</td>
+          <td>等量随机抽取</td>
+          <td><b>最重要的对照</b>：赢不过随机，方法就不成立</td>
+        </tr>
+        <tr>
+          <td class="k">只挑最难</td>
+          <td>按模型困惑度取最高的</td>
+          <td>检验「只用难度」是否已经够</td>
+        </tr>
+        <tr>
+          <td class="k">只按覆盖</td>
+          <td>只看约束类型覆盖度</td>
+          <td>检验「只用覆盖」是否已经够</td>
+        </tr>
+        <tr>
+          <td class="k">成熟方法</td>
+          <td>DEITA 式的质量—复杂度—多样性评分</td>
+          <td>与已有的主流做法正面比</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note" style="margin-top:16px">
+      <div class="label">为什么必须把「随机」当强基线，而不是凑数</div>
+      <p>
+        2026 年有研究明确指出：<b>定向挑选教材并不稳定优于均匀随机采样</b>，
+        随机采样在若干设置下是有竞争力的基线。这不是我给自己找退路，
+        而是说：<b>如果本方法只赢过「什么都不挑」，那不叫贡献。</b>
+        所以我把随机设为必做对照，并且只有显著赢过它，才把增益算作本方法的功劳。
+      </p>
+    </div>
+
+    <h3>不是看"回答像不像老师"，而是看能不能用</h3>
+    <table class="cmp">
+      <tr><th>检查项</th><th>怎么算</th></tr>
+      <tr><td class="k">约束合格率</td><td>生成的候选里，有多少条真的满足了全部硬约束（总和、锁定、禁用元素）</td></tr>
+      <tr><td class="k">证据可追溯</td><td>给出的性能数字，能不能对应到具体某条记录及其测试条件</td></tr>
+      <tr><td class="k">与老师的差距</td><td>同一任务上，学生和老师的得分差多少</td></tr>
+      <tr><td class="k">成本</td><td>训练与推理实际消耗的时间与显存</td></tr>
+    </table>
+
+    <div class="info">
+      <div class="label">四个对照组，用来证明"挑教材"真的有用</div>
+      <p>
+        随机挑同样数量的题 · 只挑最难的题 · 只挑最多样的题 · 全量训练（上界）。
+        <strong>如果所提方法和随机挑没差别，那就老老实实写"这个改进不成立"。</strong>
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2>为什么不能直接用大模型</h2>
+    <h3>因为大模型在材料题上确实不准</h3>
+    <p>
+      这一点有公开的实测数据。一个叫 MatSciBench 的基准，收了 1,340 道大学材料学教材水平的题，
+      测了当前主流大模型：
+    </p>
+    <table class="cmp">
+      <tr><th>测试</th><th>最好成绩</th></tr>
+      <tr><td class="k">纯文本题</td><td>DeepSeek-R1 取得 <strong>75.22%</strong>——错了近四分之一</td></tr>
+      <tr><td class="k">含图题</td><td>GPT-5 取得 <strong>53.02%</strong>——刚过一半</td></tr>
+    </table>
+    <p>
+      研究者进一步分析了错在哪里，结论是四类：<strong>领域知识不足、计算错误、题意理解失败、
+      图表信息提取困难</strong>。
+    </p>
+    <div class="info">
+      <div class="label">这个事实恰恰是本研究存在的理由</div>
+      <p>
+        前两类问题正好能对症处理：<strong>知识不足</strong>靠领域微调补，
+        <strong>计算不可靠</strong>靠规则检查器兜底。
+        大模型不够准，不代表不需要专门的工具——恰恰说明需要把"想"和"算"分开。
+      </p>
+    </div>
+    <p>
+      所以这个课题从不假设"老师很准"。它的逻辑是：
+      老师的示范提供<strong>任务怎么做</strong>，而<strong>材料事实是否成立</strong>
+      必须回到记录、文献和可执行检查上。两者是分开的。
+    </p>
+  </section>
+
+  <section>
+    <h2>这个研究的价值在哪</h2>
+    <h3>三层递进：不是并列，后一层由前一层推出</h3>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
+      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">1</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">现实层面：有可拆解的重复劳动</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
+          配方研究里的资料筛选、条件核对、成分改写、结果整理，都能拆成边界明确的操作。
+          把这些交给本地模型，研究者可以把精力留给真正需要判断的部分。
+        </div>
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0;border-bottom:1px solid var(--line)">
+      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">2</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">方法层面：现有"难度信号"在这类任务上失效（核心论点）</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
+          现在的教法都是"挑学生做错的题重点练"。但"做错"怎么判断？主流方法看模型自己的表现：
+          困惑度高、答不出来、想的步骤少。<br><br>
+          <strong>这个判断有个前提：题目只有唯一正确答案。</strong>
+          数学题成立——答错了就是错了。但配方不是这样：同一个要求可以有很多个都合格的配方，
+          模型没照着参考答案写，可能只是选了另一条同样合法的路，也可能真的违反了硬约束。
+          <strong>把"跟参考答案不一样"当成"做错"，就会把合格的答案当成错误重点训练。</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="background:var(--accent-bg);border-left:3px solid var(--accent);padding:18px 22px;border-radius:0 8px 8px 0;margin:16px 0">
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--accent);font-weight:650;margin-bottom:8px">本课题的做法</div>
+      <div style="font-size:15px;color:var(--ink);line-height:1.7">
+        把"什么算错"的判断，从<strong>模型内部</strong>搬到<strong>外部一个可执行的检查器</strong>上。
+        不用模型自以为的难度，而用检查器对"总量对不对、锁定项有没有动、单位有没有混、引用的条件对不对"的判定结果。
+        <strong>这样"薄弱"这个词就有了明确含义：指的是能指出、能复现的执行错误，而不是模型输出跟参考文本的表面差异。</strong>
+      </div>
+    </div>
+
+    <div class="step" style="display:flex;gap:16px;padding:18px 0">
+      <div class="num" style="flex:0 0 30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center">3</div>
+      <div class="body" style="flex:1;padding-top:2px">
+        <div class="t" style="font-size:16px;font-weight:600;margin-bottom:4px">更一般的意义：不限于合金</div>
+        <div class="d" style="font-size:14.5px;color:var(--ink2);line-height:1.7">
+          任何"约束是硬的、但答案不唯一"的专业生成任务，都有同样的困难——配方、结构、工艺参数、实验方案。
+          模型行为类的难度信号在这些任务上会遇到同样的失效。
+          本课题以合金配方为载体，把"可核验性"从一个模型能力问题，转化为一个数据工程问题。
+          <strong>若在本题场景下成立，其形式可直接迁移；若不成立，这个否证同样限定了它的适用边界。</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="info" style="background:var(--blue-bg);border-left:3px solid var(--blue);padding:18px 22px;border-radius:0 8px 8px 0;margin:20px 0">
+      <div style="font-size:12px;letter-spacing:.1em;color:var(--blue);font-weight:650;margin-bottom:8px">还有一条必须说清的边界</div>
+      <div style="font-size:15px;color:var(--ink);line-height:1.7">
+        这个思路 2026 年已有相近研究：有工作在"可验证奖励"的强化学习里，
+        只用验证器判为失败的样本就大幅提升了数据效率；也有工作证明通用大模型不微调也能做约束成分生成。
+        本课题与它们的差别是具体的、不是话术：<strong>对方的验证器面向答案唯一的任务，
+        而本课题要处理的是"多个答案都合法"时如何区分真错与合法差异</strong>。
+        这个差别能不能成立，要靠同预算对照来回答——不能靠主张。
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>可能失败的地方</h2>
+    <h3>写在开题里，不回避</h3>
+    <ul class="plain">
+      <li><b>数据太少</b>：287 条室温拉伸记录，按来源分组后训练集可能只剩两百多个来源。够不够训练，要试了才知道。</li>
+      <li><b>挑教材没用</b>：如果四组对照显示所提方法不如随机，这个改进就不成立。</li>
+      <li><b>小模型学不会</b>：40 亿参数的模型能不能掌握这套任务，尚无公开数据。</li>
+      <li><b>只是算术题</b>：如果任务本质只是"改数字凑 100%"，那传统优化器就够用，不需要语言模型——所以实验里专门加了一组"约束优化器"对照。</li>
+    </ul>
+  </section>
+
+  <div class="oneline">
+    <div class="label">一句话总结</div>
+    <p>
+      用一个开源大模型当老师，教一个能在普通显卡上跑的小模型学会"按约束改合金配方"；
+      教学时不是把所有例题都塞给它，而是挑它现在做错的、和还没练过的题型；
+      生成完再用一个纯规则程序检查数字对不对。
+      最后诚实地测：小模型到底能到什么水平、差距在哪、"挑教材"到底有没有用。
+      不预设它一定超过谁。
+    </p>
+  </div>
+
+  <footer>
+    本页为《面向合金配方辅助设计的领域小模型选择性蒸馏与知识增强生成方法研究》的通俗说明，
+    内容与开题报告正文一致。文中数据规模（1,545 条 / 630 成分 / 265 DOI / 287 条）
+    均来自对公开 MPEA 数据集的实测审计，可复现。
+    <br><br>
+    注意：本课题为研究计划，模型训练、样本选择算法与用户试用均尚未实施。
+    本页说明的是"打算做什么、怎么验证"，不是"已经做出了什么"。
+  </footer>
+
+</div>
+</body>
+</html>
