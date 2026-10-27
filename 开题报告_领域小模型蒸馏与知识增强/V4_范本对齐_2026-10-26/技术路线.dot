@@ -2,11 +2,12 @@ digraph G {
   graph [rankdir=TB, bgcolor="white", nodesep=0.26, ranksep=0.28, dpi=180];
   node [shape=box, style="rounded,filled", fontname="SimSun", fontsize=11, color="#444444", fillcolor="white", width=6.6, margin="0.18,0.12"];
   edge [color="#555555", arrowsize=0.7];
-  a [label="① 资料与来源绑定\nMPEA公开记录起步；获准全文补充表格、表注与工艺信息\n绑定文献／样品／性质／条件，保留未知和版本", fillcolor="#EDF3FA"];
-  b [label="② 下游影响驱动的核验调度（拟创新点二）\n共享字段与记录依赖 → 动作成本和预计帮助 → 预算选择\n真实核验＋独立抽检；疑点不等于已确认错误", fillcolor="#F2F7EE"];
-  c [label="③ 版本化知识库与固定检索召回\n训练、开发、测试按来源关联隔离\n生成经核验的原片段／条件摘录／紧凑卡片及其依赖闭包", fillcolor="#EDF3FA"];
-  d [label="④ 条件依赖闭包下的多粒度证据装配（拟创新点一）\n支持效用＋版本互斥＋必需依赖＋共享token成本\n小池参考求解／限时启发式 → 完整序列token复验\n保留数值时必须保留适用条件，不靠截断破坏闭包", fillcolor="#F2F7EE"];
-  e [label="⑤ 任务蒸馏与本地多步Agent（支撑与载体）\n经核验的完整证据包 → 小模型SFT → 有依据回答\n固定查询、核对、装配、澄清、终止动作，逐轮留痕", fillcolor="#FBF3EC"];
-  f [label="⑥ 来源留出验证与完整成本\n同字段强基线；装配／核验／训练分离与交叉消融\n答案正确率＋条件保留＋真实核验收益＋token与耗时\n当前为研究计划；无新算法有效性或材料性能实测", fillcolor="#EFEFEF", penwidth=1.4];
-  a -> b -> c -> d -> e -> f;
+  a [label="① 资料与来源绑定\nMPEA 公开记录起步；获准全文补充表格、表注与工艺信息\n绑定文献／样品／性质／条件，保留未知和版本", fillcolor="#EDF3FA"];
+  b [label="② 下游影响驱动的核验调度（工程支撑）\n共享字段与记录依赖 → 动作成本与预计帮助 → 预算选择\n真实核验加独立抽检；疑点不等于已确认错误", fillcolor="#F7F5F2"];
+  c [label="③ 版本化知识库与固定候选池\n训练、开发、测试按来源关联隔离\n生成原片段／条件摘录／紧凑卡片及依赖闭包", fillcolor="#EDF3FA"];
+  d [label="④ 条件依赖闭包下的多粒度证据装配（创新点一）\n支持效用＋版本互斥＋必需依赖＋共享 token 成本\n小池参考求解／限时启发式 → 完整序列 token 复验\n保留数值时必须保留适用条件，不靠截断破坏闭包", fillcolor="#F2F7EE"];
+  e [label="⑤ 条件变化一致的证据使用联合蒸馏（创新点二）\n损失＝L_SFT + λr·L_rank + λc·L_cond\n三项：答案监督／候选池列表排序／条件翻转一致性\nq 与 q′ 只差一个条件时学生偏好须相应翻转\n无对应证据时标为证据不足，不制造虚假正例", fillcolor="#F2F7EE"];
+  f [label="⑥ 本地多步 Agent 验证载体\n固定查询、核对、装配、澄清、终止动作，逐轮留痕\n执行器不主张算法创新", fillcolor="#FBF3EC"];
+  g [label="⑦ 来源留出验证与完整成本\n答案正确率＋条件错引率＋排序翻转准确率＋Recall@k\n五组消融：仅SFT／加排序／加条件一致／完整／逐项去掉条件字段\ntoken 与耗时；当前为研究计划，无算法有效性或材料性能实测", fillcolor="#EFEFEF", penwidth=1.4];
+  a -> b -> c -> d -> e -> f -> g;
 }
