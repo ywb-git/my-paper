@@ -1,1799 +1,1157 @@
 {
-  "checked_at": "2026-10-26T14:07:36.636112+00:00",
-  "scope": "本轮40条均实际访问原始来源并比对标题；元数据核验不等于全文审查或实验复现。arXiv按所访问版本引用，不宣称无正式发表版。",
-  "items": [
-    {
-      "number": 1,
-      "kind": "arxiv",
-      "identifier": "2406.13163",
-      "url": "https://arxiv.org/abs/2406.13163",
-      "http_status": 200,
-      "title": "LLMatDesign: Autonomous Materials Discovery with Large Language Models",
-      "authors": [
-        "Jia, Shuyi",
-        "Zhang, Chao",
-        "Fung, Victor"
-      ],
-      "publication_date": [
-        "2024/06/19"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[1] Jia S, Zhang C, Fung V. LLMatDesign: Autonomous Materials Discovery with Large Language Models[EB/OL]. arXiv:2406.13163, 2024.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 2,
-      "kind": "arxiv",
-      "identifier": "2511.12036",
-      "url": "https://arxiv.org/abs/2511.12036",
-      "http_status": 200,
-      "title": "Preference Learning from Physics-Based Feedback: Tuning Language Models to Design BCC/B2 Superalloys",
-      "authors": [
-        "Ghosh, Satanu",
-        "Holgate, Collin",
-        "Brodnik, Neal R.",
-        "Downey, Doug",
-        "Daly, Samantha",
-        "Pollock, Tresa M.",
-        "Carton, Samuel"
-      ],
-      "publication_date": [
-        "2025/11/15"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[2] Ghosh S, Holgate C, Brodnik N R, et al. Preference Learning from Physics-Based Feedback: Tuning Language Models to Design BCC/B2 Superalloys[EB/OL]. arXiv:2511.12036, 2025.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 3,
-      "kind": "crossref",
-      "identifier": "10.1038/s42256-026-01199-8",
-      "url": "https://api.crossref.org/works/10.1038/s42256-026-01199-8",
-      "http_status": 200,
-      "title": "A family of large language models for materials research with insights into model adaptability in continued pretraining",
-      "authors": [
-        {
-          "given": "Dhruv",
-          "family": "Ahlawat",
-          "sequence": "first",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Vaibhav",
-          "family": "Mishra",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Somaditya",
-          "family": "Singh",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0002-4551-3470",
-          "authenticated-orcid": false,
-          "given": "Mohd",
-          "family": "Zaki",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Vaibhav",
-          "family": "Bihani",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Hargun Singh",
-          "family": "Grover",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Biswajit",
-          "family": "Mishra",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Santiago",
-          "family": "Miret",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0003-4088-4296",
-          "authenticated-orcid": false,
-          "family": "Mausam",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0003-1500-4947",
-          "authenticated-orcid": false,
-          "given": "N. M. Anoop",
-          "family": "Krishnan",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        }
-      ],
-      "container": [
-        "Nature Machine Intelligence"
-      ],
-      "volume": "8",
-      "issue": "3",
-      "page": "435-448",
-      "article_number": null,
-      "issued": {
-        "date-parts": [
-          [
-            2026,
-            2,
-            27
-          ]
-        ]
-      },
-      "published": {
-        "date-parts": [
-          [
-            2026,
-            2,
-            27
-          ]
-        ]
-      },
-      "type": "journal-article",
-      "doi": "10.1038/s42256-026-01199-8",
-      "status": "retrieved",
-      "report_entry": "[3] Ahlawat D, Mishra V, Singh S, et al. A family of large language models for materials research with insights into model adaptability in continued pretraining[J]. Nature Machine Intelligence, 2026, 8(3): 435-448. DOI: 10.1038/s42256-026-01199-8.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 4,
-      "kind": "crossref",
-      "identifier": "10.1038/s41524-025-01768-2",
-      "url": "https://api.crossref.org/works/10.1038/s41524-025-01768-2",
-      "http_status": 200,
-      "title": "End-to-end prediction and design of additively manufacturable alloys using a generative AlloyGPT model",
-      "authors": [
-        {
-          "given": "Bo",
-          "family": "Ni",
-          "sequence": "first",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Benjamin",
-          "family": "Glaser",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "S. Mohadeseh",
-          "family": "Taheri-Mousavi",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        }
-      ],
-      "container": [
-        "npj Computational Materials"
-      ],
-      "volume": "11",
-      "issue": "1",
-      "page": null,
-      "article_number": "294",
-      "issued": {
-        "date-parts": [
-          [
-            2025,
-            9,
-            26
-          ]
-        ]
-      },
-      "published": {
-        "date-parts": [
-          [
-            2025,
-            9,
-            26
-          ]
-        ]
-      },
-      "type": "journal-article",
-      "doi": "10.1038/s41524-025-01768-2",
-      "status": "retrieved",
-      "report_entry": "[4] Ni B, Glaser B, Taheri-Mousavi S M. End-to-end prediction and design of additively manufacturable alloys using a generative AlloyGPT model[J]. npj Computational Materials, 2025, 11(1): 294. DOI: 10.1038/s41524-025-01768-2.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 5,
-      "kind": "arxiv",
-      "identifier": "2511.02133",
-      "url": "https://arxiv.org/abs/2511.02133",
-      "http_status": 200,
-      "title": "AlloyLens: A Visual Analytics Tool for High-throughput Alloy Screening and Inverse Design",
-      "authors": [
-        "Li, Suyang",
-        "Fajardo-Rojas, Fernando",
-        "Gomez-Gualdron, Diego",
-        "Chang, Remco",
-        "Li, Mingwei"
-      ],
-      "publication_date": [
-        "2025/11/03"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[5] Li S, Fajardo-Rojas F, Gomez-Gualdron D, et al. AlloyLens: A Visual Analytics Tool for High-throughput Alloy Screening and Inverse Design[EB/OL]. arXiv:2511.02133, 2025.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 6,
-      "kind": "arxiv",
-      "identifier": "2605.29555",
-      "url": "https://arxiv.org/abs/2605.29555",
-      "http_status": 200,
-      "title": "From Blind Guess to Informed Judgment: Teaching LLMs to Evaluate Materials by Building Knowledge-Augmented Preference Signals",
-      "authors": [
-        "Yu, Yeyong",
-        "Hu, Wenya",
-        "Wu, Xing",
-        "Qian, Quan"
-      ],
-      "publication_date": [
-        "2026/05/28"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[6] Yu Y, Hu W, Wu X, et al. From Blind Guess to Informed Judgment: Teaching LLMs to Evaluate Materials by Building Knowledge-Augmented Preference Signals[EB/OL]. arXiv:2605.29555, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 7,
-      "kind": "crossref",
-      "identifier": "10.1038/s41597-020-00768-9",
-      "url": "https://api.crossref.org/works/10.1038/s41597-020-00768-9",
-      "http_status": 200,
-      "title": "Expanded dataset of mechanical properties and observed phases of multi-principal element alloys",
-      "authors": [
-        {
-          "given": "Christopher K. H.",
-          "family": "Borg",
-          "sequence": "first",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Carolina",
-          "family": "Frey",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0002-8798-0982",
-          "authenticated-orcid": false,
-          "given": "Jasper",
-          "family": "Moh",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Tresa M.",
-          "family": "Pollock",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0003-1966-8476",
-          "authenticated-orcid": false,
-          "given": "Stéphane",
-          "family": "Gorsse",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0002-7473-0351",
-          "authenticated-orcid": false,
-          "given": "Daniel B.",
-          "family": "Miracle",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0001-5587-415X",
-          "authenticated-orcid": false,
-          "given": "Oleg N.",
-          "family": "Senkov",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Bryce",
-          "family": "Meredig",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "James E.",
-          "family": "Saal",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        }
-      ],
-      "container": [
-        "Scientific Data"
-      ],
-      "volume": "7",
-      "issue": "1",
-      "page": null,
-      "article_number": "430",
-      "issued": {
-        "date-parts": [
-          [
-            2020,
-            12,
-            8
-          ]
-        ]
-      },
-      "published": {
-        "date-parts": [
-          [
-            2020,
-            12,
-            8
-          ]
-        ]
-      },
-      "type": "journal-article",
-      "doi": "10.1038/s41597-020-00768-9",
-      "status": "retrieved",
-      "report_entry": "[7] Borg C K H, Frey C, Moh J, et al. Expanded dataset of mechanical properties and observed phases of multi-principal element alloys[J]. Scientific Data, 2020, 7(1): 430. DOI: 10.1038/s41597-020-00768-9.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 8,
-      "kind": "arxiv",
-      "identifier": "1503.02531",
-      "url": "https://arxiv.org/abs/1503.02531",
-      "error": "The read operation timed out",
-      "http_status": 200,
-      "title": "Distilling the Knowledge in a Neural Network",
-      "authors": [
-        "Hinton, Geoffrey",
-        "Vinyals, Oriol",
-        "Dean, Jeff"
-      ],
-      "publication_date": [
-        "2015/03/09"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[8] Hinton G, Vinyals O, Dean J. Distilling the Knowledge in a Neural Network[EB/OL]. arXiv:1503.02531, 2015.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 9,
-      "kind": "acl",
-      "identifier": "2023.findings-acl.507",
-      "url": "https://aclanthology.org/2023.findings-acl.507/",
-      "http_status": 200,
-      "title": "Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes",
-      "authors": [
-        "Hsieh, Cheng-Yu",
-        "Li, Chun-Liang",
-        "Yeh, Chih-kuan",
-        "Nakhost, Hootan",
-        "Fujii, Yasuhisa",
-        "Ratner, Alex",
-        "Krishna, Ranjay",
-        "Lee, Chen-Yu",
-        "Pfister, Tomas"
-      ],
-      "publication_date": [],
-      "journal": [],
-      "doi": "10.18653/v1/2023.findings-acl.507",
-      "status": "retrieved",
-      "bibtex": "@inproceedings{hsieh-etal-2023-distilling,\n    title = \"Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes\",\n    author = \"Hsieh, Cheng-Yu  and\n      Li, Chun-Liang  and\n      Yeh, Chih-kuan  and\n      Nakhost, Hootan  and\n      Fujii, Yasuhisa  and\n      Ratner, Alex  and\n      Krishna, Ranjay  and\n      Lee, Chen-Yu  and\n      Pfister, Tomas\",\n    editor = \"Rogers, Anna  and\n      Boyd-Graber, Jordan  and\n      Okazaki, Naoaki\",\n    booktitle = \"Findings of the {A}ssociation for {C}omputational {L}inguistics: {ACL} 2023\",\n    month = jul,\n    year = \"2023\",\n    address = \"Toronto, Canada\",\n    publisher = \"Association for Computational Linguistics\",\n    url = \"https://aclanthology.org/2023.findings-acl.507/\",\n    doi = \"10.18653/v1/2023.findings-acl.507\",\n    pages = \"8003--8017\"\n}\n\n",
-      "bibtex_url": "https://aclanthology.org/2023.findings-acl.507.bib",
-      "booktitle": "Findings of the {A}ssociation for {C}omputational {L}inguistics: {ACL} 2023",
-      "year": "2023",
-      "page": "8003--8017",
-      "report_entry": "[9] Hsieh C Y, Li C L, Yeh C K, et al. Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes[C]//Findings of the Association for Computational Linguistics: ACL 2023. 2023: 8003-8017. DOI: 10.18653/v1/2023.findings-acl.507.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 10,
-      "kind": "arxiv",
-      "identifier": "2311.11045",
-      "url": "https://arxiv.org/abs/2311.11045",
-      "error": "<urlopen error _ssl.c:1016: The handshake operation timed out>",
-      "http_status": 200,
-      "title": "Orca 2: Teaching Small Language Models How to Reason",
-      "authors": [
-        "Mitra, Arindam",
-        "Del Corro, Luciano",
-        "Mahajan, Shweti",
-        "Codas, Andres",
-        "Simoes, Clarisse",
-        "Agarwal, Sahaj",
-        "Chen, Xuxi",
-        "Razdaibiedina, Anastasia",
-        "Jones, Erik",
-        "Aggarwal, Kriti",
-        "Palangi, Hamid",
-        "Zheng, Guoqing",
-        "Rosset, Corby",
-        "Khanpour, Hamed",
-        "Awadallah, Ahmed"
-      ],
-      "publication_date": [
-        "2023/11/18"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[10] Mitra A, Del Corro L, Mahajan S, et al. Orca 2: Teaching Small Language Models How to Reason[EB/OL]. arXiv:2311.11045, 2023.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 11,
-      "kind": "arxiv",
-      "identifier": "2306.08543",
-      "url": "https://arxiv.org/abs/2306.08543",
-      "http_status": 200,
-      "title": "MiniLLM: On-Policy Distillation of Large Language Models",
-      "authors": [
-        "Gu, Yuxian",
-        "Dong, Li",
-        "Wei, Furu",
-        "Huang, Minlie"
-      ],
-      "publication_date": [
-        "2023/06/14"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[11] Gu Y, Dong L, Wei F, et al. MiniLLM: On-Policy Distillation of Large Language Models[EB/OL]. arXiv:2306.08543, 2023.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 12,
-      "kind": "acl",
-      "identifier": "2023.acl-long.754",
-      "url": "https://aclanthology.org/2023.acl-long.754/",
-      "http_status": 200,
-      "title": "Self-Instruct: Aligning Language Models with Self-Generated Instructions",
-      "authors": [
-        "Wang, Yizhong",
-        "Kordi, Yeganeh",
-        "Mishra, Swaroop",
-        "Liu, Alisa",
-        "Smith, Noah A.",
-        "Khashabi, Daniel",
-        "Hajishirzi, Hannaneh"
-      ],
-      "publication_date": [],
-      "journal": [],
-      "doi": "10.18653/v1/2023.acl-long.754",
-      "status": "retrieved",
-      "bibtex": "@inproceedings{wang-etal-2023-self-instruct,\n    title = \"Self-Instruct: Aligning Language Models with Self-Generated Instructions\",\n    author = \"Wang, Yizhong  and\n      Kordi, Yeganeh  and\n      Mishra, Swaroop  and\n      Liu, Alisa  and\n      Smith, Noah A.  and\n      Khashabi, Daniel  and\n      Hajishirzi, Hannaneh\",\n    editor = \"Rogers, Anna  and\n      Boyd-Graber, Jordan  and\n      Okazaki, Naoaki\",\n    booktitle = \"Proceedings of the 61st Annual Meeting of the {A}ssociation for {C}omputational {L}inguistics (Volume 1: Long Papers)\",\n    month = jul,\n    year = \"2023\",\n    address = \"Toronto, Canada\",\n    publisher = \"Association for Computational Linguistics\",\n    url = \"https://aclanthology.org/2023.acl-long.754/\",\n    doi = \"10.18653/v1/2023.acl-long.754\",\n    pages = \"13484--13508\"\n}\n\n",
-      "bibtex_url": "https://aclanthology.org/2023.acl-long.754.bib",
-      "booktitle": "Proceedings of the 61st Annual Meeting of the {A}ssociation for {C}omputational {L}inguistics (Volume 1: Long Papers)",
-      "year": "2023",
-      "page": "13484--13508",
-      "report_entry": "[12] Wang Y, Kordi Y, Mishra S, et al. Self-Instruct: Aligning Language Models with Self-Generated Instructions[C]//Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2023: 13484-13508. DOI: 10.18653/v1/2023.acl-long.754.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 13,
-      "kind": "arxiv",
-      "identifier": "2402.04333",
-      "url": "https://arxiv.org/abs/2402.04333",
-      "http_status": 200,
-      "title": "LESS: Selecting Influential Data for Targeted Instruction Tuning",
-      "authors": [
-        "Xia, Mengzhou",
-        "Malladi, Sadhika",
-        "Gururangan, Suchin",
-        "Arora, Sanjeev",
-        "Chen, Danqi"
-      ],
-      "publication_date": [
-        "2024/02/06"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[13] Xia M, Malladi S, Gururangan S, et al. LESS: Selecting Influential Data for Targeted Instruction Tuning[EB/OL]. arXiv:2402.04333, 2024.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 14,
-      "kind": "arxiv",
-      "identifier": "2312.15685",
-      "url": "https://arxiv.org/abs/2312.15685",
-      "status": "retrieved",
-      "title": "What Makes Good Data for Alignment? A Comprehensive Study of Automatic Data Selection in Instruction Tuning",
-      "authors": [
-        "Liu, Wei",
-        "Zeng, Weihao",
-        "He, Keqing",
-        "Jiang, Yong",
-        "He, Junxian"
-      ],
-      "publication_date": [
-        "2023/12/25"
-      ],
-      "verification_method": "read_page读取arXiv官方abs页面，核对题名作者及版本；命令行原请求超时未计成功",
-      "report_entry": "[14] Liu W, Zeng W, He K, et al. What Makes Good Data for Alignment? A Comprehensive Study of Automatic Data Selection in Instruction Tuning[EB/OL]. arXiv:2312.15685, 2023.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 15,
-      "kind": "crossref",
-      "identifier": "10.24963/ijcai.2025/928",
-      "url": "https://api.crossref.org/works/10.24963/ijcai.2025/928",
-      "http_status": 200,
-      "title": "D3: Diversity, Difficulty, and Dependability-Aware Data Selection for Sample-Efficient LLM Instruction Tuning",
-      "authors": [
-        {
-          "given": "Jia",
-          "family": "Zhang",
-          "sequence": "first",
-          "affiliation": [
-            {
-              "name": "National Key Laboratory for Novel Software Technology, Nanjing University"
-            },
-            {
-              "name": "School of Artificial Intelligence, Nanjing University"
-            },
-            {
-              "name": "Algorithm Tech, Taobao & Tmall Group of Alibaba"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Chen-Xi",
-          "family": "Zhang",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "National Key Laboratory for Novel Software Technology, Nanjing University"
-            },
-            {
-              "name": "School of Artificial Intelligence, Nanjing University"
-            },
-            {
-              "name": "Algorithm Tech, Taobao & Tmall Group of Alibaba"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Yao",
-          "family": "Liu",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Algorithm Tech, Taobao & Tmall Group of Alibaba"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Yi-Xuan",
-          "family": "Jin",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Algorithm Tech, Taobao & Tmall Group of Alibaba"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Xiao-Wen",
-          "family": "Yang",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "National Key Laboratory for Novel Software Technology, Nanjing University"
-            },
-            {
-              "name": "School of Artificial Intelligence, Nanjing University"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Bo",
-          "family": "Zheng",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Algorithm Tech, Taobao & Tmall Group of Alibaba"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Yi",
-          "family": "Liu",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Algorithm Tech, Taobao & Tmall Group of Alibaba"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Lan-Zhe",
-          "family": "Guo",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "National Key Laboratory for Novel Software Technology, Nanjing University"
-            },
-            {
-              "name": "School of Intelligence Science and Technology, Nanjing University"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        }
-      ],
-      "container": [
-        "Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence"
-      ],
-      "volume": null,
-      "issue": null,
-      "page": "8348-8356",
-      "article_number": null,
-      "issued": {
-        "date-parts": [
-          [
-            2025,
-            9
-          ]
-        ]
-      },
-      "published": {
-        "date-parts": [
-          [
-            2025,
-            9
-          ]
-        ]
-      },
-      "type": "proceedings-article",
-      "doi": "10.24963/ijcai.2025/928",
-      "status": "retrieved",
-      "report_entry": "[15] Zhang J, Zhang C X, Liu Y, et al. D3: Diversity, Difficulty, and Dependability-Aware Data Selection for Sample-Efficient LLM Instruction Tuning[C]//Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence. 2025: 8348-8356. DOI: 10.24963/ijcai.2025/928.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 16,
-      "kind": "arxiv",
-      "identifier": "2505.22157",
-      "url": "https://arxiv.org/abs/2505.22157",
-      "http_status": 200,
-      "title": "LASER: Stratified Selective Sampling for Instruction Tuning with Dedicated Scoring Strategy",
-      "authors": [
-        "Mirza, Paramita",
-        "Weber, Lucas",
-        "Küch, Fabian"
-      ],
-      "publication_date": [
-        "2025/05/28"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[16] Mirza P, Weber L, Küch F. LASER: Stratified Selective Sampling for Instruction Tuning with Dedicated Scoring Strategy[EB/OL]. arXiv:2505.22157, 2025.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 17,
-      "kind": "arxiv",
-      "identifier": "2005.11401",
-      "url": "https://arxiv.org/abs/2005.11401",
-      "error": "The read operation timed out",
-      "http_status": 200,
-      "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
-      "authors": [
-        "Lewis, Patrick",
-        "Perez, Ethan",
-        "Piktus, Aleksandra",
-        "Petroni, Fabio",
-        "Karpukhin, Vladimir",
-        "Goyal, Naman",
-        "Küttler, Heinrich",
-        "Lewis, Mike",
-        "Yih, Wen-tau",
-        "Rocktäschel, Tim",
-        "Riedel, Sebastian",
-        "Kiela, Douwe"
-      ],
-      "publication_date": [
-        "2020/05/22"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[17] Lewis P, Perez E, Piktus A, et al. Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks[EB/OL]. arXiv:2005.11401, 2020.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 18,
-      "kind": "arxiv",
-      "identifier": "2403.10131",
-      "url": "https://arxiv.org/abs/2403.10131",
-      "http_status": 200,
-      "title": "RAFT: Adapting Language Model to Domain Specific RAG",
-      "authors": [
-        "Zhang, Tianjun",
-        "Patil, Shishir G.",
-        "Jain, Naman",
-        "Shen, Sheng",
-        "Zaharia, Matei",
-        "Stoica, Ion",
-        "Gonzalez, Joseph E."
-      ],
-      "publication_date": [
-        "2024/03/15"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[18] Zhang T, Patil S G, Jain N, et al. RAFT: Adapting Language Model to Domain Specific RAG[EB/OL]. arXiv:2403.10131, 2024.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 19,
-      "kind": "arxiv",
-      "identifier": "2106.09685",
-      "url": "https://arxiv.org/abs/2106.09685",
-      "http_status": 200,
-      "title": "LoRA: Low-Rank Adaptation of Large Language Models",
-      "authors": [
-        "Hu, Edward J.",
-        "Shen, Yelong",
-        "Wallis, Phillip",
-        "Allen-Zhu, Zeyuan",
-        "Li, Yuanzhi",
-        "Wang, Shean",
-        "Wang, Lu",
-        "Chen, Weizhu"
-      ],
-      "publication_date": [
-        "2021/06/17"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[19] Hu E J, Shen Y, Wallis P, et al. LoRA: Low-Rank Adaptation of Large Language Models[EB/OL]. arXiv:2106.09685, 2021.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 20,
-      "kind": "arxiv",
-      "identifier": "2305.14314",
-      "url": "https://arxiv.org/abs/2305.14314",
-      "http_status": 200,
-      "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
-      "authors": [
-        "Dettmers, Tim",
-        "Pagnoni, Artidoro",
-        "Holtzman, Ari",
-        "Zettlemoyer, Luke"
-      ],
-      "publication_date": [
-        "2023/05/23"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[20] Dettmers T, Pagnoni A, Holtzman A, et al. QLoRA: Efficient Finetuning of Quantized LLMs[EB/OL]. arXiv:2305.14314, 2023.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 21,
-      "kind": "arxiv",
-      "identifier": "2505.09388",
-      "url": "https://arxiv.org/abs/2505.09388",
-      "error": "The read operation timed out",
-      "http_status": 200,
-      "title": "Qwen3 Technical Report",
-      "authors": [
-        "Yang, An",
-        "Li, Anfeng",
-        "Yang, Baosong",
-        "Zhang, Beichen",
-        "Hui, Binyuan",
-        "Zheng, Bo",
-        "Yu, Bowen",
-        "Gao, Chang",
-        "Huang, Chengen",
-        "Lv, Chenxu",
-        "Zheng, Chujie",
-        "Liu, Dayiheng",
-        "Zhou, Fan",
-        "Huang, Fei",
-        "Hu, Feng",
-        "Ge, Hao",
-        "Wei, Haoran",
-        "Lin, Huan",
-        "Tang, Jialong",
-        "Yang, Jian",
-        "Tu, Jianhong",
-        "Zhang, Jianwei",
-        "Yang, Jianxin",
-        "Yang, Jiaxi",
-        "Zhou, Jing",
-        "Zhou, Jingren",
-        "Lin, Junyang",
-        "Dang, Kai",
-        "Bao, Keqin",
-        "Yang, Kexin",
-        "Yu, Le",
-        "Deng, Lianghao",
-        "Li, Mei",
-        "Xue, Mingfeng",
-        "Li, Mingze",
-        "Zhang, Pei",
-        "Wang, Peng",
-        "Zhu, Qin",
-        "Men, Rui",
-        "Gao, Ruize",
-        "Liu, Shixuan",
-        "Luo, Shuang",
-        "Li, Tianhao",
-        "Tang, Tianyi",
-        "Yin, Wenbiao",
-        "Ren, Xingzhang",
-        "Wang, Xinyu",
-        "Zhang, Xinyu",
-        "Ren, Xuancheng",
-        "Fan, Yang",
-        "Su, Yang",
-        "Zhang, Yichang",
-        "Zhang, Yinger",
-        "Wan, Yu",
-        "Liu, Yuqiong",
-        "Wang, Zekun",
-        "Cui, Zeyu",
-        "Zhang, Zhenru",
-        "Zhou, Zhipeng",
-        "Qiu, Zihan"
-      ],
-      "publication_date": [
-        "2025/05/14"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[21] Yang A, Li A, Yang B, et al. Qwen3 Technical Report[EB/OL]. arXiv:2505.09388, 2025.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 22,
-      "kind": "acl",
-      "identifier": "2021.emnlp-main.779",
-      "url": "https://aclanthology.org/2021.emnlp-main.779/",
-      "http_status": 200,
-      "title": "PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models",
-      "authors": [
-        "Scholak, Torsten",
-        "Schucher, Nathan",
-        "Bahdanau, Dzmitry"
-      ],
-      "publication_date": [],
-      "journal": [],
-      "doi": "10.18653/v1/2021.emnlp-main.779",
-      "status": "retrieved",
-      "bibtex": "@inproceedings{scholak-etal-2021-picard,\n    title = \"{PICARD}: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models\",\n    author = \"Scholak, Torsten  and\n      Schucher, Nathan  and\n      Bahdanau, Dzmitry\",\n    editor = \"Moens, Marie-Francine  and\n      Huang, Xuanjing  and\n      Specia, Lucia  and\n      Yih, Scott Wen-tau\",\n    booktitle = \"Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing\",\n    month = nov,\n    year = \"2021\",\n    address = \"Online and Punta Cana, Dominican Republic\",\n    publisher = \"Association for Computational Linguistics\",\n    url = \"https://aclanthology.org/2021.emnlp-main.779/\",\n    doi = \"10.18653/v1/2021.emnlp-main.779\",\n    pages = \"9895--9901\"\n}\n\n",
-      "bibtex_url": "https://aclanthology.org/2021.emnlp-main.779.bib",
-      "booktitle": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing",
-      "year": "2021",
-      "page": "9895--9901",
-      "report_entry": "[22] Scholak T, Schucher N, Bahdanau D. PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models[C]//Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing. 2021: 9895-9901. DOI: 10.18653/v1/2021.emnlp-main.779.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 23,
-      "kind": "arxiv",
-      "identifier": "2409.18839",
-      "url": "https://arxiv.org/abs/2409.18839",
-      "http_status": 200,
-      "title": "MinerU: An Open-Source Solution for Precise Document Content Extraction",
-      "authors": [
-        "Wang, Bin",
-        "Xu, Chao",
-        "Zhao, Xiaomeng",
-        "Ouyang, Linke",
-        "Wu, Fan",
-        "Zhao, Zhiyuan",
-        "Xu, Rui",
-        "Liu, Kaiwen",
-        "Qu, Yuan",
-        "Shang, Fukai",
-        "Zhang, Bo",
-        "Wei, Liqun",
-        "Sui, Zhihao",
-        "Li, Wei",
-        "Shi, Botian",
-        "Qiao, Yu",
-        "Lin, Dahua",
-        "He, Conghui"
-      ],
-      "publication_date": [
-        "2024/09/27"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[23] Wang B, Xu C, Zhao X, et al. MinerU: An Open-Source Solution for Precise Document Content Extraction[EB/OL]. arXiv:2409.18839, 2024.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 24,
-      "kind": "arxiv",
-      "identifier": "2607.17417",
-      "url": "https://arxiv.org/abs/2607.17417",
-      "http_status": 200,
-      "title": "Grounded verification of chemical and materials reasoning: detection is the bottleneck",
-      "authors": [
-        "Polat, Can",
-        "Kurban, Mustafa",
-        "Serpedin, Erchin",
-        "Kurban, Hasan"
-      ],
-      "publication_date": [
-        "2026/07/19"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[24] Polat C, Kurban M, Serpedin E, et al. Grounded verification of chemical and materials reasoning: detection is the bottleneck[EB/OL]. arXiv:2607.17417, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 25,
-      "kind": "arxiv",
-      "identifier": "2512.01693",
-      "url": "https://arxiv.org/abs/2512.01693",
-      "http_status": 200,
-      "title": "LitMOF: An LLM Multi-Agent for Literature-Validated Metal-Organic Frameworks Database Correction and Expansion",
-      "authors": [
-        "Kim, Honghui",
-        "Kim, Dohoon",
-        "Kim, Jihan"
-      ],
-      "publication_date": [
-        "2025/12/01"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[25] Kim H, Kim D, Kim J. LitMOF: An LLM Multi-Agent for Literature-Validated Metal-Organic Frameworks Database Correction and Expansion[EB/OL]. arXiv:2512.01693, 2025.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 26,
-      "kind": "arxiv",
-      "identifier": "2412.15235",
-      "url": "https://arxiv.org/abs/2412.15235",
-      "http_status": 200,
-      "title": "OG-RAG: Ontology-Grounded Retrieval-Augmented Generation For Large Language Models",
-      "authors": [
-        "Sharma, Kartik",
-        "Kumar, Peeyush",
-        "Li, Yunqing"
-      ],
-      "publication_date": [
-        "2024/12/12"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[26] Sharma K, Kumar P, Li Y. OG-RAG: Ontology-Grounded Retrieval-Augmented Generation For Large Language Models[EB/OL]. arXiv:2412.15235, 2024.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 27,
-      "kind": "arxiv",
-      "identifier": "2510.00880",
-      "url": "https://arxiv.org/abs/2510.00880",
-      "http_status": 200,
-      "title": "HalluGuard: Evidence-Grounded Small Reasoning Models to Mitigate Hallucinations in Retrieval-Augmented Generation",
-      "authors": [
-        "Bergeron, Loris",
-        "Buhnila, Ioana",
-        "François, Jérôme",
-        "State, Radu"
-      ],
-      "publication_date": [
-        "2025/10/01"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[27] Bergeron L, Buhnila I, François J, et al. HalluGuard: Evidence-Grounded Small Reasoning Models to Mitigate Hallucinations in Retrieval-Augmented Generation[EB/OL]. arXiv:2510.00880, 2025.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 28,
-      "kind": "arxiv",
-      "identifier": "2506.01954",
-      "url": "https://arxiv.org/abs/2506.01954",
-      "http_status": 200,
-      "title": "DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucination via Evidence and Graph-based Distillation",
-      "authors": [
-        "Chen, Jennifer",
-        "Myrzakhan, Aidar",
-        "Luo, Yaxin",
-        "Khan, Hassaan Muhammad",
-        "Bsharat, Sondos Mahmoud",
-        "Shen, Zhiqiang"
-      ],
-      "publication_date": [
-        "2025/06/02"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[28] Chen J, Myrzakhan A, Luo Y, et al. DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucination via Evidence and Graph-based Distillation[EB/OL]. arXiv:2506.01954, 2025.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 29,
-      "kind": "arxiv",
-      "identifier": "2609.00479",
-      "url": "https://arxiv.org/abs/2609.00479",
-      "error": "The read operation timed out",
-      "http_status": 200,
-      "title": "EGT-KG: Evidence-Grounded Typed KG Retrieval for Practical Scientific QA with Small Language Models",
-      "authors": [
-        "Yu, Muran",
-        "Gao, Jiechao",
-        "Pan, Yuandong",
-        "Miao, Barney H.",
-        "Lesh, Andrew C.",
-        "Law, Kincho H.",
-        "Wang, Jie",
-        "Lepech, Michael D."
-      ],
-      "publication_date": [
-        "2026/08/31"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[29] Yu M, Gao J, Pan Y, et al. EGT-KG: Evidence-Grounded Typed KG Retrieval for Practical Scientific QA with Small Language Models[EB/OL]. arXiv:2609.00479, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 30,
-      "kind": "crossref",
-      "identifier": "10.1021/acs.jcim.5c01941",
-      "url": "https://api.crossref.org/works/10.1021/acs.jcim.5c01941",
-      "http_status": 200,
-      "title": "Materials Dual-Source Knowledge Retrieval-Augmented Generation for Local Large Language Models in Photocatalysts",
-      "authors": [
-        {
-          "ORCID": "https://orcid.org/0009-0007-3442-8338",
-          "authenticated-orcid": true,
-          "given": "Wataru",
-          "family": "Takahara",
-          "sequence": "first",
-          "affiliation": [
-            {
-              "name": "Division of Materials Science, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0003-1897-3487",
-          "authenticated-orcid": true,
-          "given": "Yuichi",
-          "family": "Yamaguchi",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Department of Applied Chemistry, Faculty of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            },
-            {
-              "name": "Tokyo University of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            },
-            {
-              "name": "Carbon Value Research Center, Research Institute for Science & Technology, Tokyo University of Science, Noda-shi, Chiba-ken 278-8510, Japan"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Mai",
-          "family": "Ogano",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Department of Applied Chemistry, Faculty of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            },
-            {
-              "name": "Tokyo University of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Fuga",
-          "family": "Kakami",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Department of Applied Chemistry, Faculty of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            },
-            {
-              "name": "Tokyo University of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0003-0705-1583",
-          "authenticated-orcid": true,
-          "given": "Yosuke",
-          "family": "Harashima",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Division of Materials Science, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            },
-            {
-              "name": "Data Science Center, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0002-4736-7454",
-          "authenticated-orcid": true,
-          "given": "Tomoaki",
-          "family": "Takayama",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Division of Materials Science, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            },
-            {
-              "name": "Data Science Center, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "Shogo",
-          "family": "Takasuka",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Division of Materials Science, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0002-5665-5482",
-          "authenticated-orcid": true,
-          "given": "Akihiko",
-          "family": "Kudo",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Department of Applied Chemistry, Faculty of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            },
-            {
-              "name": "Tokyo University of Science",
-              "place": [
-                "Shinjuku-ku, Japan"
-              ]
-            },
-            {
-              "name": "Carbon Value Research Center, Research Institute for Science & Technology, Tokyo University of Science, Noda-shi, Chiba-ken 278-8510, Japan"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "ORCID": "https://orcid.org/0000-0002-3728-3097",
-          "authenticated-orcid": true,
-          "given": "Mikiya",
-          "family": "Fujii",
-          "sequence": "additional",
-          "affiliation": [
-            {
-              "name": "Division of Materials Science, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            },
-            {
-              "name": "Data Science Center, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            },
-            {
-              "name": "Center for Material Research Platform, Nara Institute of Science and Technology, Nara-ken, Ikoma-shi 630-0192, Japan"
-            }
-          ],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        }
-      ],
-      "container": [
-        "Journal of Chemical Information and Modeling"
-      ],
-      "volume": "65",
-      "issue": "24",
-      "page": "13098-13114",
-      "article_number": null,
-      "issued": {
-        "date-parts": [
-          [
-            2025,
-            12,
-            1
-          ]
-        ]
-      },
-      "published": {
-        "date-parts": [
-          [
-            2025,
-            12,
-            1
-          ]
-        ]
-      },
-      "type": "journal-article",
-      "doi": "10.1021/acs.jcim.5c01941",
-      "status": "retrieved",
-      "report_entry": "[30] Takahara W, Yamaguchi Y, Ogano M, et al. Materials Dual-Source Knowledge Retrieval-Augmented Generation for Local Large Language Models in Photocatalysts[J]. Journal of Chemical Information and Modeling, 2025, 65(24): 13098-13114. DOI: 10.1021/acs.jcim.5c01941.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 31,
-      "kind": "arxiv",
-      "identifier": "2602.17911",
-      "url": "https://arxiv.org/abs/2602.17911",
-      "error": "<urlopen error _ssl.c:1016: The handshake operation timed out>",
-      "http_status": 200,
-      "title": "Condition-Gated Reasoning for Context-Dependent Biomedical Question Answering",
-      "authors": [
-        "Parekh, Jash Rajesh",
-        "Kweon, Wonbin",
-        "Chan, Joey",
-        "Islamaj, Rezarta",
-        "Leaman, Robert",
-        "Jiang, Pengcheng",
-        "Wei, Chih-Hsuan",
-        "Wang, Zhizheng",
-        "Lu, Zhiyong",
-        "Han, Jiawei"
-      ],
-      "publication_date": [
-        "2026/02/20"
-      ],
-      "journal": [],
-      "doi": [
-        "10.1145/3770855.3818963 10.1145/3770855.3818963 10.1145/3770855.3818963 10.1145/3770855.3818963 10.1145/3770855.3818963"
-      ],
-      "status": "retrieved",
-      "report_entry": "[31] Parekh J R, Kweon W, Chan J, et al. Condition-Gated Reasoning for Context-Dependent Biomedical Question Answering[EB/OL]. arXiv:2602.17911, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 32,
-      "kind": "arxiv",
-      "identifier": "2402.06056",
-      "url": "https://arxiv.org/abs/2402.06056",
-      "http_status": 200,
-      "title": "ActiveDP: Bridging Active Learning and Data Programming",
-      "authors": [
-        "Guan, Naiqing",
-        "Koudas, Nick"
-      ],
-      "publication_date": [
-        "2024/02/08"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[32] Guan N, Koudas N. ActiveDP: Bridging Active Learning and Data Programming[EB/OL]. arXiv:2402.06056, 2024.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 33,
-      "kind": "crossref",
-      "identifier": "10.1007/BF01588971",
-      "url": "https://api.crossref.org/works/10.1007/BF01588971",
-      "http_status": 200,
-      "title": "An analysis of approximations for maximizing submodular set functions—I",
-      "authors": [
-        {
-          "given": "G. L.",
-          "family": "Nemhauser",
-          "sequence": "first",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "L. A.",
-          "family": "Wolsey",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        },
-        {
-          "given": "M. L.",
-          "family": "Fisher",
-          "sequence": "additional",
-          "affiliation": [],
-          "role": [
-            {
-              "vocabulary": "crossref",
-              "role": "author"
-            }
-          ]
-        }
-      ],
-      "container": [
-        "Mathematical Programming"
-      ],
-      "volume": "14",
-      "issue": "1",
-      "page": "265-294",
-      "article_number": null,
-      "issued": {
-        "date-parts": [
-          [
-            1978,
-            12
-          ]
-        ]
-      },
-      "published": {
-        "date-parts": [
-          [
-            1978,
-            12
-          ]
-        ]
-      },
-      "type": "journal-article",
-      "doi": "10.1007/bf01588971",
-      "status": "retrieved",
-      "report_entry": "[33] Nemhauser G L, Wolsey L A, Fisher M L. An analysis of approximations for maximizing submodular set functions—I[J]. Mathematical Programming, 1978, 14(1): 265-294. DOI: 10.1007/bf01588971.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 34,
-      "kind": "openreview",
-      "identifier": "gtcOku1v2s",
-      "url": "https://openreview.net/forum?id=gtcOku1v2s",
-      "http_status": 200,
-      "title": "Optimal Document Selection in RAG via Combinatorial Optimization: A Theoretical Framework",
-      "authors": [],
-      "publication_date": [],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "year": "2026",
-      "publication_status": "ACL ARR 2026 January submission; not accepted proceedings",
-      "verification_method": "read_page读取OpenReview官方论文页；丢弃命令行返回的浏览器验证标题",
-      "invalid_initial_title": "Verifying your browser | OpenReview",
-      "report_entry": "[34] Optimal Document Selection in RAG via Combinatorial Optimization: A Theoretical Framework[EB/OL]. OpenReview, 2026. https://openreview.net/forum?id=gtcOku1v2s.（ACL ARR投稿版本，未据此认定正式录用）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 35,
-      "kind": "acl",
-      "identifier": "2023.emnlp-main.825",
-      "url": "https://aclanthology.org/2023.emnlp-main.825/",
-      "http_status": 200,
-      "title": "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models",
-      "authors": [
-        "Jiang, Huiqiang",
-        "Wu, Qianhui",
-        "Lin, Chin-Yew",
-        "Yang, Yuqing",
-        "Qiu, Lili"
-      ],
-      "publication_date": [],
-      "journal": [],
-      "doi": "10.18653/v1/2023.emnlp-main.825",
-      "status": "retrieved",
-      "bibtex": "@inproceedings{jiang-etal-2023-llmlingua,\n    title = \"{LLML}ingua: Compressing Prompts for Accelerated Inference of Large Language Models\",\n    author = \"Jiang, Huiqiang  and\n      Wu, Qianhui  and\n      Lin, Chin-Yew  and\n      Yang, Yuqing  and\n      Qiu, Lili\",\n    editor = \"Bouamor, Houda  and\n      Pino, Juan  and\n      Bali, Kalika\",\n    booktitle = \"Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing\",\n    month = dec,\n    year = \"2023\",\n    address = \"Singapore\",\n    publisher = \"Association for Computational Linguistics\",\n    url = \"https://aclanthology.org/2023.emnlp-main.825/\",\n    doi = \"10.18653/v1/2023.emnlp-main.825\",\n    pages = \"13358--13376\"\n}\n\n",
-      "bibtex_url": "https://aclanthology.org/2023.emnlp-main.825.bib",
-      "booktitle": "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing",
-      "year": "2023",
-      "page": "13358--13376",
-      "report_entry": "[35] Jiang H, Wu Q, Lin C Y, et al. LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models[C]//Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing. 2023: 13358-13376. DOI: 10.18653/v1/2023.emnlp-main.825.",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 36,
-      "kind": "arxiv",
-      "identifier": "2604.10734",
-      "url": "https://arxiv.org/abs/2604.10734",
-      "http_status": 200,
-      "title": "Self-Correcting RAG: Enhancing Faithfulness via MMKP Context Selection and NLI-Guided MCTS",
-      "authors": [
-        "Xu, Shijia",
-        "Wu, Zhou",
-        "Jia, Xiaolong",
-        "Wang, Yu",
-        "Liu, Kai",
-        "Dong, April Xiaowen"
-      ],
-      "publication_date": [
-        "2026/04/12"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[36] Xu S, Wu Z, Jia X, et al. Self-Correcting RAG: Enhancing Faithfulness via MMKP Context Selection and NLI-Guided MCTS[EB/OL]. arXiv:2604.10734, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 37,
-      "kind": "arxiv",
-      "identifier": "2607.26937",
-      "url": "https://arxiv.org/abs/2607.26937",
-      "http_status": 200,
-      "title": "VITAL-RAG: Invariance Race for Context Allocation in Coding Agents",
-      "authors": [
-        "Lu, Zijian",
-        "Lu, Yonghua",
-        "Chen, Mingcai",
-        "Zuo, Yiping",
-        "He, Xin",
-        "Wang, Weijun",
-        "Fan, Weibei"
-      ],
-      "publication_date": [
-        "2026/07/29"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[37] Lu Z, Lu Y, Chen M, et al. VITAL-RAG: Invariance Race for Context Allocation in Coding Agents[EB/OL]. arXiv:2607.26937, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 38,
-      "kind": "arxiv",
-      "identifier": "2609.14245",
-      "url": "https://arxiv.org/abs/2609.14245",
-      "http_status": 200,
-      "title": "The Attribution-Compression Frontier in Retrieval-Augmented Generation",
-      "authors": [
-        "Mody, Deepanshu"
-      ],
-      "publication_date": [
-        "2026/09/13"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[38] Mody D. The Attribution-Compression Frontier in Retrieval-Augmented Generation[EB/OL]. arXiv:2609.14245, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 39,
-      "kind": "arxiv",
-      "identifier": "2608.01792",
-      "url": "https://arxiv.org/abs/2608.01792",
-      "http_status": 200,
-      "title": "Can You Trust the Confidence? ConfBench for Vision-Language Models on Document Extraction",
-      "authors": [
-        "Roy, Priyashree",
-        "Martin, Sujitha",
-        "Rostami, Mohammad",
-        "Romo, Spencer",
-        "Xue, Renhao",
-        "Strahan, Bob",
-        "Socolinsky, Diego A.",
-        "Xie, Boyi",
-        "Islam, Md Mofijul"
-      ],
-      "publication_date": [
-        "2026/08/03"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[39] Roy P, Martin S, Rostami M, et al. Can You Trust the Confidence? ConfBench for Vision-Language Models on Document Extraction[EB/OL]. arXiv:2608.01792, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    },
-    {
-      "number": 40,
-      "kind": "arxiv",
-      "identifier": "2608.05387",
-      "url": "https://arxiv.org/abs/2608.05387",
-      "http_status": 200,
-      "title": "Fine-Tuning Small Language Models for Reliable VASP INCAR Generation",
-      "authors": [
-        "Zhang, Xinyue",
-        "Li, Jixiang",
-        "Shao, Bin",
-        "Yang, Baishun",
-        "Liu, Zhiyang",
-        "Wang, Weichao"
-      ],
-      "publication_date": [
-        "2026/08/05"
-      ],
-      "journal": [],
-      "doi": [],
-      "status": "retrieved",
-      "report_entry": "[40] Zhang X, Li J, Shao B, et al. Fine-Tuning Small Language Models for Reliable VASP INCAR Generation[EB/OL]. arXiv:2608.05387, 2026.（所引为arXiv版本）",
-      "title_match_in_entry": true
-    }
-  ],
-  "entry_check": "40条report_entry均使用本轮原始返回title；作者来自API或官方BibTeX，出版字段仅写已返回项。OpenReview匿名投稿不补作者。"
+ "checked_at": "2026-10-28T12:00:12.319040+00:00",
+ "scope": "本轮 43 条均实际调用 arXiv/CrossRef/OpenReview API 并比对标题（归一后子串判定）；元数据核验不等于全文审查或实验复现。arXiv 按所访问版本引用，不宣称无正式发表版。",
+ "items": [
+  {
+   "number": 1,
+   "entry": "Jia S, Zhang C, Fung V. LLMatDesign: Autonomous Materials Discovery with Large Language Models[EB/OL]. arXiv:2406.13163, 2024.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2406.13163",
+   "url": "https://arxiv.org/abs/2406.13163",
+   "http_status": 200,
+   "title": "LLMatDesign: Autonomous Materials Discovery with Large Language Models",
+   "authors": [
+    "Shuyi Jia",
+    "Chao Zhang",
+    "Victor Fung"
+   ],
+   "publication_date": [
+    "2024-06-19"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 2,
+   "entry": "Ghosh S, Holgate C, Brodnik N R, et al. Preference Learning from Physics-Based Feedback: Tuning Language Models to Design BCC/B2 Superalloys[EB/OL]. arXiv:2511.12036, 2025.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2511.12036",
+   "url": "https://arxiv.org/abs/2511.12036",
+   "http_status": 200,
+   "title": "Preference Learning from Physics-Based Feedback: Tuning Language Models to Design BCC/B2 Superalloys",
+   "authors": [
+    "Satanu Ghosh",
+    "Collin Holgate",
+    "Neal R. Brodnik",
+    "Doug Downey",
+    "Samantha Daly",
+    "Tresa M. Pollock",
+    "Samuel Carton"
+   ],
+   "publication_date": [
+    "2025-11-15"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 3,
+   "entry": "Ahlawat D, Mishra V, Singh S, et al. A family of large language models for materials research with insights into model adaptability in continued pretraining[J]. Nature Machine Intelligence, 2026, 8(3): 435-448. DOI: 10.1038/s42256-026-01199-8.",
+   "kind": "doi",
+   "identifier": "10.1038/s42256-026-01199-8",
+   "url": "https://api.crossref.org/works/10.1038/s42256-026-01199-8",
+   "http_status": 200,
+   "title": "A family of large language models for materials research with insights into model adaptability in continued pretraining",
+   "authors": [
+    "Ahlawat, Dhruv",
+    "Mishra, Vaibhav",
+    "Singh, Somaditya",
+    "Zaki, Mohd",
+    "Bihani, Vaibhav",
+    "Grover, Hargun Singh",
+    "Mishra, Biswajit",
+    "Miret, Santiago",
+    "Mausam",
+    "Krishnan, N. M. Anoop"
+   ],
+   "publication_date": [
+    "2026/2/27"
+   ],
+   "journal": [
+    "Nature Machine Intelligence"
+   ],
+   "doi": [
+    "10.1038/s42256-026-01199-8"
+   ],
+   "volume": "8",
+   "issue": "3",
+   "page": "435-448",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 4,
+   "entry": "Ni B, Glaser B, Taheri-Mousavi S M. End-to-end prediction and design of additively manufacturable alloys using a generative AlloyGPT model[J]. npj Computational Materials, 2025, 11(1): 294. DOI: 10.1038/s41524-025-01768-2.",
+   "kind": "doi",
+   "identifier": "10.1038/s41524-025-01768-2",
+   "url": "https://api.crossref.org/works/10.1038/s41524-025-01768-2",
+   "http_status": 200,
+   "title": "End-to-end prediction and design of additively manufacturable alloys using a generative AlloyGPT model",
+   "authors": [
+    "Ni, Bo",
+    "Glaser, Benjamin",
+    "Taheri-Mousavi, S. Mohadeseh"
+   ],
+   "publication_date": [
+    "2025/9/26"
+   ],
+   "journal": [
+    "npj Computational Materials"
+   ],
+   "doi": [
+    "10.1038/s41524-025-01768-2"
+   ],
+   "volume": "11",
+   "issue": "1",
+   "page": "",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 5,
+   "entry": "Li S, Fajardo-Rojas F, Gomez-Gualdron D, et al. AlloyLens: A Visual Analytics Tool for High-throughput Alloy Screening and Inverse Design[EB/OL]. arXiv:2511.02133, 2025.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2511.02133",
+   "url": "https://arxiv.org/abs/2511.02133",
+   "http_status": 200,
+   "title": "AlloyLens: A Visual Analytics Tool for High-throughput Alloy Screening and Inverse Design",
+   "authors": [
+    "Suyang Li",
+    "Fernando Fajardo-Rojas",
+    "Diego Gomez-Gualdron",
+    "Remco Chang",
+    "Mingwei Li"
+   ],
+   "publication_date": [
+    "2025-11-03"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 6,
+   "entry": "Yu Y, Hu W, Wu X, et al. From Blind Guess to Informed Judgment: Teaching LLMs to Evaluate Materials by Building Knowledge-Augmented Preference Signals[EB/OL]. arXiv:2605.29555, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2605.29555",
+   "url": "https://arxiv.org/abs/2605.29555",
+   "http_status": 200,
+   "title": "From Blind Guess to Informed Judgment: Teaching LLMs to Evaluate Materials by Building Knowledge-Augmented Preference Signals",
+   "authors": [
+    "Yeyong Yu",
+    "Wenya Hu",
+    "Xing Wu",
+    "Quan Qian"
+   ],
+   "publication_date": [
+    "2026-05-28"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 7,
+   "entry": "Borg C K H, Frey C, Moh J, et al. Expanded dataset of mechanical properties and observed phases of multi-principal element alloys[J]. Scientific Data, 2020, 7(1): 430. DOI: 10.1038/s41597-020-00768-9.",
+   "kind": "doi",
+   "identifier": "10.1038/s41597-020-00768-9",
+   "url": "https://api.crossref.org/works/10.1038/s41597-020-00768-9",
+   "http_status": 200,
+   "title": "Expanded dataset of mechanical properties and observed phases of multi-principal element alloys",
+   "authors": [
+    "Borg, Christopher K. H.",
+    "Frey, Carolina",
+    "Moh, Jasper",
+    "Pollock, Tresa M.",
+    "Gorsse, Stéphane",
+    "Miracle, Daniel B.",
+    "Senkov, Oleg N.",
+    "Meredig, Bryce",
+    "Saal, James E."
+   ],
+   "publication_date": [
+    "2020/12/8"
+   ],
+   "journal": [
+    "Scientific Data"
+   ],
+   "doi": [
+    "10.1038/s41597-020-00768-9"
+   ],
+   "volume": "7",
+   "issue": "1",
+   "page": "",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 8,
+   "entry": "Hinton G, Vinyals O, Dean J. Distilling the Knowledge in a Neural Network[EB/OL]. arXiv:1503.02531, 2015.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "1503.02531",
+   "url": "https://arxiv.org/abs/1503.02531",
+   "http_status": 200,
+   "title": "Distilling the Knowledge in a Neural Network",
+   "authors": [
+    "Geoffrey Hinton",
+    "Oriol Vinyals",
+    "Jeff Dean"
+   ],
+   "publication_date": [
+    "2015-03-09"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 9,
+   "entry": "Hsieh C Y, Li C L, Yeh C K, et al. Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes[C]//Findings of the Association for Computational Linguistics: ACL 2023. 2023: 8003-8017. DOI: 10.18653/v1/2023.findings-acl.507.",
+   "kind": "doi",
+   "identifier": "10.18653/v1/2023.findings-acl.507",
+   "url": "https://api.crossref.org/works/10.18653/v1/2023.findings-acl.507",
+   "http_status": 200,
+   "title": "Distilling Step-by-Step! Outperforming Larger Language Models with Less Training Data and Smaller Model Sizes",
+   "authors": [
+    "Hsieh, Cheng-Yu",
+    "Li, Chun-Liang",
+    "Yeh, Chih-kuan",
+    "Nakhost, Hootan",
+    "Fujii, Yasuhisa",
+    "Ratner, Alex",
+    "Krishna, Ranjay",
+    "Lee, Chen-Yu",
+    "Pfister, Tomas"
+   ],
+   "publication_date": [
+    "2023"
+   ],
+   "journal": [
+    "Findings of the Association for Computational Linguistics: ACL 2023"
+   ],
+   "doi": [
+    "10.18653/v1/2023.findings-acl.507"
+   ],
+   "volume": "",
+   "issue": "",
+   "page": "8003-8017",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 10,
+   "entry": "Mitra A, Del Corro L, Mahajan S, et al. Orca 2: Teaching Small Language Models How to Reason[EB/OL]. arXiv:2311.11045, 2023.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2311.11045",
+   "url": "https://arxiv.org/abs/2311.11045",
+   "http_status": 200,
+   "title": "Orca 2: Teaching Small Language Models How to Reason",
+   "authors": [
+    "Arindam Mitra",
+    "Luciano Del Corro",
+    "Shweti Mahajan",
+    "Andres Codas",
+    "Clarisse Simoes",
+    "Sahaj Agarwal",
+    "Xuxi Chen",
+    "Anastasia Razdaibiedina",
+    "Erik Jones",
+    "Kriti Aggarwal",
+    "Hamid Palangi",
+    "Guoqing Zheng",
+    "Corby Rosset",
+    "Hamed Khanpour",
+    "Ahmed Awadallah"
+   ],
+   "publication_date": [
+    "2023-11-18"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 11,
+   "entry": "Gu Y, Dong L, Wei F, et al. MiniLLM: On-Policy Distillation of Large Language Models[EB/OL]. arXiv:2306.08543, 2023.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2306.08543",
+   "url": "https://arxiv.org/abs/2306.08543",
+   "http_status": 200,
+   "title": "MiniLLM: On-Policy Distillation of Large Language Models",
+   "authors": [
+    "Yuxian Gu",
+    "Li Dong",
+    "Furu Wei",
+    "Minlie Huang"
+   ],
+   "publication_date": [
+    "2023-06-14"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 12,
+   "entry": "Wang Y, Kordi Y, Mishra S, et al. Self-Instruct: Aligning Language Models with Self-Generated Instructions[C]//Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers). 2023: 13484-13508. DOI: 10.18653/v1/2023.acl-long.754.",
+   "kind": "doi",
+   "identifier": "10.18653/v1/2023.acl-long.754",
+   "url": "https://api.crossref.org/works/10.18653/v1/2023.acl-long.754",
+   "http_status": 200,
+   "title": "Self-Instruct: Aligning Language Models with Self-Generated Instructions",
+   "authors": [
+    "Wang, Yizhong",
+    "Kordi, Yeganeh",
+    "Mishra, Swaroop",
+    "Liu, Alisa",
+    "Smith, Noah A.",
+    "Khashabi, Daniel",
+    "Hajishirzi, Hannaneh"
+   ],
+   "publication_date": [
+    "2023"
+   ],
+   "journal": [
+    "Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)"
+   ],
+   "doi": [
+    "10.18653/v1/2023.acl-long.754"
+   ],
+   "volume": "",
+   "issue": "",
+   "page": "13484-13508",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 13,
+   "entry": "Xia M, Malladi S, Gururangan S, et al. LESS: Selecting Influential Data for Targeted Instruction Tuning[EB/OL]. arXiv:2402.04333, 2024.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2402.04333",
+   "url": "https://arxiv.org/abs/2402.04333",
+   "http_status": 200,
+   "title": "LESS: Selecting Influential Data for Targeted Instruction Tuning",
+   "authors": [
+    "Mengzhou Xia",
+    "Sadhika Malladi",
+    "Suchin Gururangan",
+    "Sanjeev Arora",
+    "Danqi Chen"
+   ],
+   "publication_date": [
+    "2024-02-06"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 14,
+   "entry": "Liu W, Zeng W, He K, et al. What Makes Good Data for Alignment? A Comprehensive Study of Automatic Data Selection in Instruction Tuning[EB/OL]. arXiv:2312.15685, 2023.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2312.15685",
+   "url": "https://arxiv.org/abs/2312.15685",
+   "http_status": 200,
+   "title": "What Makes Good Data for Alignment? A Comprehensive Study of Automatic Data Selection in Instruction Tuning",
+   "authors": [
+    "Wei Liu",
+    "Weihao Zeng",
+    "Keqing He",
+    "Yong Jiang",
+    "Junxian He"
+   ],
+   "publication_date": [
+    "2023-12-25"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 15,
+   "entry": "Zhang J, Zhang C X, Liu Y, et al. D3: Diversity, Difficulty, and Dependability-Aware Data Selection for Sample-Efficient LLM Instruction Tuning[C]//Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence. 2025: 8348-8356. DOI: 10.24963/ijcai.2025/928.",
+   "kind": "doi",
+   "identifier": "10.24963/ijcai.2025/928",
+   "url": "https://api.crossref.org/works/10.24963/ijcai.2025/928",
+   "http_status": 200,
+   "title": "D3: Diversity, Difficulty, and Dependability-Aware Data Selection for Sample-Efficient LLM Instruction Tuning",
+   "authors": [
+    "Zhang, Jia",
+    "Zhang, Chen-Xi",
+    "Liu, Yao",
+    "Jin, Yi-Xuan",
+    "Yang, Xiao-Wen",
+    "Zheng, Bo",
+    "Liu, Yi",
+    "Guo, Lan-Zhe"
+   ],
+   "publication_date": [
+    "2025/9"
+   ],
+   "journal": [
+    "Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence"
+   ],
+   "doi": [
+    "10.24963/ijcai.2025/928"
+   ],
+   "volume": "",
+   "issue": "",
+   "page": "8348-8356",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 16,
+   "entry": "Mirza P, Weber L, Küch F. LASER: Stratified Selective Sampling for Instruction Tuning with Dedicated Scoring Strategy[EB/OL]. arXiv:2505.22157, 2025.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2505.22157",
+   "url": "https://arxiv.org/abs/2505.22157",
+   "http_status": 200,
+   "title": "LASER: Stratified Selective Sampling for Instruction Tuning with Dedicated Scoring Strategy",
+   "authors": [
+    "Paramita Mirza",
+    "Lucas Weber",
+    "Fabian Küch"
+   ],
+   "publication_date": [
+    "2025-05-28"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 17,
+   "entry": "Lewis P, Perez E, Piktus A, et al. Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks[EB/OL]. arXiv:2005.11401, 2020.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2005.11401",
+   "url": "https://arxiv.org/abs/2005.11401",
+   "http_status": 200,
+   "title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+   "authors": [
+    "Patrick Lewis",
+    "Ethan Perez",
+    "Aleksandra Piktus",
+    "Fabio Petroni",
+    "Vladimir Karpukhin",
+    "Naman Goyal",
+    "Heinrich Küttler",
+    "Mike Lewis",
+    "Wen-tau Yih",
+    "Tim Rocktäschel",
+    "Sebastian Riedel",
+    "Douwe Kiela"
+   ],
+   "publication_date": [
+    "2020-05-22"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 18,
+   "entry": "Zhang T, Patil S G, Jain N, et al. RAFT: Adapting Language Model to Domain Specific RAG[EB/OL]. arXiv:2403.10131, 2024.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2403.10131",
+   "url": "https://arxiv.org/abs/2403.10131",
+   "http_status": 200,
+   "title": "RAFT: Adapting Language Model to Domain Specific RAG",
+   "authors": [
+    "Tianjun Zhang",
+    "Shishir G. Patil",
+    "Naman Jain",
+    "Sheng Shen",
+    "Matei Zaharia",
+    "Ion Stoica",
+    "Joseph E. Gonzalez"
+   ],
+   "publication_date": [
+    "2024-03-15"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 19,
+   "entry": "Hu E J, Shen Y, Wallis P, et al. LoRA: Low-Rank Adaptation of Large Language Models[EB/OL]. arXiv:2106.09685, 2021.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2106.09685",
+   "url": "https://arxiv.org/abs/2106.09685",
+   "http_status": 200,
+   "title": "LoRA: Low-Rank Adaptation of Large Language Models",
+   "authors": [
+    "Edward J. Hu",
+    "Yelong Shen",
+    "Phillip Wallis",
+    "Zeyuan Allen-Zhu",
+    "Yuanzhi Li",
+    "Shean Wang",
+    "Lu Wang",
+    "Weizhu Chen"
+   ],
+   "publication_date": [
+    "2021-06-17"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 20,
+   "entry": "Dettmers T, Pagnoni A, Holtzman A, et al. QLoRA: Efficient Finetuning of Quantized LLMs[EB/OL]. arXiv:2305.14314, 2023.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2305.14314",
+   "url": "https://arxiv.org/abs/2305.14314",
+   "http_status": 200,
+   "title": "QLoRA: Efficient Finetuning of Quantized LLMs",
+   "authors": [
+    "Tim Dettmers",
+    "Artidoro Pagnoni",
+    "Ari Holtzman",
+    "Luke Zettlemoyer"
+   ],
+   "publication_date": [
+    "2023-05-23"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 21,
+   "entry": "Yang A, Li A, Yang B, et al. Qwen3 Technical Report[EB/OL]. arXiv:2505.09388, 2025.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2505.09388",
+   "url": "https://arxiv.org/abs/2505.09388",
+   "http_status": 200,
+   "title": "Qwen3 Technical Report",
+   "authors": [
+    "An Yang",
+    "Anfeng Li",
+    "Baosong Yang",
+    "Beichen Zhang",
+    "Binyuan Hui",
+    "Bo Zheng",
+    "Bowen Yu",
+    "Chang Gao",
+    "Chengen Huang",
+    "Chenxu Lv",
+    "Chujie Zheng",
+    "Dayiheng Liu",
+    "Fan Zhou",
+    "Fei Huang",
+    "Feng Hu",
+    "Hao Ge",
+    "Haoran Wei",
+    "Huan Lin",
+    "Jialong Tang",
+    "Jian Yang",
+    "Jianhong Tu",
+    "Jianwei Zhang",
+    "Jianxin Yang",
+    "Jiaxi Yang",
+    "Jing Zhou",
+    "Jingren Zhou",
+    "Junyang Lin",
+    "Kai Dang",
+    "Keqin Bao",
+    "Kexin Yang",
+    "Le Yu",
+    "Lianghao Deng",
+    "Mei Li",
+    "Mingfeng Xue",
+    "Mingze Li",
+    "Pei Zhang",
+    "Peng Wang",
+    "Qin Zhu",
+    "Rui Men",
+    "Ruize Gao",
+    "Shixuan Liu",
+    "Shuang Luo",
+    "Tianhao Li",
+    "Tianyi Tang",
+    "Wenbiao Yin",
+    "Xingzhang Ren",
+    "Xinyu Wang",
+    "Xinyu Zhang",
+    "Xuancheng Ren",
+    "Yang Fan",
+    "Yang Su",
+    "Yichang Zhang",
+    "Yinger Zhang",
+    "Yu Wan",
+    "Yuqiong Liu",
+    "Zekun Wang",
+    "Zeyu Cui",
+    "Zhenru Zhang",
+    "Zhipeng Zhou",
+    "Zihan Qiu"
+   ],
+   "publication_date": [
+    "2025-05-14"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 22,
+   "entry": "Scholak T, Schucher N, Bahdanau D. PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models[C]//Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing. 2021: 9895-9901. DOI: 10.18653/v1/2021.emnlp-main.779.",
+   "kind": "doi",
+   "identifier": "10.18653/v1/2021.emnlp-main.779",
+   "url": "https://api.crossref.org/works/10.18653/v1/2021.emnlp-main.779",
+   "http_status": 200,
+   "title": "PICARD: Parsing Incrementally for Constrained Auto-Regressive Decoding from Language Models",
+   "authors": [
+    "Scholak, Torsten",
+    "Schucher, Nathan",
+    "Bahdanau, Dzmitry"
+   ],
+   "publication_date": [
+    "2021"
+   ],
+   "journal": [
+    "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing"
+   ],
+   "doi": [
+    "10.18653/v1/2021.emnlp-main.779"
+   ],
+   "volume": "",
+   "issue": "",
+   "page": "9895-9901",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 23,
+   "entry": "Wang B, Xu C, Zhao X, et al. MinerU: An Open-Source Solution for Precise Document Content Extraction[EB/OL]. arXiv:2409.18839, 2024.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2409.18839",
+   "url": "https://arxiv.org/abs/2409.18839",
+   "http_status": 200,
+   "title": "MinerU: An Open-Source Solution for Precise Document Content Extraction",
+   "authors": [
+    "Bin Wang",
+    "Chao Xu",
+    "Xiaomeng Zhao",
+    "Linke Ouyang",
+    "Fan Wu",
+    "Zhiyuan Zhao",
+    "Rui Xu",
+    "Kaiwen Liu",
+    "Yuan Qu",
+    "Fukai Shang",
+    "Bo Zhang",
+    "Liqun Wei",
+    "Zhihao Sui",
+    "Wei Li",
+    "Botian Shi",
+    "Yu Qiao",
+    "Dahua Lin",
+    "Conghui He"
+   ],
+   "publication_date": [
+    "2024-09-27"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 24,
+   "entry": "Polat C, Kurban M, Serpedin E, et al. Grounded verification of chemical and materials reasoning: detection is the bottleneck[EB/OL]. arXiv:2607.17417, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2607.17417",
+   "url": "https://arxiv.org/abs/2607.17417",
+   "http_status": 200,
+   "title": "Grounded verification of chemical and materials reasoning: detection is the bottleneck",
+   "authors": [
+    "Can Polat",
+    "Mustafa Kurban",
+    "Erchin Serpedin",
+    "Hasan Kurban"
+   ],
+   "publication_date": [
+    "2026-07-19"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 25,
+   "entry": "Kim H, Kim D, Kim J. LitMOF: An LLM Multi-Agent for Literature-Validated Metal-Organic Frameworks Database Correction and Expansion[EB/OL]. arXiv:2512.01693, 2025.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2512.01693",
+   "url": "https://arxiv.org/abs/2512.01693",
+   "http_status": 200,
+   "title": "LitMOF: An LLM Multi-Agent for Literature-Validated Metal-Organic Frameworks Database Correction and Expansion",
+   "authors": [
+    "Honghui Kim",
+    "Dohoon Kim",
+    "Jihan Kim"
+   ],
+   "publication_date": [
+    "2025-12-01"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 26,
+   "entry": "Sharma K, Kumar P, Li Y. OG-RAG: Ontology-Grounded Retrieval-Augmented Generation For Large Language Models[EB/OL]. arXiv:2412.15235, 2024.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2412.15235",
+   "url": "https://arxiv.org/abs/2412.15235",
+   "http_status": 200,
+   "title": "OG-RAG: Ontology-Grounded Retrieval-Augmented Generation For Large Language Models",
+   "authors": [
+    "Kartik Sharma",
+    "Peeyush Kumar",
+    "Yunqing Li"
+   ],
+   "publication_date": [
+    "2024-12-12"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 27,
+   "entry": "Bergeron L, Buhnila I, François J, et al. HalluGuard: Evidence-Grounded Small Reasoning Models to Mitigate Hallucinations in Retrieval-Augmented Generation[EB/OL]. arXiv:2510.00880, 2025.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2510.00880",
+   "url": "https://arxiv.org/abs/2510.00880",
+   "http_status": 200,
+   "title": "HalluGuard: Evidence-Grounded Small Reasoning Models to Mitigate Hallucinations in Retrieval-Augmented Generation",
+   "authors": [
+    "Loris Bergeron",
+    "Ioana Buhnila",
+    "Jérôme François",
+    "Radu State"
+   ],
+   "publication_date": [
+    "2025-10-01"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 28,
+   "entry": "Chen J, Myrzakhan A, Luo Y, et al. DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucination via Evidence and Graph-based Distillation[EB/OL]. arXiv:2506.01954, 2025.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2506.01954",
+   "url": "https://arxiv.org/abs/2506.01954",
+   "http_status": 200,
+   "title": "DRAG: Distilling RAG for SLMs from LLMs to Transfer Knowledge and Mitigate Hallucination via Evidence and Graph-based Distillation",
+   "authors": [
+    "Jennifer Chen",
+    "Aidar Myrzakhan",
+    "Yaxin Luo",
+    "Hassaan Muhammad Khan",
+    "Sondos Mahmoud Bsharat",
+    "Zhiqiang Shen"
+   ],
+   "publication_date": [
+    "2025-06-02"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 29,
+   "entry": "Yu M, Gao J, Pan Y, et al. EGT-KG: Evidence-Grounded Typed KG Retrieval for Practical Scientific QA with Small Language Models[EB/OL]. arXiv:2609.00479, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2609.00479",
+   "url": "https://arxiv.org/abs/2609.00479",
+   "http_status": 200,
+   "title": "EGT-KG: Evidence-Grounded Typed KG Retrieval for Practical Scientific QA with Small Language Models",
+   "authors": [
+    "Muran Yu",
+    "Jiechao Gao",
+    "Yuandong Pan",
+    "Barney H. Miao",
+    "Andrew C. Lesh",
+    "Kincho H. Law",
+    "Jie Wang",
+    "Michael D. Lepech"
+   ],
+   "publication_date": [
+    "2026-08-31"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 30,
+   "entry": "Takahara W, Yamaguchi Y, Ogano M, et al. Materials Dual-Source Knowledge Retrieval-Augmented Generation for Local Large Language Models in Photocatalysts[J]. Journal of Chemical Information and Modeling, 2025, 65(24): 13098-13114. DOI: 10.1021/acs.jcim.5c01941.",
+   "kind": "doi",
+   "identifier": "10.1021/acs.jcim.5c01941",
+   "url": "https://api.crossref.org/works/10.1021/acs.jcim.5c01941",
+   "http_status": 200,
+   "title": "Materials Dual-Source Knowledge Retrieval-Augmented Generation for Local Large Language Models in Photocatalysts",
+   "authors": [
+    "Takahara, Wataru",
+    "Yamaguchi, Yuichi",
+    "Ogano, Mai",
+    "Kakami, Fuga",
+    "Harashima, Yosuke",
+    "Takayama, Tomoaki",
+    "Takasuka, Shogo",
+    "Kudo, Akihiko",
+    "Fujii, Mikiya"
+   ],
+   "publication_date": [
+    "2025/12/1"
+   ],
+   "journal": [
+    "Journal of Chemical Information and Modeling"
+   ],
+   "doi": [
+    "10.1021/acs.jcim.5c01941"
+   ],
+   "volume": "65",
+   "issue": "24",
+   "page": "13098-13114",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 31,
+   "entry": "Parekh J R, Kweon W, Chan J, et al. Condition-Gated Reasoning for Context-Dependent Biomedical Question Answering[EB/OL]. arXiv:2602.17911, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2602.17911",
+   "url": "https://arxiv.org/abs/2602.17911",
+   "http_status": 200,
+   "title": "Condition-Gated Reasoning for Context-Dependent Biomedical Question Answering",
+   "authors": [
+    "Jash Rajesh Parekh",
+    "Wonbin Kweon",
+    "Joey Chan",
+    "Rezarta Islamaj",
+    "Robert Leaman",
+    "Pengcheng Jiang",
+    "Chih-Hsuan Wei",
+    "Zhizheng Wang",
+    "Zhiyong Lu",
+    "Jiawei Han"
+   ],
+   "publication_date": [
+    "2026-02-20"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 32,
+   "entry": "Guan N, Koudas N. ActiveDP: Bridging Active Learning and Data Programming[EB/OL]. arXiv:2402.06056, 2024.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2402.06056",
+   "url": "https://arxiv.org/abs/2402.06056",
+   "http_status": 200,
+   "title": "ActiveDP: Bridging Active Learning and Data Programming",
+   "authors": [
+    "Naiqing Guan",
+    "Nick Koudas"
+   ],
+   "publication_date": [
+    "2024-02-08"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 33,
+   "entry": "Nemhauser G L, Wolsey L A, Fisher M L. An analysis of approximations for maximizing submodular set functions—I[J]. Mathematical Programming, 1978, 14(1): 265-294. DOI: 10.1007/bf01588971.",
+   "kind": "doi",
+   "identifier": "10.1007/bf01588971",
+   "url": "https://api.crossref.org/works/10.1007/bf01588971",
+   "http_status": 200,
+   "title": "An analysis of approximations for maximizing submodular set functions—I",
+   "authors": [
+    "Nemhauser, G. L.",
+    "Wolsey, L. A.",
+    "Fisher, M. L."
+   ],
+   "publication_date": [
+    "1978/12"
+   ],
+   "journal": [
+    "Mathematical Programming"
+   ],
+   "doi": [
+    "10.1007/bf01588971"
+   ],
+   "volume": "14",
+   "issue": "1",
+   "page": "265-294",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 34,
+   "entry": "Optimal Document Selection in RAG via Combinatorial Optimization: A Theoretical Framework[EB/OL]. OpenReview, 2026. https://openreview.net/forum?id=gtcOku1v2s.（ACL ARR投稿版本，未据此认定正式录用）",
+   "kind": "openreview",
+   "identifier": "gtcOku1v2s",
+   "url": "https://openreview.net/forum?id=gtcOku1v2s",
+   "http_status": 403,
+   "title": "Optimal Document Selection in RAG via Combinatorial Optimization: A Theoretical Framework",
+   "authors": [],
+   "publication_date": [],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved:prior-round",
+   "verification_method": "read_page读取OpenReview官方论文页；丢弃命令行返回的浏览器验证标题",
+   "note": "本轮 API 返回 403，沿用上一轮已核验记录",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 35,
+   "entry": "Jiang H, Wu Q, Lin C Y, et al. LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models[C]//Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing. 2023: 13358-13376. DOI: 10.18653/v1/2023.emnlp-main.825.",
+   "kind": "doi",
+   "identifier": "10.18653/v1/2023.emnlp-main.825",
+   "url": "https://api.crossref.org/works/10.18653/v1/2023.emnlp-main.825",
+   "http_status": 200,
+   "title": "LLMLingua: Compressing Prompts for Accelerated Inference of Large Language Models",
+   "authors": [
+    "Jiang, Huiqiang",
+    "Wu, Qianhui",
+    "Lin, Chin-Yew",
+    "Yang, Yuqing",
+    "Qiu, Lili"
+   ],
+   "publication_date": [
+    "2023"
+   ],
+   "journal": [
+    "Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing"
+   ],
+   "doi": [
+    "10.18653/v1/2023.emnlp-main.825"
+   ],
+   "volume": "",
+   "issue": "",
+   "page": "13358-13376",
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 36,
+   "entry": "Xu S, Wu Z, Jia X, et al. Self-Correcting RAG: Enhancing Faithfulness via MMKP Context Selection and NLI-Guided MCTS[EB/OL]. arXiv:2604.10734, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2604.10734",
+   "url": "https://arxiv.org/abs/2604.10734",
+   "http_status": 200,
+   "title": "Self-Correcting RAG: Enhancing Faithfulness via MMKP Context Selection and NLI-Guided MCTS",
+   "authors": [
+    "Shijia Xu",
+    "Zhou Wu",
+    "Xiaolong Jia",
+    "Yu Wang",
+    "Kai Liu",
+    "April Xiaowen Dong"
+   ],
+   "publication_date": [
+    "2026-04-12"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 37,
+   "entry": "Lu Z, Lu Y, Chen M, et al. VITAL-RAG: Invariance Race for Context Allocation in Coding Agents[EB/OL]. arXiv:2607.26937, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2607.26937",
+   "url": "https://arxiv.org/abs/2607.26937",
+   "http_status": 200,
+   "title": "VITAL-RAG: Invariance Race for Context Allocation in Coding Agents",
+   "authors": [
+    "Zijian Lu",
+    "Yonghua Lu",
+    "Mingcai Chen",
+    "Yiping Zuo",
+    "Xin He",
+    "Weijun Wang",
+    "Weibei Fan"
+   ],
+   "publication_date": [
+    "2026-07-29"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 38,
+   "entry": "Mody D. The Attribution-Compression Frontier in Retrieval-Augmented Generation[EB/OL]. arXiv:2609.14245, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2609.14245",
+   "url": "https://arxiv.org/abs/2609.14245",
+   "http_status": 200,
+   "title": "The Attribution-Compression Frontier in Retrieval-Augmented Generation",
+   "authors": [
+    "Deepanshu Mody"
+   ],
+   "publication_date": [
+    "2026-09-13"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 39,
+   "entry": "Roy P, Martin S, Rostami M, et al. Can You Trust the Confidence? ConfBench for Vision-Language Models on Document Extraction[EB/OL]. arXiv:2608.01792, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2608.01792",
+   "url": "https://arxiv.org/abs/2608.01792",
+   "http_status": 200,
+   "title": "Can You Trust the Confidence? ConfBench for Vision-Language Models on Document Extraction",
+   "authors": [
+    "Priyashree Roy",
+    "Sujitha Martin",
+    "Mohammad Rostami",
+    "Spencer Romo",
+    "Renhao Xue",
+    "Bob Strahan",
+    "Diego A. Socolinsky",
+    "Boyi Xie",
+    "Md Mofijul Islam"
+   ],
+   "publication_date": [
+    "2026-08-03"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 40,
+   "entry": "Zhang X, Li J, Shao B, et al. Fine-Tuning Small Language Models for Reliable VASP INCAR Generation[EB/OL]. arXiv:2608.05387, 2026.（所引为arXiv版本）",
+   "kind": "arxiv",
+   "identifier": "2608.05387",
+   "url": "https://arxiv.org/abs/2608.05387",
+   "http_status": 200,
+   "title": "Fine-Tuning Small Language Models for Reliable VASP INCAR Generation",
+   "authors": [
+    "Xinyue Zhang",
+    "Jixiang Li",
+    "Bin Shao",
+    "Baishun Yang",
+    "Zhiyang Liu",
+    "Weichao Wang"
+   ],
+   "publication_date": [
+    "2026-08-05"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 41,
+   "entry": "DeAR: dual-stage document reranking with reasoning agents via LLM distillation[EB/OL]. arXiv:2508.16998, 2025.（预印本）",
+   "kind": "arxiv",
+   "identifier": "2508.16998",
+   "url": "https://arxiv.org/abs/2508.16998",
+   "http_status": 200,
+   "title": "DeAR: Dual-Stage Document Reranking with Reasoning Agents via LLM Distillation",
+   "authors": [
+    "Abdelrahman Abdallah",
+    "Jamshid Mozafari",
+    "Bhawna Piryani",
+    "Adam Jatowt"
+   ],
+   "publication_date": [
+    "2025-08-23"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 42,
+   "entry": "Scaling down, LiTting up: efficient zero-shot listwise reranking with seq2seq encoder-decoder models[EB/OL]. arXiv:2312.16098, 2023.（预印本）",
+   "kind": "arxiv",
+   "identifier": "2312.16098",
+   "url": "https://arxiv.org/abs/2312.16098",
+   "http_status": 200,
+   "title": "Scaling Down, LiTting Up: Efficient Zero-Shot Listwise Reranking with Seq2seq Encoder-Decoder Models",
+   "authors": [
+    "Manveer Singh Tamber",
+    "Ronak Pradeep",
+    "Jimmy Lin"
+   ],
+   "publication_date": [
+    "2023-12-26"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  },
+  {
+   "number": 43,
+   "entry": "CROP: task relevance via counterfactuals for selective on-policy distillation[EB/OL]. arXiv:2608.13387, 2026.（预印本）",
+   "kind": "arxiv",
+   "identifier": "2608.13387",
+   "url": "https://arxiv.org/abs/2608.13387",
+   "http_status": 200,
+   "title": "CROP: Task Relevance via Counterfactuals for Selective On-Policy Distillation",
+   "authors": [
+    "Enhan Li",
+    "Junhao He",
+    "Hongyang Du"
+   ],
+   "publication_date": [
+    "2026-08-13"
+   ],
+   "journal": [],
+   "doi": [],
+   "status": "retrieved",
+   "title_match_in_entry": true
+  }
+ ]
 }

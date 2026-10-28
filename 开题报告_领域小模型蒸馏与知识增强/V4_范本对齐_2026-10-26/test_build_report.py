@@ -23,6 +23,18 @@ from docx.shared import Emu  # noqa: E402
 from docx.oxml.ns import qn  # noqa: E402
 
 
+FIG_CANDIDATES = ("技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png")
+
+
+def _find_fig():
+    """找技术路线图；找不到返回 None（正文含图占位符时 build 会直接报错）。"""
+    for cand in FIG_CANDIDATES:
+        path = HERE / cand
+        if path.exists():
+            return path
+    return None
+
+
 class TestParser(unittest.TestCase):
     """解析器不变量。"""
 
@@ -101,10 +113,13 @@ class TestBuildOutput(unittest.TestCase):
         import tempfile
         cls.tmp = tempfile.TemporaryDirectory()
         cls.out = Path(cls.tmp.name) / "t.docx"
-        md = HERE / "开题报告_正文.md"
+        md = HERE / "开题报告_正文_V4.md"
         if not md.exists():
-            raise unittest.SkipTest("缺少 开题报告_正文.md")
-        cls.n_refs, cls.n_heads, cls.warnings = br.build(md, cls.out)
+            raise unittest.SkipTest("缺少 开题报告_正文_V4.md")
+        fig = _find_fig()
+        if fig is None:
+            raise unittest.SkipTest("缺少技术路线图（正文含图占位符，缺图按设计直接报错）")
+        cls.n_refs, cls.n_heads, cls.warnings = br.build(md, cls.out, fig_path=fig)
         cls.doc = Document(str(cls.out))
 
     @classmethod
@@ -357,7 +372,7 @@ class TestCLI(unittest.TestCase):
                                "--fig-caption", "图 9-9　自定义")
         self.assertEqual(code, 0)
         doc = Document(str(out))
-        caps = [p.text.strip() for p in doc.paragraphs if p.text.strip().startswith("图 ")]
+        caps = [p.text.strip() for p in doc.paragraphs if p.text.strip().startswith("图")]
         self.assertIn("图 9-9　自定义", caps, f"图题未写入，实际 {caps}")
 
     def test_fig_caption_rejects_option_value(self):
@@ -422,9 +437,9 @@ class TestFormatCoverage(unittest.TestCase):
         import tempfile
         cls.tmp = tempfile.TemporaryDirectory()
         cls.out = Path(cls.tmp.name) / "t.docx"
-        md = HERE / "开题报告_正文.md"
+        md = HERE / "开题报告_正文_V4.md"
         if not md.exists():
-            raise unittest.SkipTest("缺少 开题报告_正文.md")
+            raise unittest.SkipTest("缺少 开题报告_正文_V4.md")
         fig = None
         for cand in ("技术路线.png", "图4-1_技术路线图.png", "图3-1_技术路线图.png"):
             if (HERE / cand).exists():
@@ -442,14 +457,86 @@ class TestFormatCoverage(unittest.TestCase):
         self.assertIn("TOC", joined, "TOC 域应存在")
 
     def test_page_number_field_in_footer(self):
-        footer = self.doc.sections[0].footer
+        # 正文节（最后一节）才有页码；封面节按范本不显页码
+        footer = self.doc.sections[-1].footer
         xml = "\n".join(p._p.xml for p in footer.paragraphs)
         self.assertIn("PAGE", xml, "页脚应有 PAGE 域")
 
+    def test_cover_section_has_no_page_number(self):
+        """封面节无页码（与范本一致：页码从目录/正文开始）。"""
+        xml = "\n".join(p._p.xml for p in self.doc.sections[0].footer.paragraphs)
+        self.assertNotIn("PAGE", xml, "封面节不应有 PAGE 域")
+
+    def test_three_sections_with_header(self):
+        """封面/目录/正文三节；后两节均有范本页眉，封面无页眉。"""
+        self.assertEqual(len(self.doc.sections), 3)
+        for s in self.doc.sections[1:]:
+            txt = " ".join(p.text for p in s.header.paragraphs).strip()
+            self.assertEqual(txt, br.HEADER_TEXT)
+        cover = " ".join(p.text for p in self.doc.sections[0].header.paragraphs).strip()
+        self.assertEqual(cover, "", "封面不应有页眉")
+
+    def test_front_matter_roman_body_arabic(self):
+        """目录节罗马页码、正文节阿拉伯页码且从 1 起。"""
+        def fmt_of(sec):
+            pg = sec._sectPr.find(qn("w:pgNumType"))
+            return (pg.get(qn("w:fmt")), pg.get(qn("w:start"))) if pg is not None else (None, None)
+        self.assertEqual(fmt_of(self.doc.sections[1]), ("upperRoman", "1"))
+        self.assertEqual(fmt_of(self.doc.sections[2]), ("decimal", "1"))
+
+    def test_equations_are_native_omml_and_numbered(self):
+        """公式必须是 Word 原生公式（m:oMath）且右端编号连续。"""
+        import re
+        self.assertEqual(len(self.doc.element.body.findall(".//" + qn("m:oMath"))), 10)
+        nums = []
+        for p in self.doc.paragraphs:
+            if not p._p.findall(".//" + qn("m:oMath")):
+                continue
+            m = re.search(r"（(\d+)）\s*$", p.text.strip())
+            if m:
+                nums.append(int(m.group(1)))
+        self.assertEqual(nums, list(range(1, 11)), f"公式编号不连续：{nums}")
+
+    def test_no_broken_dash_from_formula_continuation(self):
+        """公式续行不得被当成列表渲染成「— 」（曾把 L_cond 的加号吃成破折号）。"""
+        for p in self.doc.paragraphs:
+            t = p.text.strip()
+            self.assertFalse(t.startswith("— max") or t.startswith("—max"),
+                             f"出现被列表化的公式续行：{t[:40]!r}")
+
+    def test_references_twelve_point(self):
+        """参考文献条目字号 12pt（与范本正文一致，不是 10.5pt）。"""
+        import re
+        refs = [p for p in self.doc.paragraphs if re.match(r"^\[\d+\]", p.text.strip())]
+        self.assertTrue(refs)
+        self.assertEqual(Emu(refs[0].runs[0].font.size).pt, 12.0)
+
+    def test_citation_order_matches_reference_order(self):
+        """顺序编码制：正文首次引用必须按 1,2,3… 递增。"""
+        import re
+        ps = self.doc.paragraphs
+        first = next(i for i, p in enumerate(ps) if re.match(r"^\[1\]", p.text.strip()))
+        body = "\n".join(p.text for p in ps[:first])
+        order = []
+        for n in (int(x) for x in re.findall(r"\[(\d+)\]", body)):
+            if n not in order:
+                order.append(n)
+        self.assertEqual(order, list(range(1, len(order) + 1)),
+                         f"首次引用顺序不是递增：{order}")
+
     def test_figure_caption_present(self):
         caps = [p.text.strip() for p in self.doc.paragraphs
-                if p.text.strip().startswith("图 ")]
+                if p.text.strip().startswith("图")]
         self.assertTrue(caps, "应有图题")
+        self.assertTrue(caps[0].startswith("图3-1"), f"图号格式应与范本一致：{caps[0]!r}")
+
+    def test_table_caption_present_and_referenced(self):
+        """表必须有表题，且正文用「如表3-1所示」引用（否则表格无所指）。"""
+        self.assertTrue(self.doc.tables)
+        caps = [p.text.strip() for p in self.doc.paragraphs
+                if p.text.strip().startswith("表3-1")]
+        self.assertTrue(caps, "缺少表题")
+        self.assertIn("如表3-1所示", "".join(p.text for p in self.doc.paragraphs))
 
     def test_table_style_is_grid(self):
         self.assertTrue(self.doc.tables)
@@ -464,10 +551,13 @@ class TestCrossref(unittest.TestCase):
         import tempfile
         cls.tmp = tempfile.TemporaryDirectory()
         cls.out = Path(cls.tmp.name) / "x.docx"
-        md = HERE / "开题报告_正文.md"
+        md = HERE / "开题报告_正文_V4.md"
         if not md.exists():
-            raise unittest.SkipTest("缺少 开题报告_正文.md")
-        cls.n_refs, cls.n_heads, cls.warnings = br.build(md, cls.out)
+            raise unittest.SkipTest("缺少 开题报告_正文_V4.md")
+        fig = _find_fig()
+        if fig is None:
+            raise unittest.SkipTest("缺少技术路线图（正文含图占位符，缺图按设计直接报错）")
+        cls.n_refs, cls.n_heads, cls.warnings = br.build(md, cls.out, fig_path=fig)
         cls.doc = Document(str(cls.out))
         cls.xml = "".join(p._p.xml for p in cls.doc.paragraphs)
 
@@ -677,7 +767,7 @@ class TestPreviouslyUncovered(unittest.TestCase):
                 out = d / "o.docx"
                 br.build(md, out, fig_path=fig)
                 doc = Document(str(out))
-                caps = [p.text.strip() for p in doc.paragraphs if p.text.strip().startswith("图 ")]
+                caps = [p.text.strip() for p in doc.paragraphs if p.text.strip().startswith("图")]
                 self.assertIn("图 8-8　运行时默认", caps,
                               f"未使用运行时常量，实际 {caps}")
         finally:

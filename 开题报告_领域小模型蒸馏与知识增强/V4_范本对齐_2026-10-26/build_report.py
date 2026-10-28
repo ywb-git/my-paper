@@ -2,14 +2,20 @@
 # -*- coding: utf-8 -*-
 """从 Markdown 生成符合北京科技大学开题报告格式的 docx。
 
-格式基准取自同目录范本：开题报告-唐宁俊V3.docx / 开题报告-李壮壮V1.3.docx。
-- 页面 A4，页边距 上下 2.54cm、左右 3.17cm
-- 封面：学校 22pt 粗体居中；「硕士学位研究生」「选题报告及文献综述」36pt 粗体；
-  信息栏 15pt；日期 15pt 居中
-- 目录：自动生成域（打开 Word 后按 F9 或提示更新）
-- Heading 1 = 15pt，Heading 2 = 14pt，Heading 3 = 14pt（均加粗、黑体）
-- 正文 Normal = 12pt，首行缩进 0.847cm，行距 1.3，中文宋体
-- 参考文献：List Paragraph + 自动编号，无首行缩进
+格式基准取自同目录范本：开题报告-唐宁俊V3.docx。
+- 分三节：封面 / 目录（无页眉、罗马页码）/ 正文（页眉+阿拉伯页码）
+  封面节边距 上下 2.54cm、左右 3.17cm；目录与正文节 上 3.0、下 2.0、左右 3.0cm
+- 封面：学校 22pt、其余两行 36pt，均楷体加粗居中；论文题目 15pt（过长折行，不缩字号）；
+  个人信息栏 15pt 左对齐，留空处用下划线占位；日期行 15pt 居中
+- 目录：TOC 域 + w:updateFields（Word/WPS 打开即更新页码）
+- Heading 1 = 15pt（段前后 13pt、行距 1.0）
+  Heading 2 = 14pt（段前后 12pt、行距 1.5）
+  Heading 3 = 14pt（段前后 13pt、行距 1.3）；均加粗、黑体
+- 正文 Normal = 12pt，首行缩进 2 字符（firstLineChars=200），行距 1.3，中文宋体
+- 公式：$$..$$ 行经 omml.py 转为 Word 原生公式，居中并在右端标号（1）（2）…
+- 图题、表题 12pt 居中；表体 10.5pt；表题须同时给出“如表X-X所示”的正文引用
+- 参考文献：Normal + 手工 [n] + 真悬挂缩进（left/hanging 各 480 twips），12pt，
+  编号按正文首次引用顺序排列（顺序编码制）
 
 用法：
     python build_report.py                          # TOC 域版 -> 开题报告.docx
@@ -31,7 +37,10 @@ import sys
 from pathlib import Path
 
 from docx import Document
-from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
+from docx.enum.section import WD_SECTION
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT, WD_TAB_LEADER
+
+from omml import latex_to_omath
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
@@ -40,7 +49,8 @@ from docx.shared import Cm, Pt, RGBColor
 
 # 页面
 PAGE_W, PAGE_H = Cm(21.0), Cm(29.7)
-MARGIN_TB, MARGIN_LR = Cm(2.54), Cm(3.17)
+MARGIN_TB, MARGIN_LR = Cm(2.54), Cm(3.17)          # 封面节
+BODY_T, BODY_B, BODY_LR = Cm(3.0), Cm(2.0), Cm(3.0)  # 目录/正文节（同范本）
 HEADER_DIST, FOOTER_DIST = Cm(1.5), Cm(1.75)
 
 # 字号
@@ -55,7 +65,14 @@ SZ_BODY = Pt(12)
 # 字体
 FONT_CN_BODY = "宋体"
 FONT_CN_HEAD = "黑体"
+FONT_CN_KAITI = "楷体"
 FONT_EN = "Times New Roman"
+
+# 封面与题注字号
+SZ_FIG_CAP = Pt(12)          # 图题、表题（范本图题继承正文 12pt）
+SZ_REF = Pt(12)              # 参考文献条目（范本为正文 12pt）
+SZ_TABLE = Pt(10.5)          # 表体
+SZ_EQUATION_NUM = Pt(12)     # 公式右端标号
 
 # 正文段落格式
 BODY_INDENT = Cm(0.847)
@@ -76,8 +93,11 @@ COVER_DATE = ""  # 留空由用户填写；也可写 "2026年11月"
 DEFAULT_OUT_TOC = "开题报告.docx"
 DEFAULT_OUT_STATIC = "开题报告_静态目录.docx"
 
+# 页眉文字（范本正文节每页均有）
+HEADER_TEXT = "北京科技大学研究生开题报告"
+
 # 图题默认编号（可用 --fig-caption 覆盖）
-DEFAULT_FIG_CAPTION = "图 3-1　技术路线图"
+DEFAULT_FIG_CAPTION = "图3-1 技术路线图"
 
 # 命令行用法（--help 直接打印此常量，不再从 __doc__ 切割）
 # 命令行用法（--help 打印此函数结果，每次读取当前常量，避免文案与常量漂移）
@@ -177,22 +197,6 @@ def add_field(paragraph, instr: str, *, placeholder: str = ""):
     return paragraph
 
 
-def add_bookmark(paragraph, name: str, bid: int):
-    """在段落开头插入书签（用于参考文献交叉引用）。"""
-    start = OxmlElement("w:bookmarkStart")
-    start.set(qn("w:id"), str(bid))
-    start.set(qn("w:name"), name)
-    end = OxmlElement("w:bookmarkEnd")
-    end.set(qn("w:id"), str(bid))
-    p_el = paragraph._p
-    # bookmarkStart 放在第一个 run 之前；bookmarkEnd 放最后
-    if len(p_el) and p_el[0].tag != qn("w:pPr"):
-        p_el.insert(0, start)
-    else:
-        p_el.append(start)
-    p_el.append(end)
-
-
 def add_ref_field(paragraph, bookmark: str, *, size=None, cn=None, superscript=True,
                   display: str | None = None):
     """插入指向某书签的 REF 域（Word 交叉引用）。
@@ -232,12 +236,113 @@ def add_toc(paragraph, levels: str = "1-3"):
                      placeholder="（请在此处右键选择「更新域」生成目录）")
 
 
-def add_page_number_footer(section):
-    """页脚居中页码。"""
+def _field_char(paragraph, kind: str):
+    run = paragraph.add_run()
+    el = OxmlElement("w:fldChar")
+    el.set(qn("w:fldCharType"), kind)
+    run._r.append(el)
+    return run
+
+
+def _instr(paragraph, text: str):
+    run = paragraph.add_run()
+    el = OxmlElement("w:instrText")
+    el.set(qn("xml:space"), "preserve")
+    el.text = text
+    run._r.append(el)
+    return run
+
+
+def add_toc_with_entries(doc: Document, entries, levels: str = "1-3"):
+    """插入带实目录结果的 TOC 域（域结果跳段）。
+
+    entries 为 [(level, text, page)]。域结果由多个段落构成：begin/instr/separate
+    在第一段，各条目居中，end 在最后一段（Word 允许域跨段）。这样在不会
+    自动更新域的阅览器里也能看到带页码的目录，在 Word/WPS 里仍可按 F9 重算。
+    """
+    first = doc.add_paragraph()
+    first.paragraph_format.first_line_indent = Cm(0)
+    _field_char(first, "begin")
+    _instr(first, f' TOC \\o "{levels}" \\h \\z \\u ')
+    _field_char(first, "separate")
+
+    for level, text, page in entries:
+        p = doc.add_paragraph()
+        pf = p.paragraph_format
+        pf.first_line_indent = Cm(0)
+        pf.line_spacing = 1.3
+        pf.space_after = Pt(2)
+        pf.left_indent = Cm(0.85 * (max(1, level) - 1))
+        pf.tab_stops.add_tab_stop(Cm(15.0), WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+        set_run_font(p.add_run(f"{text}\t{page}"), size=Pt(12), cn=FONT_CN_BODY)
+
+    last = doc.add_paragraph()
+    last.paragraph_format.first_line_indent = Cm(0)
+    _field_char(last, "end")
+
+
+def add_page_number_footer(section, *, fmt="decimal", start=None):
+    """页脚居中页码；同时设置该节页码格式（罗马/阿拉伯、起始值）。"""
     footer = section.footer
+    footer.is_linked_to_previous = False
     p = footer.paragraphs[0] if footer.paragraphs else footer.add_paragraph()
+    _clear_paragraph(p)
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.first_line_indent = Cm(0)
     add_field(p, " PAGE ", placeholder="1")
+    _set_page_number_format(section, fmt=fmt, start=start)
+
+
+def _set_page_number_format(section, *, fmt=None, start=None):
+    """写入 w:pgNumType，并保持 sectPr 子元素顺序合法（pgNumType 在 cols 之前）。"""
+    sectPr = section._sectPr
+    pg = sectPr.find(qn("w:pgNumType"))
+    if pg is None:
+        pg = OxmlElement("w:pgNumType")
+        anchor = None
+        for tag in ("w:cols", "w:docGrid", "w:printerSettings"):
+            anchor = sectPr.find(qn(tag))
+            if anchor is not None:
+                break
+        if anchor is not None:
+            anchor.addprevious(pg)
+        else:
+            sectPr.append(pg)
+    if fmt:
+        pg.set(qn("w:fmt"), fmt)
+    if start is not None:
+        pg.set(qn("w:start"), str(start))
+
+
+def _fill_header(section):
+    """页眉：范本目录节与正文节每页均印「北京科技大学研究生开题报告」。"""
+    section.header.is_linked_to_previous = False
+    hdr = section.header
+    p = hdr.paragraphs[0] if hdr.paragraphs else hdr.add_paragraph()
+    _clear_paragraph(p)
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.first_line_indent = Cm(0)
+    set_run_font(p.add_run(HEADER_TEXT), size=Pt(9), cn=FONT_CN_BODY)
+
+
+def setup_sections(doc: Document):
+    """按范本设置各节页眉与页码：封面无、目录罗马、正文阿拉伯从 1。"""
+    secs = doc.sections
+    if len(secs) < 3:
+        # 兜底：节数不足时至少给最后一节加页码，不让页码整体消失
+        add_page_number_footer(secs[-1])
+        return
+    cover, toc, body = secs[0], secs[1], secs[2]
+    # 封面：断开继承并清空页眉页脚，且不写 PAGE 域 → 不显示页码
+    for part in (cover.header, cover.footer):
+        part.is_linked_to_previous = False
+        for p in list(part.paragraphs):
+            _clear_paragraph(p)
+    _set_page_number_format(cover, fmt="decimal")
+    _fill_header(toc)
+    add_page_number_footer(toc, fmt="upperRoman", start=1)
+    _fill_header(body)
+    add_page_number_footer(body, fmt="decimal", start=1)
 
 
 # ---------------------------------------------------------------- 文档初始化
@@ -266,15 +371,19 @@ def init_document() -> Document:
     pf.space_before = Pt(0)
     pf.space_after = Pt(0)
 
-    # 标题样式
-    for name, size in (("Heading 1", SZ_H1), ("Heading 2", SZ_H2), ("Heading 3", SZ_H3)):
+    # 标题样式：段前后与行距按范本逐级设置（不是统一 1.3）
+    for name, size, sb, sa, ls in (
+        ("Heading 1", SZ_H1, 13, 13, 1.0),
+        ("Heading 2", SZ_H2, 12, 12, 1.5),
+        ("Heading 3", SZ_H3, 13, 13, BODY_LINE_SPACING),
+    ):
         st = doc.styles[name]
         style_set_font(st, size=size, bold=True, cn=FONT_CN_HEAD, en=FONT_EN)
         st.font.color.rgb = RGBColor(0, 0, 0)  # 去蓝色
         st.paragraph_format.first_line_indent = Cm(0)
-        st.paragraph_format.line_spacing = BODY_LINE_SPACING
-        st.paragraph_format.space_before = Pt(12 if name == "Heading 1" else 6)
-        st.paragraph_format.space_after = Pt(6)
+        st.paragraph_format.line_spacing = ls
+        st.paragraph_format.space_before = Pt(sb)
+        st.paragraph_format.space_after = Pt(sa)
 
     # List Paragraph（参考文献用）
     if "List Paragraph" in [s.name for s in doc.styles]:
@@ -289,8 +398,19 @@ def init_document() -> Document:
 # ---------------------------------------------------------------- 封面
 
 
+def new_section(doc: Document):
+    """在文档末尾另起一节（下一页），并按范本设置正文节页边距。"""
+    s = doc.add_section(WD_SECTION.NEW_PAGE)
+    s.page_width, s.page_height = PAGE_W, PAGE_H
+    s.top_margin, s.bottom_margin = BODY_T, BODY_B
+    s.left_margin = s.right_margin = BODY_LR
+    s.header_distance = HEADER_DIST
+    s.footer_distance = FOOTER_DIST
+    return s
+
+
 def build_cover(doc: Document, title: str):
-    """按范本生成封面。"""
+    """按范本生成封面；结束时另起一节，便于目录节单独设页眉与罗马页码。"""
 
     def blank(n=1):
         for _ in range(n):
@@ -299,59 +419,62 @@ def build_cover(doc: Document, title: str):
             p.paragraph_format.line_spacing = 1.0
             set_run_font(p.add_run(""), size=Pt(12))
 
-    def center_line(text, size, bold=False, space_after=0):
+    def kai_line(text, size, bold=False, space_after=0, space_before=0):
         p = doc.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p.paragraph_format.first_line_indent = Cm(0)
         p.paragraph_format.line_spacing = 1.0
+        p.paragraph_format.space_before = Pt(space_before)
         p.paragraph_format.space_after = Pt(space_after)
-        set_run_font(p.add_run(text), size=size, bold=bold, cn=FONT_CN_HEAD)
+        set_run_font(p.add_run(text), size=size, bold=bold, cn=FONT_CN_KAITI)
         return p
 
-    blank(2)
-    center_line("北 京 科 技 大 学", SZ_SCHOOL, bold=True, space_after=18)
-    center_line("硕士学位研究生", SZ_TITLE_BIG, bold=True, space_after=6)
-    center_line("选题报告及文献综述", SZ_TITLE_BIG, bold=True, space_after=30)
+    # 范本封面首行即为校名，没有前置空段
+    kai_line("北 京 科 技 大 学", SZ_SCHOOL, bold=True, space_after=18, space_before=24)
+    kai_line("硕士学位研究生", SZ_TITLE_BIG, bold=True, space_after=6)
+    kai_line("选题报告及文献综述", SZ_TITLE_BIG, bold=True, space_after=30)
     blank(1)
 
-    # 论文题目：超长时自动缩字号，避免折行
-    t_size = SZ_COVER_INFO
-    if len(title) > 26:
-        t_size = Pt(13)
-    if len(title) > 34:
-        t_size = Pt(12)
+    # 论文题目：与范本一致 15pt。过长时折行，不自动缩字号（缩字号会让封面与范本不一致）
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.first_line_indent = Cm(0)
     p.paragraph_format.line_spacing = 1.0
     p.paragraph_format.space_after = Pt(30)
-    set_run_font(p.add_run(f"论文题目： {title}"), size=t_size, cn=FONT_CN_BODY)
+    set_run_font(p.add_run(f"论文题目： {title}"), size=SZ_COVER_INFO, cn=FONT_CN_BODY)
 
     blank(1)
+    # 信息栏：范本为首行缩进 105pt + 左对齐（不是居中）
     for label, value in COVER_FIELDS:
         p = doc.add_paragraph()
-        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p.paragraph_format.first_line_indent = Cm(0)
-        p.paragraph_format.line_spacing = 1.0
-        p.paragraph_format.space_after = Pt(4)
-        filled = value if value else " " * 12 + "＿" * 8
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.first_line_indent = Pt(105)
+        p.paragraph_format.line_spacing = 1.5
+        p.paragraph_format.space_after = Pt(0)
+        filled = value if value else " " * 8 + "＿" * 8
         set_run_font(p.add_run(f"{label}{filled}"), size=SZ_COVER_INFO, cn=FONT_CN_BODY)
 
     blank(3)
-    center_line(COVER_DATE if COVER_DATE else " " * 6 + "＿" * 8, SZ_COVER_INFO)
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.first_line_indent = Cm(0)
+    p.paragraph_format.line_spacing = 1.0
+    set_run_font(p.add_run(COVER_DATE if COVER_DATE else " " * 6 + "＿" * 8),
+                 size=SZ_COVER_INFO, cn=FONT_CN_BODY)
 
-    # 分页
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+    # 另起一节：封面节不设页眉、不显示页码
+    new_section(doc)
 
 
 # ---------------------------------------------------------------- 目录
 
 
-def build_toc(doc: Document, static_entries=None):
+def build_toc(doc: Document, static_entries=None, page_entries=None):
     """目录。
 
-    static_entries 为 None 时插入 TOC 域（Word 打开后更新域即得真实目录）；
-    否则直接写入静态目录条目（用于 PDF 转换，域不会被 LibreOffice 计算）。
+    page_entries 给出时 -> TOC 域 + 带页码的实目录结果（推荐，两遍构建）；
+    static_entries 为 None 时 -> 只插 TOC 域，域结果为提示文字；
+    否则 -> 直接写静态目录条目（无页码，不写域）。
     """
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -359,7 +482,9 @@ def build_toc(doc: Document, static_entries=None):
     p.paragraph_format.space_after = Pt(12)
     set_run_font(p.add_run("目    录"), size=SZ_COVER_INFO, bold=True, cn=FONT_CN_HEAD)
 
-    if static_entries is None:
+    if page_entries is not None:
+        add_toc_with_entries(doc, page_entries)
+    elif static_entries is None:
         tp = doc.add_paragraph()
         tp.paragraph_format.first_line_indent = Cm(0)
         add_toc(tp)
@@ -373,7 +498,8 @@ def build_toc(doc: Document, static_entries=None):
             label = f"　" * (level - 1) * 2 + text
             set_run_font(tp.add_run(label), size=Pt(12), cn=FONT_CN_BODY)
 
-    doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+    # 另起一节：目录节设页眉与罗马页码，正文节重新从 1 起算
+    new_section(doc)
 
 
 # ---------------------------------------------------------------- Markdown 解析
@@ -383,6 +509,8 @@ RE_HEADING = re.compile(r"^(#{1,4})\s+(.*)$")
 RE_ORDERED = re.compile(r"^(\d+)[.、]\s+(.*)$")
 RE_UNORDERED = re.compile(r"^[-*+]\s+(.*)$")
 RE_TABLE_SEP = re.compile(r"^\|[\s:|-]+\|$")
+RE_EQUATION = re.compile(r"^\$\$(.+)\$\$")
+RE_TABLE_CAP = re.compile(r"^表\s*\d+[-–—]\d+[\s　]+\S")
 
 
 def parse_markdown(md_text: str):
@@ -423,6 +551,24 @@ def parse_markdown(md_text: str):
             i += 1
             continue
 
+        # 公式块（单行 $$latex$$）。空内容或未闭合直接报错：
+        # 静默当成正文会出现“引用式（n）但全篇无公式”的悬空引用。
+        m = RE_EQUATION.match(stripped)
+        if m and m.group(1).strip():
+            blocks.append(("equation", m.group(1).strip()))
+            i += 1
+            continue
+        if stripped.startswith("$$") or stripped == "$$":
+            raise ValueError(
+                f"第 {i + 1} 行公式块未闭合或为空：{stripped[:60]!r}；"
+                "公式须写成单行 $$latex$$")
+
+        # 表题：形如「表3-1　数据层与用于本题的边界」
+        if RE_TABLE_CAP.match(stripped):
+            blocks.append(("table_caption", stripped))
+            i += 1
+            continue
+
         # 表格
         if stripped.startswith("|") and i + 1 < len(lines) and RE_TABLE_SEP.match(lines[i + 1].strip()):
             header = [c.strip() for c in stripped.strip("|").split("|")]
@@ -460,16 +606,17 @@ def parse_markdown(md_text: str):
             continue
 
 
-        # 有序列表：保留原编号
+        # 有序列表：保留原编号。缩进行不算列表：列表项一律从行首开始，
+        # 否则公式/续行的书写缩进会被吃成项目符号。
         m = RE_ORDERED.match(stripped)
-        if m:
+        if m and not raw[:1].isspace():
             blocks.append(("ordered", (m.group(1), m.group(2).strip())))
             i += 1
             continue
 
-        # 无序列表
+        # 无序列表（同上：缩进行不算列表）
         m = RE_UNORDERED.match(stripped)
-        if m:
+        if m and not raw[:1].isspace():
             blocks.append(("bullet", m.group(1).strip()))
             i += 1
             continue
@@ -484,7 +631,7 @@ def parse_markdown(md_text: str):
 # ---------------------------------------------------------------- 富文本写入
 
 
-RE_INLINE = re.compile(r"(\*\*.+?\*\*|`[^`]+`|\^\{[^}]*\}|\$\$?[^$]+\$\$?)")
+RE_INLINE = re.compile(r"(\*\*.+?\*\*|`[^`]+`)")
 
 
 def apply_hanging_indent(paragraph, *, left_twips: int = 480,
@@ -554,14 +701,6 @@ def add_rich_text(paragraph, text: str, *, size=SZ_BODY, cn=FONT_CN_BODY, base_b
         elif part.startswith("`") and part.endswith("`") and len(part) > 2:
             r = paragraph.add_run(part[1:-1])
             set_run_font(r, size=size, bold=base_bold, cn="Consolas")
-        elif part.startswith("^"):
-            r = paragraph.add_run(part[2:-1] if part.startswith("^{") else part[1:])
-            r.font.superscript = True
-            set_run_font(r, size=size, bold=base_bold, cn=cn)
-        elif part.startswith("$"):
-            # 数学公式原样输出（不解析）
-            r = paragraph.add_run(part)
-            set_run_font(r, size=size, bold=base_bold, cn=cn)
         else:
             _write_plain_with_refs(paragraph, part, size=size, cn=cn,
                                    bold=base_bold, superscript_refs=superscript_refs)
@@ -594,6 +733,7 @@ def _write_plain_with_refs(paragraph, text, *, size, cn, bold, superscript_refs)
 
 def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
                   fig_caption: str = DEFAULT_FIG_CAPTION):
+    eq_no = 0
     for kind, payload in blocks:
         if kind == "heading":
             level, text = payload
@@ -629,6 +769,33 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
             set_run_font(r, size=SZ_BODY, cn=FONT_CN_BODY)
             add_rich_text(p, payload, size=SZ_BODY, cn=FONT_CN_BODY)
 
+        elif kind == "equation":
+            eq_no += 1
+            p = doc.add_paragraph()
+            pf = p.paragraph_format
+            pf.first_line_indent = Cm(0)
+            pf.line_spacing = BODY_LINE_SPACING
+            pf.space_before = Pt(6)
+            pf.space_after = Pt(6)
+            # 正文节宽 = 21cm - 左右各 3.0cm = 15.0cm
+            # 居中制表位 + 右端制表位：经典「居中公式 + 右端编号」排法
+            pf.tab_stops.add_tab_stop(Cm(7.5), WD_TAB_ALIGNMENT.CENTER)
+            pf.tab_stops.add_tab_stop(Cm(15.0), WD_TAB_ALIGNMENT.RIGHT)
+            p.add_run("\t")
+            p._p.append(latex_to_omath(payload))
+            num = p.add_run(f"\t（{eq_no}）")
+            set_run_font(num, size=SZ_EQUATION_NUM, cn=FONT_CN_BODY)
+
+        elif kind == "table_caption":
+            # 表题在表上方（与图题在下相反），居中、与图题同字号
+            p = doc.add_paragraph()
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.first_line_indent = Cm(0)
+            p.paragraph_format.line_spacing = 1.0
+            p.paragraph_format.space_before = Pt(6)
+            p.paragraph_format.space_after = Pt(3)
+            set_run_font(p.add_run(payload), size=SZ_FIG_CAP, cn=FONT_CN_BODY)
+
         elif kind == "table":
             header, rows = payload
             t = doc.add_table(rows=1, cols=len(header))
@@ -638,7 +805,7 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
                 _clear_paragraph(cp)
                 cp.paragraph_format.first_line_indent = Cm(0)
                 cp.paragraph_format.line_spacing = 1.0
-                set_run_font(cp.add_run(h.replace("**", "")), size=Pt(10.5),
+                set_run_font(cp.add_run(h.replace("**", "")), size=SZ_TABLE,
                              bold=True, cn=FONT_CN_HEAD)
             for row in rows:
                 cells = t.add_row().cells
@@ -647,8 +814,15 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
                     _clear_paragraph(cp)
                     cp.paragraph_format.first_line_indent = Cm(0)
                     cp.paragraph_format.line_spacing = 1.0
-                    set_run_font(cp.add_run(val.replace("**", "")), size=Pt(10.5),
+                    set_run_font(cp.add_run(val.replace("**", "")), size=SZ_TABLE,
                                  cn=FONT_CN_BODY)
+            # 表头行跨页重复，且行内不拆分（避免一行内容被撕成两页）
+            if t.rows:
+                hdr_pr = t.rows[0]._tr.get_or_add_trPr()
+                hdr_pr.append(OxmlElement("w:tblHeader"))
+            for row in t.rows:
+                row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
+
             # 表后空一行
             sp = doc.add_paragraph()
             sp.paragraph_format.first_line_indent = Cm(0)
@@ -656,19 +830,30 @@ def render_blocks(doc: Document, blocks, *, fig_path: Path | None = None,
             set_run_font(sp.add_run(""), size=Pt(6))
 
         elif kind == "figure":
-            if fig_path and fig_path.exists():
-                p = doc.add_paragraph()
-                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                p.paragraph_format.first_line_indent = Cm(0)
-                p.paragraph_format.space_before = Pt(6)
-                p.paragraph_format.space_after = Pt(6)
-                p.add_run().add_picture(str(fig_path), width=Cm(13.5))
+            # 缺图直接报错：静默跳过会留下“图3-1 展示…”的悬空引用
+            if fig_path is None:
+                raise ValueError(
+                    f"正文含图占位符 {payload}，但未提供图片路径；"
+                    "缺图会使正文的「图X-X」引用悬空，故不静默跳过")
+            if not fig_path.exists():
+                raise FileNotFoundError(f"图文件不存在：{fig_path}")
+            p = doc.add_paragraph()
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.first_line_indent = Cm(0)
+            p.paragraph_format.space_before = Pt(6)
+            p.paragraph_format.space_after = Pt(6)
+            pic = p.add_run()
+            pic.add_picture(str(fig_path), width=Cm(13.5))
+            # 图片替代文本（可访问性）：无 descr 的图在读屏器里只是一张无名图片
+            for docPr in pic._r.findall(".//" + qn("wp:docPr")):
+                docPr.set("descr", fig_caption)
+                docPr.set("title", fig_caption)
 
-                cap = doc.add_paragraph()
-                cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                cap.paragraph_format.first_line_indent = Cm(0)
-                cap.paragraph_format.space_after = Pt(10)
-                set_run_font(cap.add_run(fig_caption), size=Pt(10.5), cn=FONT_CN_BODY)
+            cap = doc.add_paragraph()
+            cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            cap.paragraph_format.first_line_indent = Cm(0)
+            cap.paragraph_format.space_after = Pt(10)
+            set_run_font(cap.add_run(fig_caption), size=SZ_FIG_CAP, cn=FONT_CN_BODY)
 
 
 # ---------------------------------------------------------------- 参考文献
@@ -691,7 +876,7 @@ def render_references(doc: Document, ref_lines: list[str]):
         # 书签必须只包住编号 run：REF 域返回的是书签范围内的文本，
         # 若把整条文献包进去，正文引用会显示成整条文献全文。
         num_run = p.add_run(f"[{idx}]")
-        set_run_font(num_run, size=Pt(10.5), cn=FONT_CN_BODY)
+        set_run_font(num_run, size=SZ_REF, cn=FONT_CN_BODY)
         bm_name = ref_bookmark_name(idx)
         bm_id = str(1000 + idx)
         start = OxmlElement("w:bookmarkStart")
@@ -702,7 +887,7 @@ def render_references(doc: Document, ref_lines: list[str]):
         # 直接插在编号 run 前后，保证书签范围就是这一小段文本
         num_run._r.addprevious(start)
         num_run._r.addnext(end)
-        set_run_font(p.add_run(" " + text), size=Pt(10.5), cn=FONT_CN_BODY)
+        set_run_font(p.add_run(" " + text), size=SZ_REF, cn=FONT_CN_BODY)
 
 
 # ---------------------------------------------------------------- 主流程
@@ -739,7 +924,7 @@ def split_markdown(md_text: str):
 
 def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
           static_toc: bool = False, fig_caption: str | None = None,
-          md_text: str | None = None):
+          md_text: str | None = None, toc_pages: dict | None = None):
     """从 Markdown 生成 docx，写入 out_path。
 
     参数：
@@ -747,6 +932,8 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
         out_path     输出 docx 路径（父目录须已存在）
         fig_path     技术路线图路径；None 或不存在时不插图
         static_toc   True 写静态目录条目；False 写 TOC 域（Word 更新后生成）
+        toc_pages    标题->页码 的映射；给出时目录域内直接写入带页码的实目录
+                     （两遍构建用，见 build_deliverable.py）
         fig_caption  图题文字
         md_text      已读取的 Markdown 文本；给出时不再重复读文件
 
@@ -765,20 +952,25 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
 
     blocks, warnings = parse_markdown(body_md)
 
-    # 静态目录条目（heading level 2/3/4 -> 目录 level 1/2/3）
+    # 目录条目（heading level 2/3/4 -> 目录 level 1/2/3）
     entries = None
-    if static_toc:
-        entries = []
+    page_entries = None
+    if static_toc or toc_pages is not None:
+        base = []
         for kind, payload in blocks:
             if kind == "heading":
                 lv, txt = payload
                 if lv in (2, 3, 4):
-                    entries.append((lv - 1, txt))
-        entries.append((1, "参考文献"))
+                    base.append((lv - 1, txt))
+        base.append((1, "参考文献"))
+        if toc_pages is not None:
+            page_entries = [(lvl, txt, toc_pages.get(txt, "")) for lvl, txt in base]
+        else:
+            entries = base
 
     doc = init_document()
     build_cover(doc, title)
-    build_toc(doc, static_entries=entries)
+    build_toc(doc, static_entries=entries, page_entries=page_entries)
     render_blocks(doc, blocks, fig_path=fig_path, fig_caption=fig_caption)
 
     # 引用越界校验：正文出现的 [n] 必须落在 [1, len(ref_lines)] 内
@@ -795,12 +987,16 @@ def build(md_path: Path, out_path: Path, fig_path: Path | None = None,
                 if not (1 <= int(num) <= n_refs):
                     warnings.append(f"标题引用 [{num}] 超出参考文献范围（共 {n_refs} 条）")
 
-    # 参考文献标题
-    hp = doc.add_paragraph(style="Heading 1")
-    set_run_font(hp.add_run("参考文献"), size=SZ_H1, bold=True, cn=FONT_CN_HEAD)
-    render_references(doc, ref_lines)
+    # 参考文献标题：与范本一致居中；保留 Heading 1 以便进目录。
+    # 无文献时不写空标题（否则会出现一个没有任何条目的「参考文献」节）
+    if ref_lines:
+        hp = doc.add_paragraph(style="Heading 1")
+        hp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        set_run_font(hp.add_run("参考文献"), size=SZ_H1, bold=True, cn=FONT_CN_HEAD)
+        render_references(doc, ref_lines)
 
-    add_page_number_footer(doc.sections[0])
+    # 三节：封面无页眉页码 / 目录页眉+罗马页码 / 正文页眉+阿拉伯页码
+    setup_sections(doc)
 
     # 清理末尾空段落，避免生成空白尾页
     body = doc.element.body
@@ -999,11 +1195,8 @@ def main(argv):
     print(f"[ok] {out}")
     print(f"     模式：{'静态目录' if static else 'TOC 域'}")
     print(f"     标题数 {n_heads}，参考文献 {n_refs} 条")
-    if fig:
-        print(f"     已嵌入图：{fig.name}")
-        print(f"     图题：{fig_caption}")
-    else:
-        print("     ！未找到技术路线图，图片位置留空")
+    print(f"     已嵌入图：{fig.name}")
+    print(f"     图题：{fig_caption}")
 
     if warnings:
         print(f"\n[警告] 共 {len(warnings)} 条：")
